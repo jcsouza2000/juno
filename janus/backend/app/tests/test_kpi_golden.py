@@ -6,9 +6,9 @@ from app.auth import create_access_token, get_password_hash
 from app.dashboards import get_ceo_kpis, get_cfo_margin_by_product, get_coo_delayed_orders
 from app.financials import get_financial_summary
 from app.kpi_catalog import build_persona_dashboard
+from app.models import User
 from app.score_v2 import get_score_calculator
 from app.tests.golden_fixtures import GOLDEN_EXPECTED, seed_golden_company
-from app.models import User
 
 
 def _auth_headers(user: User) -> dict:

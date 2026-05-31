@@ -10,11 +10,11 @@ Uso:
     logger = get_logger(__name__)
 """
 
+import json
 import logging
 import logging.config
-import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any
 
 from app.config import settings
@@ -28,7 +28,7 @@ class JsonFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         payload: dict[str, Any] = {
-            "ts": datetime.fromtimestamp(record.created, tz=timezone.utc).isoformat(),
+            "ts": datetime.fromtimestamp(record.created, tz=datetime.UTC).isoformat(),
             "level": record.levelname,
             "logger": record.name,
             "message": record.getMessage(),

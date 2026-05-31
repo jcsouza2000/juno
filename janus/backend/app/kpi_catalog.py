@@ -19,9 +19,8 @@ from typing import Any
 from sqlalchemy import case, func
 from sqlalchemy.orm import Session
 
-from app import data_quality
+from app import data_quality, templates_financeiro
 from app.financials import get_financial_summary, get_statements
-from app import templates_financeiro
 from app.models import (
     Customer,
     ERPImportBatch,

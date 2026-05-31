@@ -18,8 +18,8 @@ import openpyxl
 import pandas as pd
 from sqlalchemy.orm import Session
 
-from .models import FinancialStatement, FinancialUploadBatch
 from . import templates_financeiro
+from .models import FinancialStatement, FinancialUploadBatch
 
 # ── Normalização ──────────────────────────────────────────────────────────────
 

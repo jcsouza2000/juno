@@ -11,7 +11,6 @@ from sqlalchemy.orm import Session
 from app.core.datetime_utils import utcnow_naive
 from app.models import Company, Customer, FinancialStatement, Product, ProductionOrder, SalesOrder
 
-
 GOLDEN_EXPECTED = {
     "receita_bruta": 1500.0,
     "receita_liquida": 1400.0,

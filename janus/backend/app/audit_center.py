@@ -309,7 +309,6 @@ def _domain_validations(company_id: int, db: Session) -> list[dict[str, Any]]:
 
 
 def _reconciliation(company_id: int, db: Session) -> list[dict[str, Any]]:
-    statements = get_statements(company_id, db)
     sales_revenue = float(
         db.query(func.sum(SalesOrder.revenue - SalesOrder.discount))
         .filter(SalesOrder.company_id == company_id)

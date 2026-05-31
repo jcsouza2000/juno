@@ -36,8 +36,8 @@ REQUIRED_MODEL = os.getenv("OLLAMA_MODEL", "qwen3:8b")
 @router.get("/ollama/health", summary="Status do Ollama local")
 def ollama_health():
     try:
-        req = urllib.request.Request(f"{OLLAMA_BASE_URL}/api/tags", method="GET")
-        with urllib.request.urlopen(req, timeout=4) as resp:
+        req = urllib.request.Request(f"{OLLAMA_BASE_URL}/api/tags", method="GET")  # noqa: S310
+        with urllib.request.urlopen(req, timeout=4) as resp:  # noqa: S310
             payload = json.loads(resp.read().decode("utf-8"))
         models = [item.get("name", "") for item in payload.get("models", [])]
         model_ready = REQUIRED_MODEL in models
