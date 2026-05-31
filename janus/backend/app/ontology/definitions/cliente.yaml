@@ -1,0 +1,66 @@
+# =============================================================================
+# ObjectType: Cliente
+# =============================================================================
+# Cliente comercial da empresa. Mapeia para app.models.Customer.
+# =============================================================================
+
+apiVersion: ontology.juno.gravithy.com.br/v1
+kind: ObjectType
+metadata:
+  name: Cliente
+  description: |
+    Cliente comercial — pessoa fisica ou juridica destinataria de pedidos
+    de venda. Carrega segmentacao basica para analise de mix.
+  owner: comercial
+  tags: [comercial, cadastro]
+
+spec:
+  backing:
+    type: sqlalchemy
+    model: app.models.Customer
+    primary_key: id
+
+  title_property: name
+  identifier_properties: [id]
+
+  properties:
+    id:
+      type: integer
+      required: true
+      readonly: true
+    company_id:
+      type: integer
+      required: true
+      readonly: true
+      marking: TenantScoped
+    name:
+      type: string
+      required: true
+      max_length: 255
+      marking: PII
+    segment:
+      type: string
+      max_length: 255
+      enum_hint: [varejo, atacado, distribuidor, governo, exportacao]
+    created_at:
+      type: datetime
+      readonly: true
+
+  links:
+    empresa:
+      target: Empresa
+      cardinality: many_to_one
+      backing:
+        type: foreign_key
+        column: company_id
+    pedidos:
+      target: PedidoVenda
+      cardinality: one_to_many
+      backing:
+        type: foreign_key
+        target_column: customer_id
+
+  markings:
+    inherit: [TenantScoped]
+
+  actions: []

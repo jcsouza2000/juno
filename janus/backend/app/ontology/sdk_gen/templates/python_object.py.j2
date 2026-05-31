@@ -1,0 +1,57 @@
+"""
+juno_ontology.{{ snake_name }} — cliente para ObjectType '{{ object_type }}'.
+
+GERADO AUTOMATICAMENTE — alteracoes manuais sao sobrescritas.
+Stamp: {{ stamp }}
+"""
+
+from __future__ import annotations
+
+from typing import Any, ClassVar
+
+from ._base import HTTPClient, Money, ObjectClient, ActionResult, get_client
+
+
+class {{ class_name }}(ObjectClient):
+    """{{ description | default('ObjectType ' + object_type) }}"""
+
+    OBJECT_TYPE: ClassVar[str] = "{{ object_type }}"
+
+    # ── Properties ────────────────────────────────────────────────────────────
+    {% for prop_name, prop in properties.items() %}
+    {{ prop_name }}: {{ prop.py_type }}
+    {% endfor %}
+
+    {% if computed_properties %}
+    # ── Computed ──────────────────────────────────────────────────────────────
+    {% for cp_name, cp in computed_properties.items() %}
+    {{ cp_name }}: {{ cp.py_type }}  # = {{ cp.formula }}
+    {% endfor %}
+    {% endif %}
+
+    {% if links %}
+    # ── Links ─────────────────────────────────────────────────────────────────
+    {% for link_name, link in links.items() %}
+    def get_{{ link_name }}(self, *, client: HTTPClient | None = None) -> Any:
+        """Resolve link '{{ link_name }}' → {{ link.target }} ({{ link.cardinality }})."""
+        c = client or get_client()
+        return c.get(f"/api/v1/ontology/{self.OBJECT_TYPE}/{self.id}/links/{{ link_name }}")
+    {% endfor %}
+    {% endif %}
+
+    {% if actions %}
+    # ── Actions ───────────────────────────────────────────────────────────────
+    {% for action_name, action in actions.items() %}
+    def {{ action.snake_name }}(self{% for input_name, input_spec in action.inputs.items() %}, {{ input_name }}: {{ input_spec.py_type }}{% if not input_spec.required %} = None{% endif %}{% endfor %}, *, dry_run: bool = False, actor_type: str = "user", confirmed_by: int | None = None, client: HTTPClient | None = None) -> ActionResult:
+        """{{ action.description | default('Executa ' + action_name) }}"""
+        inputs: dict[str, Any] = {}
+        {% for input_name, input_spec in action.inputs.items() %}
+        if {{ input_name }} is not None:
+            inputs["{{ input_name }}"] = {{ input_name }}
+        {% endfor %}
+        return self._execute_action(
+            "{{ action_name }}", inputs,
+            dry_run=dry_run, actor_type=actor_type, confirmed_by=confirmed_by, client=client,
+        )
+    {% endfor %}
+    {% endif %}

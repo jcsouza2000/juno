@@ -1,0 +1,256 @@
+# =============================================================================
+# ObjectType: OrdemProducao
+# =============================================================================
+# Ordem de manufatura — planejado vs. realizado, em quantidade, custo e prazo.
+# Mapeia para app.models.ProductionOrder.
+# =============================================================================
+
+apiVersion: ontology.juno.gravithy.com.br/v1
+kind: ObjectType
+metadata:
+  name: OrdemProducao
+  description: |
+    Ordem de produção/manufatura. Comparativo entre planejado e realizado
+    em quantidade, custo e prazo. Base para análise de OEE, lead time e
+    desvio de custo.
+  owner: pcp
+  tags: [operacao, manufatura, pcp]
+
+spec:
+  backing:
+    type: sqlalchemy
+    model: app.models.ProductionOrder
+    primary_key: id
+
+  title_property: id   # OPs são identificadas por número
+  identifier_properties: [id]
+
+  properties:
+    id:
+      type: integer
+      required: true
+      readonly: true
+    company_id:
+      type: integer
+      required: true
+      readonly: true
+      marking: TenantScoped
+    product_id:
+      type: integer
+      required: true
+    planned_qty:
+      type: integer
+      min: 0
+      description: Quantidade planejada
+    actual_qty:
+      type: integer
+      min: 0
+      description: Quantidade efetivamente produzida
+    planned_cost:
+      type: money
+      currency: BRL
+      min: 0
+      marking: ConfidencialComercial
+    actual_cost:
+      type: money
+      currency: BRL
+      min: 0
+      marking: ConfidencialComercial
+    planned_date:
+      type: datetime
+      description: Data planejada de conclusão
+    actual_date:
+      type: datetime
+      description: Data real de conclusão (null se em andamento)
+    status:
+      type: string
+      enum_values: [planned, in_progress, completed, cancelled]
+    created_at:
+      type: datetime
+      readonly: true
+
+  computed_properties:
+    atraso_dias:
+      type: integer
+      formula: "(actual_date - planned_date).days if (actual_date and planned_date) else 0"
+      description: Dias de atraso (negativo = adiantado, 0 = no prazo)
+    atrasada:
+      type: boolean
+      formula: "(actual_date is not None and actual_date > planned_date) or (actual_date is None and now > planned_date)"
+    desvio_custo:
+      type: money
+      formula: "actual_cost - planned_cost"
+      description: Desvio em R$ (positivo = gastou mais)
+    desvio_custo_pct:
+      type: percent
+      formula: "((actual_cost - planned_cost) / planned_cost * 100) if planned_cost > 0 else 0"
+    aderencia_qty:
+      type: percent
+      formula: "(actual_qty / planned_qty * 100) if planned_qty > 0 else 0"
+      description: Quanto da quantidade planejada foi entregue
+
+  links:
+    empresa:
+      target: Empresa
+      cardinality: many_to_one
+      backing:
+        type: foreign_key
+        column: company_id
+    produto:
+      target: Produto
+      cardinality: many_to_one
+      backing:
+        type: foreign_key
+        column: product_id
+      reverse_name: ordens_producao
+
+  markings:
+    inherit: [TenantScoped]
+
+  actions:
+    - reagendarOrdem
+    - cancelarOrdem
+    - registrarConclusao
+
+---
+# =============================================================================
+# Action: reagendarOrdem
+# =============================================================================
+apiVersion: ontology.juno.gravithy.com.br/v1
+kind: ActionType
+metadata:
+  name: reagendarOrdem
+  description: |
+    Move a data planejada de uma OP. Caso clássico de write-back via IA:
+    Coordinator detecta gargalo, propõe nova data, gestor confirma.
+  owner: pcp
+
+spec:
+  target: OrdemProducao
+
+  inputs:
+    nova_data_planejada:
+      type: datetime
+      required: true
+    motivo:
+      type: string
+      required: true
+      max_length: 500
+      enum_hint: [gargalo-maquina, ruptura-insumo, alteracao-cliente, manutencao, outros]
+    notificar_cliente:
+      type: boolean
+      required: false
+      description: Se true, dispara evento de notificação para cliente vinculado
+
+  validation:
+    - rule: "status != 'completed'"
+      message: "OP já concluída não pode ser reagendada."
+      severity: error
+    - rule: "status != 'cancelled'"
+      message: "OP cancelada não pode ser reagendada — crie uma nova."
+      severity: error
+    - rule: "(nova_data_planejada - planned_date).days >= -30"
+      message: "Reagendamento puxando a data > 30 dias para trás é incomum — confirme."
+      severity: warning
+
+  authorization:
+    roles: [admin, gerente_pcp, planejador]
+    require_confirmation: true   # alto impacto operacional
+
+  effect:
+    handler: app.ontology.actions.production.reschedule
+
+  audit:
+    fields_before: [planned_date, status]
+    fields_after: [planned_date, status]
+    extra_context: [motivo, notificar_cliente]
+
+  dry_run: supported
+
+---
+# =============================================================================
+# Action: cancelarOrdem
+# =============================================================================
+apiVersion: ontology.juno.gravithy.com.br/v1
+kind: ActionType
+metadata:
+  name: cancelarOrdem
+  description: Cancela uma OP. Não deleta — muda status para 'cancelled' com motivo obrigatório.
+  owner: pcp
+
+spec:
+  target: OrdemProducao
+
+  inputs:
+    motivo:
+      type: string
+      required: true
+      max_length: 500
+    reverter_estoque:
+      type: boolean
+      required: false
+      description: Se true, devolve insumos consumidos parcialmente ao estoque
+
+  validation:
+    - rule: "status != 'completed'"
+      message: "OP completa não pode ser cancelada (use 'estornarConclusao')."
+      severity: error
+
+  authorization:
+    roles: [admin, gerente_pcp]
+    require_confirmation: true
+
+  effect:
+    handler: app.ontology.actions.production.cancel
+
+  audit:
+    fields_before: [status]
+    fields_after: [status]
+    extra_context: [motivo, reverter_estoque]
+
+---
+# =============================================================================
+# Action: registrarConclusao
+# =============================================================================
+apiVersion: ontology.juno.gravithy.com.br/v1
+kind: ActionType
+metadata:
+  name: registrarConclusao
+  description: Registra conclusão de OP com quantidades e custo real.
+  owner: pcp
+
+spec:
+  target: OrdemProducao
+
+  inputs:
+    actual_qty:
+      type: integer
+      min: 0
+      required: true
+    actual_cost:
+      type: money
+      currency: BRL
+      min: 0
+      required: true
+    actual_date:
+      type: datetime
+      required: true
+
+  validation:
+    - rule: "status == 'in_progress' or status == 'planned'"
+      message: "Só OPs em andamento ou planejadas podem ser concluídas."
+      severity: error
+    - rule: "actual_qty <= planned_qty * 1.1"
+      message: "Quantidade real > 10% acima da planejada — incomum, confirme."
+      severity: warning
+
+  authorization:
+    roles: [admin, gerente_pcp, operador_pcp]
+    require_confirmation: false   # operação rotineira, não exige confirmação
+
+  effect:
+    handler: app.ontology.actions.production.complete
+
+  audit:
+    fields_before: [actual_qty, actual_cost, actual_date, status]
+    fields_after: [actual_qty, actual_cost, actual_date, status]

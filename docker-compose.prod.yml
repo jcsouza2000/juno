@@ -1,0 +1,72 @@
+﻿services:
+  juno-postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: juno_db
+      POSTGRES_USER: juno
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - juno_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U juno -d juno_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  juno-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  juno-backend:
+    build:
+      context: ./janus/backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      juno-postgres:
+        condition: service_healthy
+      juno-redis:
+        condition: service_healthy
+    environment:
+      JUNO_ENV: production
+      SECRET_KEY: ${SECRET_KEY}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      DATABASE_URL: postgresql://juno:${POSTGRES_PASSWORD}@juno-postgres:5432/juno_db
+      REDIS_URL: redis://juno-redis:6379/0
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+      LOGIN_RATE_LIMIT: ${LOGIN_RATE_LIMIT}
+      LOG_LEVEL: INFO
+      RUN_MIGRATIONS: ${RUN_MIGRATIONS:-true}
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health/ready').read()"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  juno-frontend:
+    build:
+      context: ./janus/frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    restart: unless-stopped
+    depends_on:
+      - juno-backend
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      AUTH_SECRET: ${AUTH_SECRET}
+    ports:
+      - "4000:4000"
+
+volumes:
+  juno_pgdata:

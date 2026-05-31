@@ -1,0 +1,3 @@
+﻿document_type,document_number,account_code,account_name,debit,credit,period
+LANCAMENTO,001,1000,Caixa,1000.00,0.00,2024-01
+LANCAMENTO,002,2000,Fornecedores,0.00,500.00,2024-01

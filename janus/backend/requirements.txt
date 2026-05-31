@@ -1,0 +1,94 @@
+# =====================================================================
+# JUNO Backend - dependencias consolidadas
+# =====================================================================
+# Este arquivo unifica:
+#   - requirements.txt (base atual)
+#   - requirements_fase5..9.txt (que estavam em janus/backend/)
+#   - requirements_fase10..12.txt (que estavam em janus/)
+# Para dev/testes/lint, ver requirements-dev.txt.
+
+# === Core FastAPI ===
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+python-multipart==0.0.17
+httpx==0.27.2
+
+# === Banco ===
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.10
+alembic==1.14.0
+redis==5.2.0
+
+# === Validacao / Settings ===
+pydantic==2.9.2
+pydantic-settings==2.6.1
+python-dotenv==1.0.1
+email-validator==2.2.0
+
+# === Seguranca / Auth ===
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+# passlib 1.7.4 e incompativel com bcrypt >= 4.1. Fixar bcrypt em <4.1.
+# Quando passlib lancar 1.8+ com suporte a bcrypt 4+, remover este pin.
+bcrypt==4.0.1
+cryptography==42.0.8
+argon2-cffi==23.1.0
+PyJWT==2.8.0
+bleach==6.1.0
+
+# === Rate limit ===
+slowapi==0.1.9
+
+# === Conectores ERP (fase 5) ===
+# requests >= 2.32.5 tolera urllib3 2.x sem emitir RequestsDependencyWarning.
+requests>=2.32.5,<3
+urllib3>=1.21.1,<3
+charset-normalizer>=2,<4
+zeep==4.2.1           # SOAP/WSDL (SAP, TOTVS)
+xmltodict==0.13.0
+# pyodbc==5.1.0       # opcional, comentado por requerer libs do SO
+
+# === Scheduler ===
+apscheduler==3.10.4
+
+# === Data / Excel ===
+pandas==2.2.3
+numpy==1.26.4
+openpyxl==3.1.5
+xlsxwriter==3.2.0
+
+# === Reports / PDF (fase 7) ===
+reportlab==4.2.5
+matplotlib==3.9.2
+seaborn==0.13.2
+
+# === Observabilidade (fase 9 + 10) ===
+prometheus-client==0.21.0
+prometheus-fastapi-instrumentator==7.0.0
+psutil==6.1.0
+opentelemetry-api==1.27.0
+opentelemetry-sdk==1.27.0
+opentelemetry-instrumentation-fastapi==0.48b0
+opentelemetry-instrumentation-sqlalchemy==0.48b0
+opentelemetry-instrumentation-requests==0.48b0
+opentelemetry-exporter-otlp==1.27.0
+sentry-sdk[fastapi]==2.17.0
+structlog==24.4.0
+
+# === ML/AI base (fase 6 + 12) ===
+# As bibliotecas mais pesadas (torch, transformers, langchain etc.) sao opcionais.
+# Quem nao for usar ML pode comentar ou instalar via requirements-ml.txt.
+scikit-learn==1.5.2
+joblib==1.4.2
+statsmodels==0.14.4
+openai==1.54.4
+ollama==0.6.2
+
+# === Integracoes externas (fase 11) ===
+# stripe / pika / kafka-python sao opcionais; instale conforme uso.
+stripe==11.1.0
+
+# === Ontology Engine (v0.2.0-dev) ===
+PyYAML==6.0.3
+asteval==1.0.5
+Jinja2==3.1.6

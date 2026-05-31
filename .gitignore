@@ -1,0 +1,126 @@
+# ====================================================================
+# JANUS_AI / JUNO — .gitignore raiz
+# ====================================================================
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.pytest_tmp/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+.tox/
+.nox/
+
+# --- Virtualenvs ---
+.venv/
+.venv-*/
+venv/
+env/
+ENV/
+
+# --- Node / Next.js ---
+node_modules/
+.next/
+out/
+dist/
+build/
+.turbo/
+*.tsbuildinfo
+.pnp.*
+.yarn/
+
+# --- Variáveis de ambiente (NUNCA commit) ---
+.env
+.env*
+.env.local
+.env.*.local
+*.env
+!.env.example
+!.env*.example
+!**/.env.example
+!**/.env*.example
+
+# --- IDEs ---
+.claude/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Sistema operacional ---
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# --- Logs ---
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Bancos locais / dumps ---
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.sql
+
+# --- Backups e checkpoints históricos (legado das fases) ---
+*.backup.*
+*.backup_*
+*.bak
+*.old
+.fase*_checkpoint.json
+_01_*.txt
+_02_*.txt
+_03_*.txt
+_04_*.txt
+_05_*.txt
+_06_*.txt
+_07_*.txt
+_08_*.txt
+fase*_output.txt
+
+# --- Modelos / artefatos ML ---
+models/*.pkl
+models/*.joblib
+models/*.onnx
+mlruns/
+mlartifacts/
+
+# --- Docker ---
+*.pid
+
+# --- Coverage / relatórios ---
+coverage/
+junit.xml
+test-results/
+
+# --- Backups do banco (contêm dados reais; NUNCA commitar) ---
+backups/
+*.sql.gz
+
+# --- Ruído técnico / arquivos temporários ---
+mypy_*.txt
+_gen_*.js
+_sync_probe.txt
+reorganizar_diretorios.bat
+
+# --- Documentos confidenciais de negócio (NÃO versionar no repo de código) ---
+Contratos/
+_archive/
+
+# --- Entregáveis binários na raiz (readicione com 'git add -f' se quiser versionar) ---
+/*.docx
+/*.pptx
+/*.pdf

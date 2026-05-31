@@ -1,0 +1,10 @@
+/**
+ * juno_ontology - index do SDK TypeScript.
+ *
+ * GERADO AUTOMATICAMENTE. Stamp: {{ stamp }}
+ */
+
+export * from "./_base";
+{% for camel in modules %}
+export * from "./{{ camel }}";
+{% endfor %}

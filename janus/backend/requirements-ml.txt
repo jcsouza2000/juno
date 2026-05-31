@@ -1,0 +1,24 @@
+# Dependencias pesadas de ML/IA — instalar somente em deploys que usam
+# os modulos app/ml/, app/api/predictions, RAG, fine-tuning, etc.
+-r requirements.txt
+
+# Forecasting
+prophet==1.1.6
+
+# Deep learning / LLMs
+torch==2.4.1
+transformers==4.45.2
+sentence-transformers==3.2.1
+peft==0.13.2
+accelerate==1.0.1
+datasets==3.0.2
+bitsandbytes==0.44.1
+langchain==0.3.7
+chromadb==0.5.18
+
+# Messaging (alguns pipelines de ML usam)
+pika==1.3.2
+kafka-python==2.0.3
+
+# Tracking
+mlflow==2.17.2

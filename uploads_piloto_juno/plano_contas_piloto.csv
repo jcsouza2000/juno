@@ -1,0 +1,23 @@
+codigo_conta,conta,grupo_dre,tipo,categoria_dre,natureza,peso
+3.01.001,Receita de Vendas - Metalmecânica,Receitas Operacionais,Receita,Faturamento de Vendas,credito,
+4.01.001,CMV - Metalmecânica,Custos dos Produtos Vendidos,Despesa,CMV,debito,
+3.01.002,Receita de Vendas - Plásticos,Receitas Operacionais,Receita,Faturamento de Vendas,credito,
+4.01.002,CMV - Plásticos,Custos dos Produtos Vendidos,Despesa,CMV,debito,
+3.01.003,Receita de Vendas - Eletrônicos,Receitas Operacionais,Receita,Faturamento de Vendas,credito,
+4.01.003,CMV - Eletrônicos,Custos dos Produtos Vendidos,Despesa,CMV,debito,
+3.01.004,Receita de Vendas - Embalagens,Receitas Operacionais,Receita,Faturamento de Vendas,credito,
+4.01.004,CMV - Embalagens,Custos dos Produtos Vendidos,Despesa,CMV,debito,
+3.01.005,Receita de Vendas - Químicos,Receitas Operacionais,Receita,Faturamento de Vendas,credito,
+4.01.005,CMV - Químicos,Custos dos Produtos Vendidos,Despesa,CMV,debito,
+5.01.001,Salarios e Ordenados CLT,Despesas com Pessoal,Despesa,Folha de Pagamento,debito,0.42
+5.01.002,Encargos Sociais FGTS/INSS,Despesas com Pessoal,Despesa,Folha de Pagamento,debito,0.18
+5.01.003,Pro-labore Administrativo,Despesas com Pessoal,Despesa,Folha de Pagamento,debito,0.1
+5.02.001,Aluguel e Condominio,Despesas Ocupacionais,Despesa,Custos Ocupacionais,debito,0.08
+5.02.002,Energia Eletrica e Utilidades,Despesas Ocupacionais,Despesa,Custos Ocupacionais,debito,0.04
+5.03.001,Marketing Digital e Feiras,Despesas Comerciais,Despesa,Marketing e Vendas,debito,0.05
+5.03.002,Comissoes e Bonificacoes de Vendas,Despesas Comerciais,Despesa,Marketing e Vendas,debito,0.03
+5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas,Despesa,Despesas Administrativas (Software/SaaS),debito,0.035
+5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas,Despesa,Despesas Administrativas (Software/SaaS),debito,0.025
+5.04.003,Material de Escritorio e Viagens,Despesas Administrativas,Despesa,Despesas Administrativas (Software/SaaS),debito,0.015
+5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,Despesa,Impostos sobre Vendas,debito,0.0165
+5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,Despesa,Impostos sobre Vendas,debito,0.076

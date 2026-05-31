@@ -1,0 +1,18 @@
+﻿version: '3.8'
+
+services:
+  evidently:
+    image: python:3.11-slim
+    container_name: juno-evidently
+    command: >
+      bash -c "pip install evidently pandas numpy scikit-learn &&
+               python -c 'from evidently import __version__; print("Evidently OK")' &&
+               sleep infinity"
+    ports:
+      - "8085:8085"
+    volumes:
+      - evidently_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  evidently_data:

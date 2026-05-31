@@ -1,0 +1,56 @@
+﻿groups:
+  - name: juno_alerts
+    rules:
+      - alert: HighErrorRate
+        expr: rate(audit_logs_total{success="false"}[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Taxa de erro alta detectada"
+          description: "Taxa de erro {{ \ }}% nos ultimos 5 minutos"
+
+      - alert: DatabaseDown
+        expr: up{job="postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL fora do ar"
+          description: "O banco de dados PostgreSQL nao esta respondendo"
+
+      - alert: BackendDown
+        expr: up{job="juno-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Backend JUNO fora do ar"
+          description: "O backend FastAPI nao esta respondendo"
+
+      - alert: HighCPUUsage
+        expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Uso de CPU alto"
+          description: "CPU usage acima de 80% por mais de 10 minutos"
+
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 85
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Uso de memoria alto"
+          description: "Memoria RAM acima de 85% por mais de 10 minutos"
+
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Espaco em disco baixo"
+          description: "Menos de 10% de espaco livre no disco"

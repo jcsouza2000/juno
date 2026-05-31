@@ -1,0 +1,25 @@
+apiVersion: ontology.juno.gravithy.com.br/v1
+kind: Pipeline
+metadata:
+  name: daily_margin_recompute
+  description: |
+    Recomputa margem critica diaria. Le todos os produtos, identifica os
+    com margem < 10% e gera lista de alertas. Step write opcional (stub).
+  owner: comercial
+  tags: [comercial, financeiro, diario]
+
+spec:
+  schedule: "0 4 * * *"   # 04:00 todo dia (opcional, APScheduler honra)
+  steps:
+    - name: load_produtos
+      type: read
+      object_type: Produto
+      filters: { company_id: 1 }
+      outputs: produtos
+      limit: 5000
+
+    - name: detect_critical
+      type: transform
+      handler: app.ontology.pipelines_handlers.margin.detect_critical_margins
+      inputs: [produtos]
+      outputs: alerts

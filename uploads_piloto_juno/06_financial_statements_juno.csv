@@ -1,0 +1,1103 @@
+statement_type,periodo,codigo_conta,conta,grupo_dre,valor
+DRE,2024-01,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,243929.36
+DRE,2024-01,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,474697.95
+DRE,2024-01,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,456968.15
+DRE,2024-01,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,380278.56
+DRE,2024-01,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,479325.41
+DRE,2024-01,4.01.001,CMV - Metalmecânica,CMV,-131441.05
+DRE,2024-01,4.01.002,CMV - Plásticos,CMV,-252810.56
+DRE,2024-01,4.01.003,CMV - Eletrônicos,CMV,-252572.42
+DRE,2024-01,4.01.004,CMV - Embalagens,CMV,-208190.91
+DRE,2024-01,4.01.005,CMV - Químicos,CMV,-265669.75
+DRE,2024-01,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-29898.39
+DRE,2024-01,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-11883.85
+DRE,2024-01,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-6746.34
+DRE,2024-01,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5413.95
+DRE,2024-01,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2814.56
+DRE,2024-01,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3419.36
+DRE,2024-01,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-2030.95
+DRE,2024-01,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2444.46
+DRE,2024-01,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1729.11
+DRE,2024-01,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-984.15
+DRE,2024-01,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-33580.79
+DRE,2024-01,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-154675.16
+DRE,2024-02,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,386029.3
+DRE,2024-02,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,417432.32
+DRE,2024-02,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,458884.74
+DRE,2024-02,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,299659.86
+DRE,2024-02,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,561017.2
+DRE,2024-02,4.01.001,CMV - Metalmecânica,CMV,-211875.83
+DRE,2024-02,4.01.002,CMV - Plásticos,CMV,-227607.92
+DRE,2024-02,4.01.003,CMV - Eletrônicos,CMV,-258582.66
+DRE,2024-02,4.01.004,CMV - Embalagens,CMV,-164762.75
+DRE,2024-02,4.01.005,CMV - Químicos,CMV,-310413.66
+DRE,2024-02,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-28722.06
+DRE,2024-02,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-12236.53
+DRE,2024-02,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-6610.2
+DRE,2024-02,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5665.81
+DRE,2024-02,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2639.53
+DRE,2024-02,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3289.74
+DRE,2024-02,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-2042.46
+DRE,2024-02,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2382.31
+DRE,2024-02,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1794.95
+DRE,2024-02,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-989.23
+DRE,2024-02,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-35029.89
+DRE,2024-02,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-161349.78
+DRE,2024-03,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,306121.48
+DRE,2024-03,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,441175.94
+DRE,2024-03,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,386618.56
+DRE,2024-03,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,382463.0
+DRE,2024-03,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,521482.95
+DRE,2024-03,4.01.001,CMV - Metalmecânica,CMV,-160473.49
+DRE,2024-03,4.01.002,CMV - Plásticos,CMV,-234997.76
+DRE,2024-03,4.01.003,CMV - Eletrônicos,CMV,-216166.67
+DRE,2024-03,4.01.004,CMV - Embalagens,CMV,-213225.35
+DRE,2024-03,4.01.005,CMV - Químicos,CMV,-287243.87
+DRE,2024-03,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-29350.47
+DRE,2024-03,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-12196.45
+DRE,2024-03,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-6951.7
+DRE,2024-03,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5391.45
+DRE,2024-03,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2757.69
+DRE,2024-03,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3414.43
+DRE,2024-03,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-2029.18
+DRE,2024-03,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2406.5
+DRE,2024-03,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1692.6
+DRE,2024-03,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-1058.94
+DRE,2024-03,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-33624.72
+DRE,2024-03,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-154877.51
+DRE,2024-04,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,358017.31
+DRE,2024-04,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,471033.94
+DRE,2024-04,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,418832.93
+DRE,2024-04,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,288129.87
+DRE,2024-04,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,486108.56
+DRE,2024-04,4.01.001,CMV - Metalmecânica,CMV,-189860.15
+DRE,2024-04,4.01.002,CMV - Plásticos,CMV,-251794.67
+DRE,2024-04,4.01.003,CMV - Eletrônicos,CMV,-222132.18
+DRE,2024-04,4.01.004,CMV - Embalagens,CMV,-158332.78
+DRE,2024-04,4.01.005,CMV - Químicos,CMV,-273758.12
+DRE,2024-04,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-27972.51
+DRE,2024-04,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-11851.75
+DRE,2024-04,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-6768.46
+DRE,2024-04,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5306.65
+DRE,2024-04,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2710.71
+DRE,2024-04,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3324.79
+DRE,2024-04,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-2130.67
+DRE,2024-04,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2413.78
+DRE,2024-04,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1712.09
+DRE,2024-04,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-1057.07
+DRE,2024-04,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-33365.02
+DRE,2024-04,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-153681.32
+DRE,2024-05,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,360338.34
+DRE,2024-05,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,451398.83
+DRE,2024-05,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,431468.38
+DRE,2024-05,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,335685.07
+DRE,2024-05,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,579300.3
+DRE,2024-05,4.01.001,CMV - Metalmecânica,CMV,-195609.52
+DRE,2024-05,4.01.002,CMV - Plásticos,CMV,-242054.69
+DRE,2024-05,4.01.003,CMV - Eletrônicos,CMV,-239177.49
+DRE,2024-05,4.01.004,CMV - Embalagens,CMV,-187089.0
+DRE,2024-05,4.01.005,CMV - Químicos,CMV,-317076.38
+DRE,2024-05,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-28721.97
+DRE,2024-05,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-11881.72
+DRE,2024-05,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-7068.8
+DRE,2024-05,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5458.5
+DRE,2024-05,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2768.66
+DRE,2024-05,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3559.81
+DRE,2024-05,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-2135.29
+DRE,2024-05,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2491.68
+DRE,2024-05,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1698.27
+DRE,2024-05,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-1053.15
+DRE,2024-05,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-35610.15
+DRE,2024-05,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-164022.51
+DRE,2024-06,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,246963.2
+DRE,2024-06,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,396067.35
+DRE,2024-06,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,401786.9
+DRE,2024-06,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,356061.78
+DRE,2024-06,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,445648.24
+DRE,2024-06,4.01.001,CMV - Metalmecânica,CMV,-133131.6
+DRE,2024-06,4.01.002,CMV - Plásticos,CMV,-212108.24
+DRE,2024-06,4.01.003,CMV - Eletrônicos,CMV,-221351.68
+DRE,2024-06,4.01.004,CMV - Embalagens,CMV,-193420.96
+DRE,2024-06,4.01.005,CMV - Químicos,CMV,-244852.99
+DRE,2024-06,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-28314.64
+DRE,2024-06,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-12285.5
+DRE,2024-06,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-7118.1
+DRE,2024-06,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5647.55
+DRE,2024-06,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2863.99
+DRE,2024-06,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3378.24
+DRE,2024-06,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-1983.3
+DRE,2024-06,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2495.9
+DRE,2024-06,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1711.33
+DRE,2024-06,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-1067.51
+DRE,2024-06,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-30467.7
+DRE,2024-06,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-140336.09
+DRE,2024-07,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,294502.15
+DRE,2024-07,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,425140.55
+DRE,2024-07,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,431740.54
+DRE,2024-07,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,385700.47
+DRE,2024-07,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,485058.43
+DRE,2024-07,4.01.001,CMV - Metalmecânica,CMV,-158789.88
+DRE,2024-07,4.01.002,CMV - Plásticos,CMV,-226626.87
+DRE,2024-07,4.01.003,CMV - Eletrônicos,CMV,-244731.57
+DRE,2024-07,4.01.004,CMV - Embalagens,CMV,-215670.96
+DRE,2024-07,4.01.005,CMV - Químicos,CMV,-269756.83
+DRE,2024-07,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-29215.14
+DRE,2024-07,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-12715.15
+DRE,2024-07,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-6589.93
+DRE,2024-07,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5736.63
+DRE,2024-07,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2652.59
+DRE,2024-07,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3262.14
+DRE,2024-07,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-2061.33
+DRE,2024-07,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2448.31
+DRE,2024-07,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1749.56
+DRE,2024-07,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-1010.98
+DRE,2024-07,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-33365.35
+DRE,2024-07,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-153682.8
+DRE,2024-08,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,291487.11
+DRE,2024-08,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,394982.55
+DRE,2024-08,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,347353.61
+DRE,2024-08,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,281883.69
+DRE,2024-08,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,557678.28
+DRE,2024-08,4.01.001,CMV - Metalmecânica,CMV,-155692.26
+DRE,2024-08,4.01.002,CMV - Plásticos,CMV,-205782.56
+DRE,2024-08,4.01.003,CMV - Eletrônicos,CMV,-192938.15
+DRE,2024-08,4.01.004,CMV - Embalagens,CMV,-158065.82
+DRE,2024-08,4.01.005,CMV - Químicos,CMV,-316924.91
+DRE,2024-08,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-29086.5
+DRE,2024-08,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-12189.43
+DRE,2024-08,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-6927.8
+DRE,2024-08,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5678.5
+DRE,2024-08,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2849.73
+DRE,2024-08,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3264.54
+DRE,2024-08,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-1977.4
+DRE,2024-08,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2278.71
+DRE,2024-08,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1711.21
+DRE,2024-08,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-1020.96
+DRE,2024-08,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-30910.86
+DRE,2024-08,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-142377.28
+DRE,2024-09,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,344997.31
+DRE,2024-09,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,390113.86
+DRE,2024-09,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,388155.39
+DRE,2024-09,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,239335.83
+DRE,2024-09,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,425122.67
+DRE,2024-09,4.01.001,CMV - Metalmecânica,CMV,-186479.01
+DRE,2024-09,4.01.002,CMV - Plásticos,CMV,-209809.29
+DRE,2024-09,4.01.003,CMV - Eletrônicos,CMV,-213692.99
+DRE,2024-09,4.01.004,CMV - Embalagens,CMV,-132932.35
+DRE,2024-09,4.01.005,CMV - Químicos,CMV,-241007.91
+DRE,2024-09,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-28383.86
+DRE,2024-09,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-11970.68
+DRE,2024-09,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-6777.95
+DRE,2024-09,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5210.94
+DRE,2024-09,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2830.27
+DRE,2024-09,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3385.18
+DRE,2024-09,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-2080.23
+DRE,2024-09,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2355.48
+DRE,2024-09,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1732.16
+DRE,2024-09,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-1031.65
+DRE,2024-09,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-29497.46
+DRE,2024-09,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-135867.1
+DRE,2024-10,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,315098.81
+DRE,2024-10,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,419983.08
+DRE,2024-10,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,510569.41
+DRE,2024-10,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,381096.03
+DRE,2024-10,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,468188.13
+DRE,2024-10,4.01.001,CMV - Metalmecânica,CMV,-175093.61
+DRE,2024-10,4.01.002,CMV - Plásticos,CMV,-229638.16
+DRE,2024-10,4.01.003,CMV - Eletrônicos,CMV,-270492.71
+DRE,2024-10,4.01.004,CMV - Embalagens,CMV,-212750.65
+DRE,2024-10,4.01.005,CMV - Químicos,CMV,-262652.51
+DRE,2024-10,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-27646.88
+DRE,2024-10,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-12306.68
+DRE,2024-10,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-7000.62
+DRE,2024-10,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5506.89
+DRE,2024-10,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2807.48
+DRE,2024-10,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3347.31
+DRE,2024-10,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-1962.28
+DRE,2024-10,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2291.04
+DRE,2024-10,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1672.89
+DRE,2024-10,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-1018.01
+DRE,2024-10,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-34566.44
+DRE,2024-10,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-159215.09
+DRE,2024-11,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,413583.2
+DRE,2024-11,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,479539.16
+DRE,2024-11,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,572996.25
+DRE,2024-11,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,512030.34
+DRE,2024-11,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,625312.8
+DRE,2024-11,4.01.001,CMV - Metalmecânica,CMV,-222019.94
+DRE,2024-11,4.01.002,CMV - Plásticos,CMV,-258741.13
+DRE,2024-11,4.01.003,CMV - Eletrônicos,CMV,-312366.34
+DRE,2024-11,4.01.004,CMV - Embalagens,CMV,-279954.99
+DRE,2024-11,4.01.005,CMV - Químicos,CMV,-347572.89
+DRE,2024-11,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-29747.06
+DRE,2024-11,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-12568.81
+DRE,2024-11,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-6824.8
+DRE,2024-11,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5350.94
+DRE,2024-11,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2720.22
+DRE,2024-11,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3347.39
+DRE,2024-11,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-2080.58
+DRE,2024-11,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2473.79
+DRE,2024-11,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1715.61
+DRE,2024-11,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-980.84
+DRE,2024-11,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-42957.12
+DRE,2024-11,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-197863.09
+DRE,2024-12,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,448239.26
+DRE,2024-12,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,555231.96
+DRE,2024-12,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,615946.9
+DRE,2024-12,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,393302.65
+DRE,2024-12,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,589221.12
+DRE,2024-12,4.01.001,CMV - Metalmecânica,CMV,-238646.63
+DRE,2024-12,4.01.002,CMV - Plásticos,CMV,-296911.25
+DRE,2024-12,4.01.003,CMV - Eletrônicos,CMV,-345468.06
+DRE,2024-12,4.01.004,CMV - Embalagens,CMV,-215967.6
+DRE,2024-12,4.01.005,CMV - Químicos,CMV,-327310.24
+DRE,2024-12,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-29962.55
+DRE,2024-12,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-12716.01
+DRE,2024-12,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-6790.49
+DRE,2024-12,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5237.07
+DRE,2024-12,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2862.67
+DRE,2024-12,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3479.48
+DRE,2024-12,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-2003.55
+DRE,2024-12,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2405.54
+DRE,2024-12,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1735.68
+DRE,2024-12,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-999.41
+DRE,2024-12,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-42932.04
+DRE,2024-12,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-197747.58
+DRE,2025-01,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,301049.99
+DRE,2025-01,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,337684.17
+DRE,2025-01,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,316540.33
+DRE,2025-01,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,339198.01
+DRE,2025-01,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,347652.69
+DRE,2025-01,4.01.001,CMV - Metalmecânica,CMV,-215846.97
+DRE,2025-01,4.01.002,CMV - Plásticos,CMV,-233429.67
+DRE,2025-01,4.01.003,CMV - Eletrônicos,CMV,-238892.16
+DRE,2025-01,4.01.004,CMV - Embalagens,CMV,-246011.95
+DRE,2025-01,4.01.005,CMV - Químicos,CMV,-252924.17
+DRE,2025-01,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-73978.1
+DRE,2025-01,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-31704.9
+DRE,2025-01,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-17613.83
+DRE,2025-01,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-14091.07
+DRE,2025-01,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-7045.53
+DRE,2025-01,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-8806.92
+DRE,2025-01,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-5284.15
+DRE,2025-01,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-6164.84
+DRE,2025-01,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-4403.46
+DRE,2025-01,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-2642.08
+DRE,2025-01,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-27095.07
+DRE,2025-01,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-124801.51
+DRE,2025-02,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,241338.16
+DRE,2025-02,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,323177.95
+DRE,2025-02,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,292921.29
+DRE,2025-02,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,277941.21
+DRE,2025-02,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,275155.08
+DRE,2025-02,4.01.001,CMV - Metalmecânica,CMV,-171501.12
+DRE,2025-02,4.01.002,CMV - Plásticos,CMV,-225986.73
+DRE,2025-02,4.01.003,CMV - Eletrônicos,CMV,-215234.71
+DRE,2025-02,4.01.004,CMV - Embalagens,CMV,-205901.72
+DRE,2025-02,4.01.005,CMV - Químicos,CMV,-200396.9
+DRE,2025-02,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-73978.1
+DRE,2025-02,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-31704.9
+DRE,2025-02,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-17613.83
+DRE,2025-02,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-14091.07
+DRE,2025-02,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-7045.53
+DRE,2025-02,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-8806.92
+DRE,2025-02,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-5284.15
+DRE,2025-02,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-6164.84
+DRE,2025-02,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-4403.46
+DRE,2025-02,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-2642.08
+DRE,2025-02,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-23273.81
+DRE,2025-02,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-107200.56
+DRE,2025-03,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,317122.55
+DRE,2025-03,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,312650.54
+DRE,2025-03,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,392120.2
+DRE,2025-03,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,269415.51
+DRE,2025-03,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,392302.15
+DRE,2025-03,4.01.001,CMV - Metalmecânica,CMV,-230470.35
+DRE,2025-03,4.01.002,CMV - Plásticos,CMV,-221475.55
+DRE,2025-03,4.01.003,CMV - Eletrônicos,CMV,-283370.85
+DRE,2025-03,4.01.004,CMV - Embalagens,CMV,-194046.74
+DRE,2025-03,4.01.005,CMV - Químicos,CMV,-290750.85
+DRE,2025-03,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-73978.1
+DRE,2025-03,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-31704.9
+DRE,2025-03,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-17613.83
+DRE,2025-03,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-14091.07
+DRE,2025-03,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-7045.53
+DRE,2025-03,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-8806.92
+DRE,2025-03,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-5284.15
+DRE,2025-03,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-6164.84
+DRE,2025-03,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-4403.46
+DRE,2025-03,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-2642.08
+DRE,2025-03,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-27779.58
+DRE,2025-03,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-127954.43
+DRE,2025-04,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,286185.94
+DRE,2025-04,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,357503.56
+DRE,2025-04,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,313921.74
+DRE,2025-04,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,235328.59
+DRE,2025-04,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,376519.87
+DRE,2025-04,4.01.001,CMV - Metalmecânica,CMV,-209897.17
+DRE,2025-04,4.01.002,CMV - Plásticos,CMV,-249491.34
+DRE,2025-04,4.01.003,CMV - Eletrônicos,CMV,-229108.07
+DRE,2025-04,4.01.004,CMV - Embalagens,CMV,-173045.44
+DRE,2025-04,4.01.005,CMV - Químicos,CMV,-283380.11
+DRE,2025-04,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-73978.1
+DRE,2025-04,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-31704.9
+DRE,2025-04,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-17613.83
+DRE,2025-04,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-14091.07
+DRE,2025-04,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-7045.53
+DRE,2025-04,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-8806.92
+DRE,2025-04,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-5284.15
+DRE,2025-04,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-6164.84
+DRE,2025-04,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-4403.46
+DRE,2025-04,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-2642.08
+DRE,2025-04,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-25896.09
+DRE,2025-04,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-119278.94
+DRE,2025-05,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,244254.19
+DRE,2025-05,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,272713.88
+DRE,2025-05,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,348922.94
+DRE,2025-05,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,207894.32
+DRE,2025-05,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,470983.07
+DRE,2025-05,4.01.001,CMV - Metalmecânica,CMV,-176040.02
+DRE,2025-05,4.01.002,CMV - Plásticos,CMV,-196572.99
+DRE,2025-05,4.01.003,CMV - Eletrônicos,CMV,-257206.94
+DRE,2025-05,4.01.004,CMV - Embalagens,CMV,-152125.54
+DRE,2025-05,4.01.005,CMV - Químicos,CMV,-347501.0
+DRE,2025-05,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-73978.1
+DRE,2025-05,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-31704.9
+DRE,2025-05,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-17613.83
+DRE,2025-05,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-14091.07
+DRE,2025-05,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-7045.53
+DRE,2025-05,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-8806.92
+DRE,2025-05,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-5284.15
+DRE,2025-05,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-6164.84
+DRE,2025-05,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-4403.46
+DRE,2025-05,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-2642.08
+DRE,2025-05,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-25488.68
+DRE,2025-05,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-117402.4
+DRE,2025-06,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,268384.87
+DRE,2025-06,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,276035.79
+DRE,2025-06,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,350283.91
+DRE,2025-06,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,294892.18
+DRE,2025-06,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,383981.88
+DRE,2025-06,4.01.001,CMV - Metalmecânica,CMV,-195141.09
+DRE,2025-06,4.01.002,CMV - Plásticos,CMV,-195827.96
+DRE,2025-06,4.01.003,CMV - Eletrônicos,CMV,-254929.31
+DRE,2025-06,4.01.004,CMV - Embalagens,CMV,-218215.88
+DRE,2025-06,4.01.005,CMV - Químicos,CMV,-280782.84
+DRE,2025-06,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-73978.1
+DRE,2025-06,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-31704.9
+DRE,2025-06,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-17613.83
+DRE,2025-06,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-14091.07
+DRE,2025-06,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-7045.53
+DRE,2025-06,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-8806.92
+DRE,2025-06,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-5284.15
+DRE,2025-06,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-6164.84
+DRE,2025-06,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-4403.46
+DRE,2025-06,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-2642.08
+DRE,2025-06,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-25964.05
+DRE,2025-06,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-119591.98
+DRE,2025-07,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,315732.02
+DRE,2025-07,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,288973.95
+DRE,2025-07,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,394793.24
+DRE,2025-07,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,257482.67
+DRE,2025-07,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,465738.64
+DRE,2025-07,4.01.001,CMV - Metalmecânica,CMV,-227185.85
+DRE,2025-07,4.01.002,CMV - Plásticos,CMV,-206860.43
+DRE,2025-07,4.01.003,CMV - Eletrônicos,CMV,-285342.69
+DRE,2025-07,4.01.004,CMV - Embalagens,CMV,-190574.28
+DRE,2025-07,4.01.005,CMV - Químicos,CMV,-345647.25
+DRE,2025-07,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-73978.1
+DRE,2025-07,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-31704.9
+DRE,2025-07,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-17613.83
+DRE,2025-07,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-14091.07
+DRE,2025-07,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-7045.53
+DRE,2025-07,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-8806.92
+DRE,2025-07,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-5284.15
+DRE,2025-07,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-6164.84
+DRE,2025-07,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-4403.46
+DRE,2025-07,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-2642.08
+DRE,2025-07,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-28424.89
+DRE,2025-07,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-130926.76
+DRE,2025-08,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,198845.5
+DRE,2025-08,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,342300.23
+DRE,2025-08,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,372094.39
+DRE,2025-08,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,233044.05
+DRE,2025-08,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,326111.29
+DRE,2025-08,4.01.001,CMV - Metalmecânica,CMV,-147081.21
+DRE,2025-08,4.01.002,CMV - Plásticos,CMV,-242412.39
+DRE,2025-08,4.01.003,CMV - Eletrônicos,CMV,-272978.4
+DRE,2025-08,4.01.004,CMV - Embalagens,CMV,-172495.73
+DRE,2025-08,4.01.005,CMV - Químicos,CMV,-238698.71
+DRE,2025-08,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-73978.1
+DRE,2025-08,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-31704.9
+DRE,2025-08,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-17613.83
+DRE,2025-08,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-14091.07
+DRE,2025-08,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-7045.53
+DRE,2025-08,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-8806.92
+DRE,2025-08,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-5284.15
+DRE,2025-08,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-6164.84
+DRE,2025-08,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-4403.46
+DRE,2025-08,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-2642.08
+DRE,2025-08,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-24294.53
+DRE,2025-08,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-111902.05
+DRE,2025-09,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,244399.27
+DRE,2025-09,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,323605.23
+DRE,2025-09,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,395528.19
+DRE,2025-09,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,306888.43
+DRE,2025-09,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,473175.42
+DRE,2025-09,4.01.001,CMV - Metalmecânica,CMV,-181563.51
+DRE,2025-09,4.01.002,CMV - Plásticos,CMV,-237108.58
+DRE,2025-09,4.01.003,CMV - Eletrônicos,CMV,-287992.89
+DRE,2025-09,4.01.004,CMV - Embalagens,CMV,-225617.49
+DRE,2025-09,4.01.005,CMV - Químicos,CMV,-352863.62
+DRE,2025-09,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-73978.1
+DRE,2025-09,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-31704.9
+DRE,2025-09,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-17613.83
+DRE,2025-09,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-14091.07
+DRE,2025-09,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-7045.53
+DRE,2025-09,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-8806.92
+DRE,2025-09,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-5284.15
+DRE,2025-09,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-6164.84
+DRE,2025-09,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-4403.46
+DRE,2025-09,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-2642.08
+DRE,2025-09,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-28769.34
+DRE,2025-09,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-132513.34
+DRE,2025-10,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,296677.86
+DRE,2025-10,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,404336.88
+DRE,2025-10,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,343626.65
+DRE,2025-10,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,235058.19
+DRE,2025-10,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,500391.4
+DRE,2025-10,4.01.001,CMV - Metalmecânica,CMV,-214915.52
+DRE,2025-10,4.01.002,CMV - Plásticos,CMV,-291802.57
+DRE,2025-10,4.01.003,CMV - Eletrônicos,CMV,-250077.17
+DRE,2025-10,4.01.004,CMV - Embalagens,CMV,-175138.47
+DRE,2025-10,4.01.005,CMV - Químicos,CMV,-371139.61
+DRE,2025-10,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-73978.1
+DRE,2025-10,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-31704.9
+DRE,2025-10,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-17613.83
+DRE,2025-10,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-14091.07
+DRE,2025-10,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-7045.53
+DRE,2025-10,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-8806.92
+DRE,2025-10,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-5284.15
+DRE,2025-10,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-6164.84
+DRE,2025-10,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-4403.46
+DRE,2025-10,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-2642.08
+DRE,2025-10,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-29371.5
+DRE,2025-10,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-135286.91
+DRE,2025-11,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,347832.89
+DRE,2025-11,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,503061.19
+DRE,2025-11,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,612532.28
+DRE,2025-11,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,370133.79
+DRE,2025-11,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,486682.86
+DRE,2025-11,4.01.001,CMV - Metalmecânica,CMV,-249993.47
+DRE,2025-11,4.01.002,CMV - Plásticos,CMV,-356788.74
+DRE,2025-11,4.01.003,CMV - Eletrônicos,CMV,-433863.36
+DRE,2025-11,4.01.004,CMV - Embalagens,CMV,-268513.01
+DRE,2025-11,4.01.005,CMV - Químicos,CMV,-361056.3
+DRE,2025-11,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-73978.1
+DRE,2025-11,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-31704.9
+DRE,2025-11,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-17613.83
+DRE,2025-11,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-14091.07
+DRE,2025-11,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-7045.53
+DRE,2025-11,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-8806.92
+DRE,2025-11,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-5284.15
+DRE,2025-11,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-6164.84
+DRE,2025-11,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-4403.46
+DRE,2025-11,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-2642.08
+DRE,2025-11,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-38284.01
+DRE,2025-11,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-176338.47
+DRE,2025-12,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,386696.36
+DRE,2025-12,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,425159.18
+DRE,2025-12,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,455501.01
+DRE,2025-12,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,310888.68
+DRE,2025-12,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,656139.32
+DRE,2025-12,4.01.001,CMV - Metalmecânica,CMV,-277207.05
+DRE,2025-12,4.01.002,CMV - Plásticos,CMV,-304999.74
+DRE,2025-12,4.01.003,CMV - Eletrônicos,CMV,-332630.88
+DRE,2025-12,4.01.004,CMV - Embalagens,CMV,-222521.99
+DRE,2025-12,4.01.005,CMV - Químicos,CMV,-473380.91
+DRE,2025-12,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-73978.1
+DRE,2025-12,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-31704.9
+DRE,2025-12,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-17613.83
+DRE,2025-12,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-14091.07
+DRE,2025-12,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-7045.53
+DRE,2025-12,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-8806.92
+DRE,2025-12,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-5284.15
+DRE,2025-12,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-6164.84
+DRE,2025-12,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-4403.46
+DRE,2025-12,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-2642.08
+DRE,2025-12,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-36867.35
+DRE,2025-12,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-169813.23
+DRE,2026-01,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,746466.83
+DRE,2026-01,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,837334.41
+DRE,2026-01,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,761796.45
+DRE,2026-01,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,559788.67
+DRE,2026-01,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,922372.76
+DRE,2026-01,4.01.001,CMV - Metalmecânica,CMV,-399376.85
+DRE,2026-01,4.01.002,CMV - Plásticos,CMV,-453746.88
+DRE,2026-01,4.01.003,CMV - Eletrônicos,CMV,-418913.49
+DRE,2026-01,4.01.004,CMV - Embalagens,CMV,-311472.23
+DRE,2026-01,4.01.005,CMV - Químicos,CMV,-506348.58
+DRE,2026-01,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-27468.45
+DRE,2026-01,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-11799.79
+DRE,2026-01,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-6614.76
+DRE,2026-01,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5292.81
+DRE,2026-01,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2670.94
+DRE,2026-01,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3574.82
+DRE,2026-01,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-2070.58
+DRE,2026-01,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2378.92
+DRE,2026-01,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1723.43
+DRE,2026-01,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-976.71
+DRE,2026-01,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-63158.03
+DRE,2026-01,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-290909.69
+DRE,2026-02,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,617306.23
+DRE,2026-02,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,789394.54
+DRE,2026-02,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,694879.11
+DRE,2026-02,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,566658.78
+DRE,2026-02,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,816781.02
+DRE,2026-02,4.01.001,CMV - Metalmecânica,CMV,-347354.52
+DRE,2026-02,4.01.002,CMV - Plásticos,CMV,-418585.74
+DRE,2026-02,4.01.003,CMV - Eletrônicos,CMV,-378215.98
+DRE,2026-02,4.01.004,CMV - Embalagens,CMV,-313091.31
+DRE,2026-02,4.01.005,CMV - Químicos,CMV,-445140.64
+DRE,2026-02,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-28630.9
+DRE,2026-02,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-12874.5
+DRE,2026-02,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-7007.83
+DRE,2026-02,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5390.91
+DRE,2026-02,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2859.51
+DRE,2026-02,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3545.56
+DRE,2026-02,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-2148.41
+DRE,2026-02,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2300.69
+DRE,2026-02,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1790.47
+DRE,2026-02,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-1031.91
+DRE,2026-02,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-57502.82
+DRE,2026-02,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-264861.5
+DRE,2026-03,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,680348.22
+DRE,2026-03,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,794955.45
+DRE,2026-03,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,812437.49
+DRE,2026-03,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,697125.32
+DRE,2026-03,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,1081766.37
+DRE,2026-03,4.01.001,CMV - Metalmecânica,CMV,-373336.56
+DRE,2026-03,4.01.002,CMV - Plásticos,CMV,-423612.91
+DRE,2026-03,4.01.003,CMV - Eletrônicos,CMV,-451619.75
+DRE,2026-03,4.01.004,CMV - Embalagens,CMV,-384460.47
+DRE,2026-03,4.01.005,CMV - Químicos,CMV,-593346.05
+DRE,2026-03,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-27735.44
+DRE,2026-03,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-11811.38
+DRE,2026-03,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-6796.78
+DRE,2026-03,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5327.3
+DRE,2026-03,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2625.36
+DRE,2026-03,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3580.86
+DRE,2026-03,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-2102.96
+DRE,2026-03,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2401.78
+DRE,2026-03,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1754.17
+DRE,2026-03,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-1038.95
+DRE,2026-03,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-67099.44
+DRE,2026-03,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-309064.1
+DRE,2026-04,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,688190.28
+DRE,2026-04,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,739591.06
+DRE,2026-04,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,921057.89
+DRE,2026-04,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,704066.53
+DRE,2026-04,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,1066168.44
+DRE,2026-04,4.01.001,CMV - Metalmecânica,CMV,-376651.21
+DRE,2026-04,4.01.002,CMV - Plásticos,CMV,-397164.28
+DRE,2026-04,4.01.003,CMV - Eletrônicos,CMV,-500746.82
+DRE,2026-04,4.01.004,CMV - Embalagens,CMV,-389139.05
+DRE,2026-04,4.01.005,CMV - Químicos,CMV,-599383.45
+DRE,2026-04,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-29290.77
+DRE,2026-04,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-12006.3
+DRE,2026-04,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-6726.8
+DRE,2026-04,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5416.05
+DRE,2026-04,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2768.1
+DRE,2026-04,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3297.18
+DRE,2026-04,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-2105.03
+DRE,2026-04,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2360.58
+DRE,2026-04,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1745.34
+DRE,2026-04,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-1071.98
+DRE,2026-04,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-67964.72
+DRE,2026-04,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-313049.64
+DRE,2026-05,3.01.001,Receita de Vendas - Metalmecânica,Faturamento de Vendas,537224.45
+DRE,2026-05,3.01.002,Receita de Vendas - Plásticos,Faturamento de Vendas,640011.04
+DRE,2026-05,3.01.003,Receita de Vendas - Eletrônicos,Faturamento de Vendas,509946.37
+DRE,2026-05,3.01.004,Receita de Vendas - Embalagens,Faturamento de Vendas,416451.94
+DRE,2026-05,3.01.005,Receita de Vendas - Químicos,Faturamento de Vendas,882434.21
+DRE,2026-05,4.01.001,CMV - Metalmecânica,CMV,-294953.05
+DRE,2026-05,4.01.002,CMV - Plásticos,CMV,-341945.44
+DRE,2026-05,4.01.003,CMV - Eletrônicos,CMV,-281898.89
+DRE,2026-05,4.01.004,CMV - Embalagens,CMV,-230068.59
+DRE,2026-05,4.01.005,CMV - Químicos,CMV,-493668.96
+DRE,2026-05,5.01.001,Salarios e Ordenados CLT,Folha de Pagamento,-27887.7
+DRE,2026-05,5.01.002,Encargos Sociais FGTS/INSS,Folha de Pagamento,-12616.15
+DRE,2026-05,5.01.003,Pro-labore Administrativo,Folha de Pagamento,-6943.02
+DRE,2026-05,5.02.001,Aluguel e Condominio,Custos Ocupacionais,-5629.36
+DRE,2026-05,5.02.002,Energia Eletrica e Utilidades,Custos Ocupacionais,-2841.06
+DRE,2026-05,5.03.001,Marketing Digital e Feiras,Marketing e Vendas,-3360.43
+DRE,2026-05,5.03.002,Comissoes e Bonificacoes de Vendas,Marketing e Vendas,-2084.65
+DRE,2026-05,5.04.001,Software ERP e Ferramentas SaaS,Despesas Administrativas (Software/SaaS),-2343.59
+DRE,2026-05,5.04.002,Contabilidade e Assessoria Juridica,Despesas Administrativas (Software/SaaS),-1686.18
+DRE,2026-05,5.04.003,Material de Escritorio e Viagens,Despesas Administrativas (Software/SaaS),-1029.62
+DRE,2026-05,5.05.001,PIS sobre Faturamento,Impostos sobre Vendas,-49270.12
+DRE,2026-05,5.05.002,COFINS sobre Faturamento,Impostos sobre Vendas,-226941.17
+DRE,2024-01,,receita_bruta,Resumo Gerencial,2035199.43
+DRE,2024-01,,receita_liquida,Resumo Gerencial,2035199.43
+DRE,2024-01,,cmv,Resumo Gerencial,-1110684.69
+DRE,2024-01,,lucro_bruto,Resumo Gerencial,924514.74
+DRE,2024-01,,despesas_operacionais,Resumo Gerencial,-255621.07
+DRE,2024-01,,ebitda,Resumo Gerencial,668893.67
+DRE,2024-01,,lucro_liquido,Resumo Gerencial,668893.67
+BALANCO,2024-01,,ativo_circulante,Resumo Gerencial,918893.67
+BALANCO,2024-01,,passivo_circulante,Resumo Gerencial,366335.9
+BALANCO,2024-01,,passivo_nao_circulante,Resumo Gerencial,162815.95
+BALANCO,2024-01,,patrimonio_liquido,Resumo Gerencial,389741.82
+DFC,2024-01,,caixa_operacional,Resumo Gerencial,668893.67
+DFC,2024-01,,caixa_investimento,Resumo Gerencial,-50879.99
+DFC,2024-01,,caixa_financiamento,Resumo Gerencial,30527.99
+DFC,2024-01,,variacao_caixa,Resumo Gerencial,648541.68
+DFC,2024-01,,caixa_final,Resumo Gerencial,918893.67
+DRE,2024-02,,receita_bruta,Resumo Gerencial,2123023.42
+DRE,2024-02,,receita_liquida,Resumo Gerencial,2123023.42
+DRE,2024-02,,cmv,Resumo Gerencial,-1173242.82
+DRE,2024-02,,lucro_bruto,Resumo Gerencial,949780.6
+DRE,2024-02,,despesas_operacionais,Resumo Gerencial,-262752.49
+DRE,2024-02,,ebitda,Resumo Gerencial,687028.11
+DRE,2024-02,,lucro_liquido,Resumo Gerencial,687028.11
+BALANCO,2024-02,,ativo_circulante,Resumo Gerencial,1605921.78
+BALANCO,2024-02,,passivo_circulante,Resumo Gerencial,382144.22
+BALANCO,2024-02,,passivo_nao_circulante,Resumo Gerencial,169841.87
+BALANCO,2024-02,,patrimonio_liquido,Resumo Gerencial,1053935.69
+DFC,2024-02,,caixa_operacional,Resumo Gerencial,687028.11
+DFC,2024-02,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2024-02,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2024-02,,variacao_caixa,Resumo Gerencial,687028.11
+DFC,2024-02,,caixa_final,Resumo Gerencial,1605921.78
+DRE,2024-03,,receita_bruta,Resumo Gerencial,2037861.93
+DRE,2024-03,,receita_liquida,Resumo Gerencial,2037861.93
+DRE,2024-03,,cmv,Resumo Gerencial,-1112107.14
+DRE,2024-03,,lucro_bruto,Resumo Gerencial,925754.79
+DRE,2024-03,,despesas_operacionais,Resumo Gerencial,-255751.64
+DRE,2024-03,,ebitda,Resumo Gerencial,670003.15
+DRE,2024-03,,lucro_liquido,Resumo Gerencial,670003.15
+BALANCO,2024-03,,ativo_circulante,Resumo Gerencial,2275924.93
+BALANCO,2024-03,,passivo_circulante,Resumo Gerencial,366815.15
+BALANCO,2024-03,,passivo_nao_circulante,Resumo Gerencial,163028.95
+BALANCO,2024-03,,patrimonio_liquido,Resumo Gerencial,1746080.83
+DFC,2024-03,,caixa_operacional,Resumo Gerencial,670003.15
+DFC,2024-03,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2024-03,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2024-03,,variacao_caixa,Resumo Gerencial,670003.15
+DFC,2024-03,,caixa_final,Resumo Gerencial,2275924.93
+DRE,2024-04,,receita_bruta,Resumo Gerencial,2022122.61
+DRE,2024-04,,receita_liquida,Resumo Gerencial,2022122.61
+DRE,2024-04,,cmv,Resumo Gerencial,-1095877.9
+DRE,2024-04,,lucro_bruto,Resumo Gerencial,926244.71
+DRE,2024-04,,despesas_operacionais,Resumo Gerencial,-252294.82
+DRE,2024-04,,ebitda,Resumo Gerencial,673949.89
+DRE,2024-04,,lucro_liquido,Resumo Gerencial,673949.89
+BALANCO,2024-04,,ativo_circulante,Resumo Gerencial,2949874.82
+BALANCO,2024-04,,passivo_circulante,Resumo Gerencial,363982.07
+BALANCO,2024-04,,passivo_nao_circulante,Resumo Gerencial,161769.81
+BALANCO,2024-04,,patrimonio_liquido,Resumo Gerencial,2424122.94
+DFC,2024-04,,caixa_operacional,Resumo Gerencial,673949.89
+DFC,2024-04,,caixa_investimento,Resumo Gerencial,-50553.07
+DFC,2024-04,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2024-04,,variacao_caixa,Resumo Gerencial,623396.82
+DFC,2024-04,,caixa_final,Resumo Gerencial,2949874.82
+DRE,2024-05,,receita_bruta,Resumo Gerencial,2158190.92
+DRE,2024-05,,receita_liquida,Resumo Gerencial,2158190.92
+DRE,2024-05,,cmv,Resumo Gerencial,-1181007.08
+DRE,2024-05,,lucro_bruto,Resumo Gerencial,977183.84
+DRE,2024-05,,despesas_operacionais,Resumo Gerencial,-266470.51
+DRE,2024-05,,ebitda,Resumo Gerencial,710713.33
+DRE,2024-05,,lucro_liquido,Resumo Gerencial,710713.33
+BALANCO,2024-05,,ativo_circulante,Resumo Gerencial,3660588.15
+BALANCO,2024-05,,passivo_circulante,Resumo Gerencial,388474.37
+BALANCO,2024-05,,passivo_nao_circulante,Resumo Gerencial,172655.27
+BALANCO,2024-05,,patrimonio_liquido,Resumo Gerencial,3099458.51
+DFC,2024-05,,caixa_operacional,Resumo Gerencial,710713.33
+DFC,2024-05,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2024-05,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2024-05,,variacao_caixa,Resumo Gerencial,710713.33
+DFC,2024-05,,caixa_final,Resumo Gerencial,3660588.15
+DRE,2024-06,,receita_bruta,Resumo Gerencial,1846527.47
+DRE,2024-06,,receita_liquida,Resumo Gerencial,1846527.47
+DRE,2024-06,,cmv,Resumo Gerencial,-1004865.47
+DRE,2024-06,,lucro_bruto,Resumo Gerencial,841662.0
+DRE,2024-06,,despesas_operacionais,Resumo Gerencial,-237669.85
+DRE,2024-06,,ebitda,Resumo Gerencial,603992.15
+DRE,2024-06,,lucro_liquido,Resumo Gerencial,603992.15
+BALANCO,2024-06,,ativo_circulante,Resumo Gerencial,4264580.3
+BALANCO,2024-06,,passivo_circulante,Resumo Gerencial,332374.94
+BALANCO,2024-06,,passivo_nao_circulante,Resumo Gerencial,147722.2
+BALANCO,2024-06,,patrimonio_liquido,Resumo Gerencial,3784483.16
+DFC,2024-06,,caixa_operacional,Resumo Gerencial,603992.15
+DFC,2024-06,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2024-06,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2024-06,,variacao_caixa,Resumo Gerencial,603992.15
+DFC,2024-06,,caixa_final,Resumo Gerencial,4264580.3
+DRE,2024-07,,receita_bruta,Resumo Gerencial,2022142.14
+DRE,2024-07,,receita_liquida,Resumo Gerencial,2022142.14
+DRE,2024-07,,cmv,Resumo Gerencial,-1115576.11
+DRE,2024-07,,lucro_bruto,Resumo Gerencial,906566.03
+DRE,2024-07,,despesas_operacionais,Resumo Gerencial,-254489.91
+DRE,2024-07,,ebitda,Resumo Gerencial,652076.12
+DRE,2024-07,,lucro_liquido,Resumo Gerencial,652076.12
+BALANCO,2024-07,,ativo_circulante,Resumo Gerencial,4916656.42
+BALANCO,2024-07,,passivo_circulante,Resumo Gerencial,363985.59
+BALANCO,2024-07,,passivo_nao_circulante,Resumo Gerencial,161771.37
+BALANCO,2024-07,,patrimonio_liquido,Resumo Gerencial,4390899.46
+DFC,2024-07,,caixa_operacional,Resumo Gerencial,652076.12
+DFC,2024-07,,caixa_investimento,Resumo Gerencial,-50553.55
+DFC,2024-07,,caixa_financiamento,Resumo Gerencial,30332.13
+DFC,2024-07,,variacao_caixa,Resumo Gerencial,631854.7
+DFC,2024-07,,caixa_final,Resumo Gerencial,4916656.42
+DRE,2024-08,,receita_bruta,Resumo Gerencial,1873385.24
+DRE,2024-08,,receita_liquida,Resumo Gerencial,1873385.24
+DRE,2024-08,,cmv,Resumo Gerencial,-1029403.7
+DRE,2024-08,,lucro_bruto,Resumo Gerencial,843981.54
+DRE,2024-08,,despesas_operacionais,Resumo Gerencial,-240272.92
+DRE,2024-08,,ebitda,Resumo Gerencial,603708.62
+DRE,2024-08,,lucro_liquido,Resumo Gerencial,603708.62
+BALANCO,2024-08,,ativo_circulante,Resumo Gerencial,5520365.04
+BALANCO,2024-08,,passivo_circulante,Resumo Gerencial,337209.34
+BALANCO,2024-08,,passivo_nao_circulante,Resumo Gerencial,149870.82
+BALANCO,2024-08,,patrimonio_liquido,Resumo Gerencial,5033284.88
+DFC,2024-08,,caixa_operacional,Resumo Gerencial,603708.62
+DFC,2024-08,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2024-08,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2024-08,,variacao_caixa,Resumo Gerencial,603708.62
+DFC,2024-08,,caixa_final,Resumo Gerencial,5520365.04
+DRE,2024-09,,receita_bruta,Resumo Gerencial,1787725.06
+DRE,2024-09,,receita_liquida,Resumo Gerencial,1787725.06
+DRE,2024-09,,cmv,Resumo Gerencial,-983921.55
+DRE,2024-09,,lucro_bruto,Resumo Gerencial,803803.51
+DRE,2024-09,,despesas_operacionais,Resumo Gerencial,-231122.96
+DRE,2024-09,,ebitda,Resumo Gerencial,572680.55
+DRE,2024-09,,lucro_liquido,Resumo Gerencial,572680.55
+BALANCO,2024-09,,ativo_circulante,Resumo Gerencial,6093045.59
+BALANCO,2024-09,,passivo_circulante,Resumo Gerencial,321790.51
+BALANCO,2024-09,,passivo_nao_circulante,Resumo Gerencial,143018.0
+BALANCO,2024-09,,patrimonio_liquido,Resumo Gerencial,5628237.07
+DFC,2024-09,,caixa_operacional,Resumo Gerencial,572680.55
+DFC,2024-09,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2024-09,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2024-09,,variacao_caixa,Resumo Gerencial,572680.55
+DFC,2024-09,,caixa_final,Resumo Gerencial,6093045.59
+DRE,2024-10,,receita_bruta,Resumo Gerencial,2094935.46
+DRE,2024-10,,receita_liquida,Resumo Gerencial,2094935.46
+DRE,2024-10,,cmv,Resumo Gerencial,-1150627.64
+DRE,2024-10,,lucro_bruto,Resumo Gerencial,944307.82
+DRE,2024-10,,despesas_operacionais,Resumo Gerencial,-259341.61
+DRE,2024-10,,ebitda,Resumo Gerencial,684966.21
+DRE,2024-10,,lucro_liquido,Resumo Gerencial,684966.21
+BALANCO,2024-10,,ativo_circulante,Resumo Gerencial,6778011.8
+BALANCO,2024-10,,passivo_circulante,Resumo Gerencial,377088.38
+BALANCO,2024-10,,passivo_nao_circulante,Resumo Gerencial,167594.84
+BALANCO,2024-10,,patrimonio_liquido,Resumo Gerencial,6233328.58
+DFC,2024-10,,caixa_operacional,Resumo Gerencial,684966.21
+DFC,2024-10,,caixa_investimento,Resumo Gerencial,-52373.39
+DFC,2024-10,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2024-10,,variacao_caixa,Resumo Gerencial,632592.82
+DFC,2024-10,,caixa_final,Resumo Gerencial,6778011.8
+DRE,2024-11,,receita_bruta,Resumo Gerencial,2603461.75
+DRE,2024-11,,receita_liquida,Resumo Gerencial,2603461.75
+DRE,2024-11,,cmv,Resumo Gerencial,-1420655.29
+DRE,2024-11,,lucro_bruto,Resumo Gerencial,1182806.46
+DRE,2024-11,,despesas_operacionais,Resumo Gerencial,-308630.25
+DRE,2024-11,,ebitda,Resumo Gerencial,874176.21
+DRE,2024-11,,lucro_liquido,Resumo Gerencial,874176.21
+BALANCO,2024-11,,ativo_circulante,Resumo Gerencial,7652188.01
+BALANCO,2024-11,,passivo_circulante,Resumo Gerencial,468623.11
+BALANCO,2024-11,,passivo_nao_circulante,Resumo Gerencial,208276.94
+BALANCO,2024-11,,patrimonio_liquido,Resumo Gerencial,6975287.95
+DFC,2024-11,,caixa_operacional,Resumo Gerencial,874176.21
+DFC,2024-11,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2024-11,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2024-11,,variacao_caixa,Resumo Gerencial,874176.21
+DFC,2024-11,,caixa_final,Resumo Gerencial,7652188.01
+DRE,2024-12,,receita_bruta,Resumo Gerencial,2601941.89
+DRE,2024-12,,receita_liquida,Resumo Gerencial,2601941.89
+DRE,2024-12,,cmv,Resumo Gerencial,-1424303.78
+DRE,2024-12,,lucro_bruto,Resumo Gerencial,1177638.11
+DRE,2024-12,,despesas_operacionais,Resumo Gerencial,-308872.07
+DRE,2024-12,,ebitda,Resumo Gerencial,868766.04
+DRE,2024-12,,lucro_liquido,Resumo Gerencial,868766.04
+BALANCO,2024-12,,ativo_circulante,Resumo Gerencial,8520954.05
+BALANCO,2024-12,,passivo_circulante,Resumo Gerencial,468349.54
+BALANCO,2024-12,,passivo_nao_circulante,Resumo Gerencial,208155.35
+BALANCO,2024-12,,patrimonio_liquido,Resumo Gerencial,7844449.16
+DFC,2024-12,,caixa_operacional,Resumo Gerencial,868766.04
+DFC,2024-12,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2024-12,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2024-12,,variacao_caixa,Resumo Gerencial,868766.04
+DFC,2024-12,,caixa_final,Resumo Gerencial,8520954.05
+DRE,2025-01,,receita_bruta,Resumo Gerencial,1642125.19
+DRE,2025-01,,receita_liquida,Resumo Gerencial,1642125.19
+DRE,2025-01,,cmv,Resumo Gerencial,-1187104.92
+DRE,2025-01,,lucro_bruto,Resumo Gerencial,455020.27
+DRE,2025-01,,despesas_operacionais,Resumo Gerencial,-323631.46
+DRE,2025-01,,ebitda,Resumo Gerencial,131388.81
+DRE,2025-01,,lucro_liquido,Resumo Gerencial,131388.81
+BALANCO,2025-01,,ativo_circulante,Resumo Gerencial,8652342.86
+BALANCO,2025-01,,passivo_circulante,Resumo Gerencial,295582.53
+BALANCO,2025-01,,passivo_nao_circulante,Resumo Gerencial,131370.02
+BALANCO,2025-01,,patrimonio_liquido,Resumo Gerencial,8225390.31
+DFC,2025-01,,caixa_operacional,Resumo Gerencial,131388.81
+DFC,2025-01,,caixa_investimento,Resumo Gerencial,-41053.13
+DFC,2025-01,,caixa_financiamento,Resumo Gerencial,24631.88
+DFC,2025-01,,variacao_caixa,Resumo Gerencial,114967.56
+DFC,2025-01,,caixa_final,Resumo Gerencial,8652342.86
+DRE,2025-02,,receita_bruta,Resumo Gerencial,1410533.69
+DRE,2025-02,,receita_liquida,Resumo Gerencial,1410533.69
+DRE,2025-02,,cmv,Resumo Gerencial,-1019021.18
+DRE,2025-02,,lucro_bruto,Resumo Gerencial,391512.51
+DRE,2025-02,,despesas_operacionais,Resumo Gerencial,-302209.25
+DRE,2025-02,,ebitda,Resumo Gerencial,89303.26
+DRE,2025-02,,lucro_liquido,Resumo Gerencial,89303.26
+BALANCO,2025-02,,ativo_circulante,Resumo Gerencial,8741646.12
+BALANCO,2025-02,,passivo_circulante,Resumo Gerencial,253896.06
+BALANCO,2025-02,,passivo_nao_circulante,Resumo Gerencial,112842.7
+BALANCO,2025-02,,patrimonio_liquido,Resumo Gerencial,8374907.36
+DFC,2025-02,,caixa_operacional,Resumo Gerencial,89303.26
+DFC,2025-02,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2025-02,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2025-02,,variacao_caixa,Resumo Gerencial,89303.26
+DFC,2025-02,,caixa_final,Resumo Gerencial,8741646.12
+DRE,2025-03,,receita_bruta,Resumo Gerencial,1683610.95
+DRE,2025-03,,receita_liquida,Resumo Gerencial,1683610.95
+DRE,2025-03,,cmv,Resumo Gerencial,-1220114.34
+DRE,2025-03,,lucro_bruto,Resumo Gerencial,463496.61
+DRE,2025-03,,despesas_operacionais,Resumo Gerencial,-327468.89
+DRE,2025-03,,ebitda,Resumo Gerencial,136027.72
+DRE,2025-03,,lucro_liquido,Resumo Gerencial,136027.72
+BALANCO,2025-03,,ativo_circulante,Resumo Gerencial,8877673.84
+BALANCO,2025-03,,passivo_circulante,Resumo Gerencial,303049.97
+BALANCO,2025-03,,passivo_nao_circulante,Resumo Gerencial,134688.88
+BALANCO,2025-03,,patrimonio_liquido,Resumo Gerencial,8439934.99
+DFC,2025-03,,caixa_operacional,Resumo Gerencial,136027.72
+DFC,2025-03,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2025-03,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2025-03,,variacao_caixa,Resumo Gerencial,136027.72
+DFC,2025-03,,caixa_final,Resumo Gerencial,8877673.84
+DRE,2025-04,,receita_bruta,Resumo Gerencial,1569459.7
+DRE,2025-04,,receita_liquida,Resumo Gerencial,1569459.7
+DRE,2025-04,,cmv,Resumo Gerencial,-1144922.13
+DRE,2025-04,,lucro_bruto,Resumo Gerencial,424537.57
+DRE,2025-04,,despesas_operacionais,Resumo Gerencial,-316909.91
+DRE,2025-04,,ebitda,Resumo Gerencial,107627.66
+DRE,2025-04,,lucro_liquido,Resumo Gerencial,107627.66
+BALANCO,2025-04,,ativo_circulante,Resumo Gerencial,8985301.5
+BALANCO,2025-04,,passivo_circulante,Resumo Gerencial,282502.75
+BALANCO,2025-04,,passivo_nao_circulante,Resumo Gerencial,125556.78
+BALANCO,2025-04,,patrimonio_liquido,Resumo Gerencial,8577241.98
+DFC,2025-04,,caixa_operacional,Resumo Gerencial,107627.66
+DFC,2025-04,,caixa_investimento,Resumo Gerencial,-39236.49
+DFC,2025-04,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2025-04,,variacao_caixa,Resumo Gerencial,68391.17
+DFC,2025-04,,caixa_final,Resumo Gerencial,8985301.5
+DRE,2025-05,,receita_bruta,Resumo Gerencial,1544768.4
+DRE,2025-05,,receita_liquida,Resumo Gerencial,1544768.4
+DRE,2025-05,,cmv,Resumo Gerencial,-1129446.49
+DRE,2025-05,,lucro_bruto,Resumo Gerencial,415321.91
+DRE,2025-05,,despesas_operacionais,Resumo Gerencial,-314625.96
+DRE,2025-05,,ebitda,Resumo Gerencial,100695.95
+DRE,2025-05,,lucro_liquido,Resumo Gerencial,100695.95
+BALANCO,2025-05,,ativo_circulante,Resumo Gerencial,9085997.45
+BALANCO,2025-05,,passivo_circulante,Resumo Gerencial,278058.31
+BALANCO,2025-05,,passivo_nao_circulante,Resumo Gerencial,123581.47
+BALANCO,2025-05,,patrimonio_liquido,Resumo Gerencial,8684357.67
+DFC,2025-05,,caixa_operacional,Resumo Gerencial,100695.95
+DFC,2025-05,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2025-05,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2025-05,,variacao_caixa,Resumo Gerencial,100695.95
+DFC,2025-05,,caixa_final,Resumo Gerencial,9085997.45
+DRE,2025-06,,receita_bruta,Resumo Gerencial,1573578.63
+DRE,2025-06,,receita_liquida,Resumo Gerencial,1573578.63
+DRE,2025-06,,cmv,Resumo Gerencial,-1144897.08
+DRE,2025-06,,lucro_bruto,Resumo Gerencial,428681.55
+DRE,2025-06,,despesas_operacionais,Resumo Gerencial,-317290.91
+DRE,2025-06,,ebitda,Resumo Gerencial,111390.64
+DRE,2025-06,,lucro_liquido,Resumo Gerencial,111390.64
+BALANCO,2025-06,,ativo_circulante,Resumo Gerencial,9197388.09
+BALANCO,2025-06,,passivo_circulante,Resumo Gerencial,283244.15
+BALANCO,2025-06,,passivo_nao_circulante,Resumo Gerencial,125886.29
+BALANCO,2025-06,,patrimonio_liquido,Resumo Gerencial,8788257.65
+DFC,2025-06,,caixa_operacional,Resumo Gerencial,111390.64
+DFC,2025-06,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2025-06,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2025-06,,variacao_caixa,Resumo Gerencial,111390.64
+DFC,2025-06,,caixa_final,Resumo Gerencial,9197388.09
+DRE,2025-07,,receita_bruta,Resumo Gerencial,1722720.52
+DRE,2025-07,,receita_liquida,Resumo Gerencial,1722720.52
+DRE,2025-07,,cmv,Resumo Gerencial,-1255610.5
+DRE,2025-07,,lucro_bruto,Resumo Gerencial,467110.02
+DRE,2025-07,,despesas_operacionais,Resumo Gerencial,-331086.53
+DRE,2025-07,,ebitda,Resumo Gerencial,136023.49
+DRE,2025-07,,lucro_liquido,Resumo Gerencial,136023.49
+BALANCO,2025-07,,ativo_circulante,Resumo Gerencial,9333411.58
+BALANCO,2025-07,,passivo_circulante,Resumo Gerencial,310089.69
+BALANCO,2025-07,,passivo_nao_circulante,Resumo Gerencial,137817.64
+BALANCO,2025-07,,patrimonio_liquido,Resumo Gerencial,8885504.24
+DFC,2025-07,,caixa_operacional,Resumo Gerencial,136023.49
+DFC,2025-07,,caixa_investimento,Resumo Gerencial,-43068.01
+DFC,2025-07,,caixa_financiamento,Resumo Gerencial,25840.81
+DFC,2025-07,,variacao_caixa,Resumo Gerencial,118796.28
+DFC,2025-07,,caixa_final,Resumo Gerencial,9333411.58
+DRE,2025-08,,receita_bruta,Resumo Gerencial,1472395.46
+DRE,2025-08,,receita_liquida,Resumo Gerencial,1472395.46
+DRE,2025-08,,cmv,Resumo Gerencial,-1073666.44
+DRE,2025-08,,lucro_bruto,Resumo Gerencial,398729.02
+DRE,2025-08,,despesas_operacionais,Resumo Gerencial,-307931.46
+DRE,2025-08,,ebitda,Resumo Gerencial,90797.56
+DRE,2025-08,,lucro_liquido,Resumo Gerencial,90797.56
+BALANCO,2025-08,,ativo_circulante,Resumo Gerencial,9424209.14
+BALANCO,2025-08,,passivo_circulante,Resumo Gerencial,265031.18
+BALANCO,2025-08,,passivo_nao_circulante,Resumo Gerencial,117791.64
+BALANCO,2025-08,,patrimonio_liquido,Resumo Gerencial,9041386.32
+DFC,2025-08,,caixa_operacional,Resumo Gerencial,90797.56
+DFC,2025-08,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2025-08,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2025-08,,variacao_caixa,Resumo Gerencial,90797.56
+DFC,2025-08,,caixa_final,Resumo Gerencial,9424209.14
+DRE,2025-09,,receita_bruta,Resumo Gerencial,1743596.54
+DRE,2025-09,,receita_liquida,Resumo Gerencial,1743596.54
+DRE,2025-09,,cmv,Resumo Gerencial,-1285146.09
+DRE,2025-09,,lucro_bruto,Resumo Gerencial,458450.45
+DRE,2025-09,,despesas_operacionais,Resumo Gerencial,-333017.56
+DRE,2025-09,,ebitda,Resumo Gerencial,125432.89
+DRE,2025-09,,lucro_liquido,Resumo Gerencial,125432.89
+BALANCO,2025-09,,ativo_circulante,Resumo Gerencial,9549642.03
+BALANCO,2025-09,,passivo_circulante,Resumo Gerencial,313847.38
+BALANCO,2025-09,,passivo_nao_circulante,Resumo Gerencial,139487.72
+BALANCO,2025-09,,patrimonio_liquido,Resumo Gerencial,9096306.93
+DFC,2025-09,,caixa_operacional,Resumo Gerencial,125432.89
+DFC,2025-09,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2025-09,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2025-09,,variacao_caixa,Resumo Gerencial,125432.89
+DFC,2025-09,,caixa_final,Resumo Gerencial,9549642.03
+DRE,2025-10,,receita_bruta,Resumo Gerencial,1780090.98
+DRE,2025-10,,receita_liquida,Resumo Gerencial,1780090.98
+DRE,2025-10,,cmv,Resumo Gerencial,-1303073.34
+DRE,2025-10,,lucro_bruto,Resumo Gerencial,477017.64
+DRE,2025-10,,despesas_operacionais,Resumo Gerencial,-336393.29
+DRE,2025-10,,ebitda,Resumo Gerencial,140624.35
+DRE,2025-10,,lucro_liquido,Resumo Gerencial,140624.35
+BALANCO,2025-10,,ativo_circulante,Resumo Gerencial,9690266.38
+BALANCO,2025-10,,passivo_circulante,Resumo Gerencial,320416.38
+BALANCO,2025-10,,passivo_nao_circulante,Resumo Gerencial,142407.28
+BALANCO,2025-10,,patrimonio_liquido,Resumo Gerencial,9227442.73
+DFC,2025-10,,caixa_operacional,Resumo Gerencial,140624.35
+DFC,2025-10,,caixa_investimento,Resumo Gerencial,-44502.27
+DFC,2025-10,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2025-10,,variacao_caixa,Resumo Gerencial,96122.08
+DFC,2025-10,,caixa_final,Resumo Gerencial,9690266.38
+DRE,2025-11,,receita_bruta,Resumo Gerencial,2320243.01
+DRE,2025-11,,receita_liquida,Resumo Gerencial,2320243.01
+DRE,2025-11,,cmv,Resumo Gerencial,-1670214.88
+DRE,2025-11,,lucro_bruto,Resumo Gerencial,650028.13
+DRE,2025-11,,despesas_operacionais,Resumo Gerencial,-386357.36
+DRE,2025-11,,ebitda,Resumo Gerencial,263670.77
+DRE,2025-11,,lucro_liquido,Resumo Gerencial,263670.77
+BALANCO,2025-11,,ativo_circulante,Resumo Gerencial,9953937.15
+BALANCO,2025-11,,passivo_circulante,Resumo Gerencial,417643.74
+BALANCO,2025-11,,passivo_nao_circulante,Resumo Gerencial,185619.44
+BALANCO,2025-11,,patrimonio_liquido,Resumo Gerencial,9350673.97
+DFC,2025-11,,caixa_operacional,Resumo Gerencial,263670.77
+DFC,2025-11,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2025-11,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2025-11,,variacao_caixa,Resumo Gerencial,263670.77
+DFC,2025-11,,caixa_final,Resumo Gerencial,9953937.15
+DRE,2025-12,,receita_bruta,Resumo Gerencial,2234384.55
+DRE,2025-12,,receita_liquida,Resumo Gerencial,2234384.55
+DRE,2025-12,,cmv,Resumo Gerencial,-1610740.57
+DRE,2025-12,,lucro_bruto,Resumo Gerencial,623643.98
+DRE,2025-12,,despesas_operacionais,Resumo Gerencial,-378415.46
+DRE,2025-12,,ebitda,Resumo Gerencial,245228.52
+DRE,2025-12,,lucro_liquido,Resumo Gerencial,245228.52
+BALANCO,2025-12,,ativo_circulante,Resumo Gerencial,10199165.67
+BALANCO,2025-12,,passivo_circulante,Resumo Gerencial,402189.22
+BALANCO,2025-12,,passivo_nao_circulante,Resumo Gerencial,178750.76
+BALANCO,2025-12,,patrimonio_liquido,Resumo Gerencial,9618225.69
+DFC,2025-12,,caixa_operacional,Resumo Gerencial,245228.52
+DFC,2025-12,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2025-12,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2025-12,,variacao_caixa,Resumo Gerencial,245228.52
+DFC,2025-12,,caixa_final,Resumo Gerencial,10199165.67
+DRE,2026-01,,receita_bruta,Resumo Gerencial,3827759.12
+DRE,2026-01,,receita_liquida,Resumo Gerencial,3827759.12
+DRE,2026-01,,cmv,Resumo Gerencial,-2089858.03
+DRE,2026-01,,lucro_bruto,Resumo Gerencial,1737901.09
+DRE,2026-01,,despesas_operacionais,Resumo Gerencial,-418638.93
+DRE,2026-01,,ebitda,Resumo Gerencial,1319262.16
+DRE,2026-01,,lucro_liquido,Resumo Gerencial,1319262.16
+BALANCO,2026-01,,ativo_circulante,Resumo Gerencial,11518427.83
+BALANCO,2026-01,,passivo_circulante,Resumo Gerencial,688996.64
+BALANCO,2026-01,,passivo_nao_circulante,Resumo Gerencial,306220.73
+BALANCO,2026-01,,patrimonio_liquido,Resumo Gerencial,10523210.46
+DFC,2026-01,,caixa_operacional,Resumo Gerencial,1319262.16
+DFC,2026-01,,caixa_investimento,Resumo Gerencial,-95693.98
+DFC,2026-01,,caixa_financiamento,Resumo Gerencial,57416.39
+DFC,2026-01,,variacao_caixa,Resumo Gerencial,1280984.57
+DFC,2026-01,,caixa_final,Resumo Gerencial,11518427.83
+DRE,2026-02,,receita_bruta,Resumo Gerencial,3485019.68
+DRE,2026-02,,receita_liquida,Resumo Gerencial,3485019.68
+DRE,2026-02,,cmv,Resumo Gerencial,-1902388.19
+DRE,2026-02,,lucro_bruto,Resumo Gerencial,1582631.49
+DRE,2026-02,,despesas_operacionais,Resumo Gerencial,-389945.01
+DRE,2026-02,,ebitda,Resumo Gerencial,1192686.48
+DRE,2026-02,,lucro_liquido,Resumo Gerencial,1192686.48
+BALANCO,2026-02,,ativo_circulante,Resumo Gerencial,12711114.31
+BALANCO,2026-02,,passivo_circulante,Resumo Gerencial,627303.54
+BALANCO,2026-02,,passivo_nao_circulante,Resumo Gerencial,278801.57
+BALANCO,2026-02,,patrimonio_liquido,Resumo Gerencial,11805009.19
+DFC,2026-02,,caixa_operacional,Resumo Gerencial,1192686.48
+DFC,2026-02,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2026-02,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2026-02,,variacao_caixa,Resumo Gerencial,1192686.48
+DFC,2026-02,,caixa_final,Resumo Gerencial,12711114.31
+DRE,2026-03,,receita_bruta,Resumo Gerencial,4066632.85
+DRE,2026-03,,receita_liquida,Resumo Gerencial,4066632.85
+DRE,2026-03,,cmv,Resumo Gerencial,-2226375.74
+DRE,2026-03,,lucro_bruto,Resumo Gerencial,1840257.11
+DRE,2026-03,,despesas_operacionais,Resumo Gerencial,-441338.52
+DRE,2026-03,,ebitda,Resumo Gerencial,1398918.59
+DRE,2026-03,,lucro_liquido,Resumo Gerencial,1398918.59
+BALANCO,2026-03,,ativo_circulante,Resumo Gerencial,14110032.9
+BALANCO,2026-03,,passivo_circulante,Resumo Gerencial,731993.91
+BALANCO,2026-03,,passivo_nao_circulante,Resumo Gerencial,325330.63
+BALANCO,2026-03,,patrimonio_liquido,Resumo Gerencial,13052708.36
+DFC,2026-03,,caixa_operacional,Resumo Gerencial,1398918.59
+DFC,2026-03,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2026-03,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2026-03,,variacao_caixa,Resumo Gerencial,1398918.59
+DFC,2026-03,,caixa_final,Resumo Gerencial,14110032.9
+DRE,2026-04,,receita_bruta,Resumo Gerencial,4119074.2
+DRE,2026-04,,receita_liquida,Resumo Gerencial,4119074.2
+DRE,2026-04,,cmv,Resumo Gerencial,-2263084.81
+DRE,2026-04,,lucro_bruto,Resumo Gerencial,1855989.39
+DRE,2026-04,,despesas_operacionais,Resumo Gerencial,-447802.49
+DRE,2026-04,,ebitda,Resumo Gerencial,1408186.9
+DRE,2026-04,,lucro_liquido,Resumo Gerencial,1408186.9
+BALANCO,2026-04,,ativo_circulante,Resumo Gerencial,15518219.8
+BALANCO,2026-04,,passivo_circulante,Resumo Gerencial,741433.36
+BALANCO,2026-04,,passivo_nao_circulante,Resumo Gerencial,329525.94
+BALANCO,2026-04,,patrimonio_liquido,Resumo Gerencial,14447260.51
+DFC,2026-04,,caixa_operacional,Resumo Gerencial,1408186.9
+DFC,2026-04,,caixa_investimento,Resumo Gerencial,-102976.86
+DFC,2026-04,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2026-04,,variacao_caixa,Resumo Gerencial,1305210.05
+DFC,2026-04,,caixa_final,Resumo Gerencial,15518219.8
+DRE,2026-05,,receita_bruta,Resumo Gerencial,2986068.01
+DRE,2026-05,,receita_liquida,Resumo Gerencial,2986068.01
+DRE,2026-05,,cmv,Resumo Gerencial,-1642534.93
+DRE,2026-05,,lucro_bruto,Resumo Gerencial,1343533.08
+DRE,2026-05,,despesas_operacionais,Resumo Gerencial,-342633.05
+DRE,2026-05,,ebitda,Resumo Gerencial,1000900.03
+DRE,2026-05,,lucro_liquido,Resumo Gerencial,1000900.03
+BALANCO,2026-05,,ativo_circulante,Resumo Gerencial,16519119.83
+BALANCO,2026-05,,passivo_circulante,Resumo Gerencial,537492.24
+BALANCO,2026-05,,passivo_nao_circulante,Resumo Gerencial,238885.44
+BALANCO,2026-05,,patrimonio_liquido,Resumo Gerencial,15742742.15
+DFC,2026-05,,caixa_operacional,Resumo Gerencial,1000900.03
+DFC,2026-05,,caixa_investimento,Resumo Gerencial,0.0
+DFC,2026-05,,caixa_financiamento,Resumo Gerencial,0.0
+DFC,2026-05,,variacao_caixa,Resumo Gerencial,1000900.03
+DFC,2026-05,,caixa_final,Resumo Gerencial,16519119.83

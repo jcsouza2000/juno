@@ -1,0 +1,73 @@
+﻿{
+  \"dashboard\": {
+    \"id\": null,
+    \"title\": \"JUNO — Business Metrics\",
+    \"tags\": [\"juno\", \"business\"],
+    \"timezone\": \"browser\",
+    \"schemaVersion\": 36,
+    \"refresh\": \"5m\",
+    \"panels\": [
+      {
+        \"id\": 1,
+        \"title\": \"Usuarios Ativos\",
+        \"type\": \"stat\",
+        \"targets\": [
+          {
+            \"expr\": \"count(increase(audit_logs_total{action='LOGIN'}[1h]))\",
+            \"legendFormat\": \"Logins/h\"
+          }
+        ],
+        \"gridPos\": {\"h\": 4, \"w\": 6, \"x\": 0, \"y\": 0}
+      },
+      {
+        \"id\": 2,
+        \"title\": \"DSRs Pendentes\",
+        \"type\": \"stat\",
+        \"targets\": [
+          {
+            \"expr\": \"data_subject_requests_pending\",
+            \"legendFormat\": \"Pendentes\"
+          }
+        ],
+        \"gridPos\": {\"h\": 4, \"w\": 6, \"x\": 6, \"y\": 0}
+      },
+      {
+        \"id\": 3,
+        \"title\": \"Taxa de Compliance LGPD\",
+        \"type\": \"gauge\",
+        \"targets\": [
+          {
+            \"expr\": \"compliance_rate_lgpd\",
+            \"legendFormat\": \"Compliance %\"
+          }
+        ],
+        \"gridPos\": {\"h\": 4, \"w\": 6, \"x\": 12, \"y\": 0},
+        \"fieldConfig\": {
+          \"defaults\": {
+            \"max\": 100,
+            \"thresholds\": {
+              \"steps\": [
+                {\"color\": \"red\", \"value\": 0},
+                {\"color\": \"yellow\", \"value\": 80},
+                {\"color\": \"green\", \"value\": 95}
+              ]
+            }
+          }
+        }
+      },
+      {
+        \"id\": 4,
+        \"title\": \"Tentativas de Login Falhas\",
+        \"type\": \"timeseries\",
+        \"targets\": [
+          {
+            \"expr\": \"increase(login_attempts_failed_total[1h])\",
+            \"legendFormat\": \"Falhas/h\"
+          }
+        ],
+        \"gridPos\": {\"h\": 8, \"w\": 12, \"x\": 0, \"y\": 4}
+      }
+    ]
+  },
+  \"overwrite\": true
+}

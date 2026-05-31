@@ -1,0 +1,24 @@
+﻿version: '3.8'
+
+services:
+  ray-head:
+    image: rayproject/ray:latest-cpu
+    container_name: juno-ray-head
+    command: >
+      ray start --head --port=6377 --dashboard-host=0.0.0.0 --dashboard-port=8265
+      --block
+    ports:
+      - "8265:8265"
+      - "6377:6377"
+      - "10001:10001"
+    volumes:
+      - ray_data:/tmp/ray
+    healthcheck:
+      test: ["CMD", "ray", "status"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  ray_data:

@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "name": "Minha Empresa",
+    "sector": "Diagnostico operacional multi-setorial",
+    "revenue_year": 45000000
+  },
+  {
+    "id": 2,
+    "name": "Minha Empresa - Historico",
+    "sector": "Base secundaria (compatibilidade)",
+    "revenue_year": 28000000
+  }
+]

@@ -1,0 +1,198 @@
+/**
+ * juno_ontology/_base - cliente HTTP e tipos comuns do SDK TypeScript.
+ *
+ * GERADO AUTOMATICAMENTE — alteracoes manuais sao sobrescritas.
+ * Regenerar: `python -m app.ontology.cli generate-sdk --lang typescript --out janus/frontend/src/ontology/`
+ *
+ * Stamp: {{ stamp }}
+ */
+
+// =============================================================================
+// Tipos compartilhados
+// =============================================================================
+
+export interface Money {
+  amount: number;
+  currency: string;
+}
+
+export interface ActionResult {
+  success: boolean;
+  before: Record<string, unknown>;
+  after: Record<string, unknown>;
+  diff: Record<string, { before: unknown; after: unknown }>;
+  audit_id: number | null;
+  warnings: string[];
+  dry_run: boolean;
+}
+
+export interface ListResult<T> {
+  items: T[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export interface ValidationError {
+  field: string | null;
+  rule: string;
+  message: string;
+}
+
+// =============================================================================
+// Errors
+// =============================================================================
+
+export class OntologyClientError extends Error {}
+export class ObjectNotFound extends OntologyClientError {}
+export class PermissionDenied extends OntologyClientError {}
+export class ValidationFailed extends OntologyClientError {
+  constructor(public errors: ValidationError[]) {
+    super(`validation failed (${errors.length} erros)`);
+  }
+}
+
+// =============================================================================
+// HTTP client
+// =============================================================================
+
+export interface ClientConfig {
+  baseUrl?: string;
+  token?: string;
+  fetchFn?: typeof fetch;
+}
+
+let _defaultClient: OntologyClient | null = null;
+
+export function setClient(client: OntologyClient): void {
+  _defaultClient = client;
+}
+
+export function getClient(): OntologyClient {
+  if (_defaultClient === null) {
+    _defaultClient = new OntologyClient();
+  }
+  return _defaultClient;
+}
+
+export class OntologyClient {
+  baseUrl: string;
+  token: string;
+  fetchFn: typeof fetch;
+
+  constructor(config: ClientConfig = {}) {
+    const envUrl = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env?.NEXT_PUBLIC_API_URL;
+    this.baseUrl = (config.baseUrl ?? envUrl ?? "http://localhost:9050").replace(/\/$/, "");
+    this.token = config.token ?? "";
+    this.fetchFn = config.fetchFn ?? fetch;
+  }
+
+  private headers(): Record<string, string> {
+    const h: Record<string, string> = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    };
+    if (this.token) {
+      h["Authorization"] = `Bearer ${this.token}`;
+    }
+    return h;
+  }
+
+  private async request<T>(method: string, path: string, body?: unknown, params?: Record<string, unknown>): Promise<T> {
+    let url = `${this.baseUrl}${path}`;
+    if (params) {
+      const qs = new URLSearchParams();
+      Object.entries(params).forEach(([k, v]) => {
+        if (v !== undefined && v !== null) qs.set(k, String(v));
+      });
+      const q = qs.toString();
+      if (q) url += `?${q}`;
+    }
+    const res = await this.fetchFn(url, {
+      method,
+      headers: this.headers(),
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+    const text = await res.text();
+    let parsed: unknown = text;
+    try {
+      parsed = text ? JSON.parse(text) : null;
+    } catch {
+      // mantem string
+    }
+    if (!res.ok) {
+      if (res.status === 404) throw new ObjectNotFound(JSON.stringify(parsed));
+      if (res.status === 403) throw new PermissionDenied(JSON.stringify(parsed));
+      if (res.status === 400 && typeof parsed === "object" && parsed !== null) {
+        const detail = (parsed as { detail?: { validation_errors?: ValidationError[] } }).detail;
+        if (detail?.validation_errors) throw new ValidationFailed(detail.validation_errors);
+      }
+      throw new OntologyClientError(`HTTP ${res.status}: ${JSON.stringify(parsed)}`);
+    }
+    return parsed as T;
+  }
+
+  get<T>(path: string, params?: Record<string, unknown>): Promise<T> {
+    return this.request<T>("GET", path, undefined, params);
+  }
+
+  post<T>(path: string, body?: unknown, params?: Record<string, unknown>): Promise<T> {
+    return this.request<T>("POST", path, body, params);
+  }
+}
+
+// =============================================================================
+// Base helpers para ObjectTypes gerados
+// =============================================================================
+
+export interface ObjectTypeMeta {
+  OBJECT_TYPE: string;
+}
+
+export async function fetchById<T>(meta: ObjectTypeMeta, id: number, client?: OntologyClient): Promise<T> {
+  const c = client ?? getClient();
+  return c.get<T>(`/api/v1/ontology/${meta.OBJECT_TYPE}/${id}`);
+}
+
+export async function listObjects<T>(
+  meta: ObjectTypeMeta,
+  opts: { limit?: number; offset?: number; orderBy?: string } = {},
+  client?: OntologyClient,
+): Promise<ListResult<T>> {
+  const c = client ?? getClient();
+  return c.get<ListResult<T>>(`/api/v1/ontology/${meta.OBJECT_TYPE}`, {
+    limit: opts.limit ?? 50,
+    offset: opts.offset ?? 0,
+    order_by: opts.orderBy,
+  });
+}
+
+export async function searchObjects<T>(
+  meta: ObjectTypeMeta,
+  q: string,
+  limit = 20,
+  client?: OntologyClient,
+): Promise<T[]> {
+  const c = client ?? getClient();
+  return c.get<T[]>(`/api/v1/ontology/${meta.OBJECT_TYPE}/search`, { q, limit });
+}
+
+export async function executeAction(
+  meta: ObjectTypeMeta,
+  id: number,
+  actionName: string,
+  inputs: Record<string, unknown>,
+  opts: { dryRun?: boolean; actorType?: string; confirmedBy?: number | null } = {},
+  client?: OntologyClient,
+): Promise<ActionResult> {
+  const c = client ?? getClient();
+  return c.post<ActionResult>(
+    `/api/v1/ontology/${meta.OBJECT_TYPE}/${id}/actions/${actionName}`,
+    {
+      inputs,
+      actor_type: opts.actorType ?? "user",
+      confirmed_by: opts.confirmedBy ?? null,
+    },
+    { dry_run: opts.dryRun ? "true" : "false" },
+  );
+}

@@ -1,0 +1,70 @@
+﻿_format_version: "3.0"
+_transform: true
+
+services:
+  - name: juno-backend
+    url: http://juno-backend:8000
+    routes:
+      - name: juno-api
+        paths:
+          - /api
+        strip_path: true
+        methods:
+          - GET
+          - POST
+          - PUT
+          - PATCH
+          - DELETE
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 100
+              hour: 1000
+              policy: redis
+              redis_host: juno-redis
+              redis_port: 6379
+              fault_tolerant: true
+              hide_client_headers: false
+          - name: cors
+            config:
+              origins:
+                - "http://localhost:4000"
+                - "https://app.juno.ai"
+              methods:
+                - GET
+                - POST
+                - PUT
+                - PATCH
+                - DELETE
+                - OPTIONS
+              headers:
+                - Authorization
+                - Content-Type
+                - X-Request-ID
+              max_age: 3600
+              credentials: true
+          - name: request-transformer
+            config:
+              add:
+                headers:
+                  - X-Gateway-Source:kong
+          - name: file-log
+            config:
+              path: /tmp/kong-access.log
+
+  - name: juno-frontend
+    url: http://juno-frontend:3000
+    routes:
+      - name: juno-web
+        paths:
+          - /
+        strip_path: false
+
+plugins:
+  - name: prometheus
+    config:
+      per_consumer: true
+  - name: ip-restriction
+    config:
+      allow:
+        - 0.0.0.0/0  # Em produção, restringir IPs

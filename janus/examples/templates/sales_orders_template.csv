@@ -1,0 +1,4 @@
+pedido,cliente,produto,receita,desconto,data_pedido
+PV001,Empresa ABC Ltda,Torno CNC Exemplo,85000.00,4250.00,01/01/2025
+PV002,Transportadora XYZ,Centro de Usinagem,210000.00,0.00,15/01/2025
+PV003,Metalúrgica Delta,Peça Customizada,48000.00,2400.00,20/01/2025

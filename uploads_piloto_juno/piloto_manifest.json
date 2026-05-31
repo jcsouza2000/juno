@@ -1,0 +1,43 @@
+{
+  "generated_at": "2026-05-29T19:19:19.987047Z",
+  "output_dir": "C:\\Souza\\juno\\uploads_piloto_juno",
+  "format": "financeiro_analitico_por_conta",
+  "counts": {
+    "clientes": 250,
+    "produtos": 500,
+    "pedidos_venda": 19480,
+    "ordens_producao": 9732,
+    "lancamentos_financeiros": 39278,
+    "contas_plano_contas": 22,
+    "contas_distintas_lancadas": 22
+  },
+  "totals": {
+    "receita": 64388578.8,
+    "cmv": 38970472.83,
+    "despesa_operacional": 9148986.14
+  },
+  "template_alignment": {
+    "fonte": "Demontrações Financeiras_Templates.xlsx",
+    "competencia": "2025",
+    "receita_liquida_alvo": 20697507.0,
+    "cmv_alvo": 15043958.0,
+    "lucro_liquido_alvo": 1678211.0,
+    "opex_total_alvo": 3975338.0,
+    "margem_bruta_pct": 27.32,
+    "margem_liquida_pct": 8.11
+  },
+  "files": {
+    "clientes": "C:\\Souza\\juno\\uploads_piloto_juno\\clientes_piloto_larga_escala.csv",
+    "produtos": "C:\\Souza\\juno\\uploads_piloto_juno\\produtos_piloto_larga_escala.csv",
+    "vendas": "C:\\Souza\\juno\\uploads_piloto_juno\\pedidos_venda_piloto_larga_escala.csv",
+    "op": "C:\\Souza\\juno\\uploads_piloto_juno\\ordens_producao_piloto_larga_escala.csv",
+    "financeiro": "C:\\Souza\\juno\\uploads_piloto_juno\\financeiro_piloto_larga_escala.csv",
+    "plano_contas": "C:\\Souza\\juno\\uploads_piloto_juno\\plano_contas_piloto.csv"
+  },
+  "upload_hint": {
+    "erp_integrations": [
+      "01..04 *_juno.csv"
+    ],
+    "financials_page": "05_financial_ledger_juno.csv (analitico) ou 06_financial_statements_juno.csv (DRE gerencial agregada)"
+  }
+}

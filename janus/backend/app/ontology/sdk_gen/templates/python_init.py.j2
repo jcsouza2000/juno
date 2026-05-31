@@ -1,0 +1,29 @@
+"""
+juno_ontology — JUNO Ontology Python SDK.
+
+GERADO AUTOMATICAMENTE. Stamp: {{ stamp }}
+
+Uso:
+    from juno_ontology import set_client, HTTPClient
+    from juno_ontology import {% for c in classes %}{{ c }}{% if not loop.last %}, {% endif %}{% endfor %}
+
+    set_client(HTTPClient(base_url="http://localhost:9050", token="..."))
+
+    prod = Produto.get(10)
+    result = prod.atualizar_preco(novo_preco=200.0, motivo="reajuste")
+"""
+
+from ._base import HTTPClient, Money, ActionResult, ObjectClient, get_client, set_client
+from ._base import OntologyClientError, ObjectNotFound, PermissionDenied, ValidationFailed
+{% for name, snake in module_map %}
+from .{{ snake }} import {{ name }}
+{% endfor %}
+
+__all__ = [
+    "HTTPClient", "Money", "ActionResult", "ObjectClient",
+    "get_client", "set_client",
+    "OntologyClientError", "ObjectNotFound", "PermissionDenied", "ValidationFailed",
+    {% for name, snake in module_map %}
+    "{{ name }}",
+    {% endfor %}
+]

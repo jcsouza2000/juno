@@ -1,0 +1,339 @@
+﻿'use client';
+
+import { useState, useEffect } from 'react';
+import { api } from '@/lib/api';
+import { useActiveCompany } from '@/lib/tenant';
+import MetricCard from '@/components/dashboard/MetricCard';
+import ScoreCard from '@/components/dashboard/ScoreCard';
+import MarginTable from '@/components/dashboard/MarginTable';
+import DelayTable from '@/components/dashboard/DelayTable';
+import InsightSection from '@/components/dashboard/InsightSection';
+import DiagnosticReport from '@/components/dashboard/DiagnosticReport';
+import { getTrendDirection, previousWindowCount } from '@/lib/trends';
+import { DollarSign, TrendingUp, AlertTriangle, FileText, Loader2, Download } from 'lucide-react';
+
+interface CeoData {
+  receita_liquida?: number;
+  score_juno?: number;
+}
+
+interface CfoRow {
+  product: string;
+  receita_liquida: number;
+  custo_real: number;
+  margem: number;
+  [key: string]: unknown;
+}
+
+interface DashboardRow {
+  order_id: number;
+  product: string;
+  planned_date: string;
+  actual_date: string | null;
+  status: string;
+  [key: string]: unknown;
+}
+
+interface InsightRow {
+  type?: string;
+  message: string;
+  impact: string;
+  action: string;
+}
+
+interface OntologyProduct {
+  id: number | string;
+  nome?: string;
+  margem?: number;
+  saudavel?: boolean;
+}
+
+interface OntologyOrder {
+  id: number | string;
+  produto_id?: number | string;
+  atraso_dias?: number;
+  atrasada?: boolean;
+}
+
+interface ReportData {
+  company_name: string;
+  score_juno: number;
+  revenue: number;
+  insights: Array<{ message: string; impact: string }>;
+  recommendations: string[];
+  action_plan: string[];
+}
+
+export default function RomiPage() {
+  const { company, companyId, isLoading: companyLoading } = useActiveCompany();
+  const [ceoData, setCeoData] = useState<CeoData | null>(null);
+  const [cfoData, setCfoData] = useState<CfoRow[]>([]);
+  const [cooData, setCooData] = useState<DashboardRow[]>([]);
+  const [insightsData, setInsightsData] = useState<InsightRow[]>([]);
+  const [ontologyProducts, setOntologyProducts] = useState<OntologyProduct[]>([]);
+  const [ontologyOrders, setOntologyOrders] = useState<OntologyOrder[]>([]);
+  const [events7d, setEvents7d] = useState(0);
+  const [eventsPrev7d, setEventsPrev7d] = useState(0);
+  const [reportData, setReportData] = useState<ReportData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [generatingReport, setGeneratingReport] = useState(false);
+  const [downloadingPDF, setDownloadingPDF] = useState(false);
+  const receitaLiquida = ceoData?.receita_liquida ?? 0;
+  const totalMargin = cfoData.reduce((sum, item) => sum + Number(item.margem ?? 0), 0);
+  const totalRevenueFromMargins = cfoData.reduce(
+    (sum, item) => sum + Number(item.receita_liquida ?? 0),
+    0,
+  );
+  const averageMarginPct = totalRevenueFromMargins
+    ? (totalMargin / totalRevenueFromMargins) * 100
+    : null;
+
+  useEffect(() => {
+    async function fetchData() {
+      if (companyLoading) return;
+      if (!companyId) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const fetchCeo = api.get(`/dashboard/ceo/${companyId}`).then(r => r.data).catch(() => ({ receita_liquida: 0, score_juno: 0 }));
+        const fetchCfo = api.get(`/dashboard/cfo/${companyId}`).then(r => r.data).catch(() => []);
+        const fetchCoo = api.get(`/dashboard/coo/${companyId}`).then(r => r.data).catch(() => []);
+        const fetchIns = api.get(`/insights/${companyId}`).then(r => r.data).catch(() => []);
+        const fetchOntology = api.get(`/products/${companyId}/v2`).then(r => r.data).catch(() => []);
+        const fetchOntologyOrders = api.get(`/production-orders/${companyId}/v2`).then(r => r.data).catch(() => []);
+        const fetchEvents7d = api.get(`/events/${companyId}?count_only=true&days=7`).then(r => Number(r.data?.count ?? 0)).catch(() => 0);
+        const fetchEvents14d = api.get(`/events/${companyId}?count_only=true&days=14`).then(r => Number(r.data?.count ?? 0)).catch(() => 0);
+
+        const [ceo, cfo, coo, ins, productsV2, ordersV2, e7, e14] = await Promise.all([
+          fetchCeo,
+          fetchCfo,
+          fetchCoo,
+          fetchIns,
+          fetchOntology,
+          fetchOntologyOrders,
+          fetchEvents7d,
+          fetchEvents14d,
+        ]);
+        
+        setCeoData(ceo);
+        setCfoData(cfo);
+        setCooData(coo);
+        setInsightsData(ins);
+        setOntologyProducts(productsV2);
+        setOntologyOrders(ordersV2);
+        setEvents7d(e7);
+        setEventsPrev7d(previousWindowCount(e7, e14));
+      } catch (error) {
+        console.error("Erro ao carregar dados da Minha Empresa:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, [companyId, companyLoading]);
+
+  const handleGenerateReport = async () => {
+    if (!companyId) return;
+    setGeneratingReport(true);
+    try {
+      const res = await api.get(`/report/diagnostic/${companyId}`);
+      setReportData(res.data);
+    } catch (error) {
+      console.error("Erro ao gerar diagnóstico:", error);
+    } finally {
+      setGeneratingReport(false);
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!companyId) return;
+    setDownloadingPDF(true);
+    try {
+      const res = await api.get(`/report/pdf/${companyId}`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'JUNO_Diagnostico_Minha_Empresa.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Erro ao baixar PDF:", error);
+    } finally {
+      setDownloadingPDF(false);
+    }
+  };
+
+  if (loading || companyLoading) return <div className="flex items-center justify-center h-full">Carregando diagnóstico...</div>;
+  if (!companyId) {
+    return (
+      <div className="bg-white border border-yellow-100 rounded-lg p-8">
+        <h1 className="text-xl font-bold text-[#0A2342]">Nenhuma empresa vinculada</h1>
+        <p className="mt-2 text-sm text-gray-600">Vincule um tenant ao usuario para carregar o diagnostico operacional.</p>
+      </div>
+    );
+  }
+
+  const eventTrend = getTrendDirection(events7d, eventsPrev7d);
+
+  return (
+    <div className="space-y-8">
+      <div className="border-b border-gray-200 pb-4 flex justify-between items-end">
+        <div>
+          <h1 className="text-2xl font-bold text-[#0A2342]">{company?.name ?? 'Minha Empresa'} — Diagnóstico Operacional 360°</h1>
+          <p className="text-gray-500 text-sm">Foco: margem, custo real, atrasos, gargalos e prontidão executiva.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleGenerateReport}
+            disabled={generatingReport}
+            className="flex items-center gap-2 bg-[#C9A959] text-[#0A2342] font-bold py-2 px-6 rounded-lg hover:bg-[#b89a51] transition-colors shadow-md disabled:opacity-50"
+          >
+            {generatingReport ? <Loader2 className="animate-spin" size={18} /> : <FileText size={18} />}
+            Gerar Diagnóstico 360
+          </button>
+          <button
+            onClick={handleDownloadPDF}
+            disabled={downloadingPDF}
+            className="flex items-center gap-2 bg-[#0A2342] text-white font-bold py-2 px-6 rounded-lg hover:bg-[#0d2d57] transition-colors shadow-md disabled:opacity-50"
+          >
+            {downloadingPDF ? <Loader2 className="animate-spin" size={18} /> : <Download size={18} />}
+            Baixar PDF Executivo
+          </button>
+        </div>
+      </div>
+
+      {reportData && <DiagnosticReport data={reportData} />}
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-1">
+          <ScoreCard score={ceoData?.score_juno ?? 0} />
+        </div>
+        <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <MetricCard 
+            title="Receita Líquida" 
+            value={`R$ ${receitaLiquida.toLocaleString()}`} 
+            icon={<DollarSign size={20} />} 
+          />
+          <MetricCard 
+            title="Margem Média" 
+            value={averageMarginPct == null ? 'Sem dados' : `${averageMarginPct.toFixed(1)}%`}
+            icon={<TrendingUp size={20} />} 
+          />
+          <MetricCard 
+            title="Alertas Críticos" 
+            value={cooData.length} 
+            subtitle={`Eventos 7d: ${events7d} (ant. ${eventsPrev7d})`}
+            icon={<AlertTriangle size={20} />} 
+            trend={eventTrend}
+          />
+        </div>
+      </div>
+
+      <InsightSection insights={insightsData} />
+
+      <div className="grid grid-cols-1 gap-8">
+        <MarginTable data={cfoData} />
+        <DelayTable data={cooData} />
+      </div>
+
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h3 className="font-bold text-[#0A2342]">Prova de Ontologia (Rota v2)</h3>
+          <span className="text-xs text-gray-400">/products/{companyId}/v2</span>
+        </div>
+        <div className="p-4">
+          {ontologyProducts.length === 0 ? (
+            <p className="text-sm text-gray-500">Nenhum produto retornado pela camada ontológica.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-gray-500 border-b border-gray-100">
+                    <th className="py-2 pr-4">Produto</th>
+                    <th className="py-2 pr-4">Margem</th>
+                    <th className="py-2 pr-4">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ontologyProducts.slice(0, 8).map((p) => (
+                    <tr key={p.id} className="border-b border-gray-50">
+                      <td className="py-2 pr-4 font-medium text-gray-700">{p.nome}</td>
+                      <td className={`py-2 pr-4 font-semibold ${(p.margem ?? 0) > 0 ? 'text-green-700' : 'text-red-600'}`}>
+                        R$ {Number(p.margem ?? 0).toLocaleString('pt-BR')}
+                      </td>
+                      <td className="py-2 pr-4">
+                        <span className={`text-xs font-bold px-2 py-1 rounded-full ${p.saudavel ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                          {p.saudavel ? 'Saudavel' : 'Critico'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h3 className="font-bold text-[#0A2342]">Prova de Ontologia de Ordens (Rota v2)</h3>
+          <span className="text-xs text-gray-400">/production-orders/{companyId}/v2</span>
+        </div>
+        <div className="p-4">
+          {ontologyOrders.length === 0 ? (
+            <p className="text-sm text-gray-500">Nenhuma ordem retornada pela camada ontológica.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-gray-500 border-b border-gray-100">
+                    <th className="py-2 pr-4">Ordem</th>
+                    <th className="py-2 pr-4">Produto</th>
+                    <th className="py-2 pr-4">Atraso (dias)</th>
+                    <th className="py-2 pr-4">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ontologyOrders.slice(0, 8).map((o) => (
+                    <tr key={o.id} className="border-b border-gray-50">
+                      <td className="py-2 pr-4 font-medium text-gray-700">#{o.id}</td>
+                      <td className="py-2 pr-4 text-gray-600">{o.produto_id}</td>
+                      <td className={`py-2 pr-4 font-semibold ${(o.atraso_dias ?? 0) > 0 ? 'text-red-600' : 'text-green-700'}`}>
+                        {o.atraso_dias ?? 0}
+                      </td>
+                      <td className="py-2 pr-4">
+                        <span className={`text-xs font-bold px-2 py-1 rounded-full ${o.atrasada ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                          {o.atrasada ? 'Atrasada' : 'No prazo'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="bg-blue-50 border-l-4 border-[#0A2342] p-4 rounded-r-lg">
+        <h4 className="font-bold text-[#0A2342] mb-1 uppercase text-xs">Alertas Executivos</h4>
+        {insightsData.length === 0 && cooData.length === 0 ? (
+          <p className="text-sm text-gray-700">Nenhum alerta crítico calculado com os dados atuais.</p>
+        ) : (
+          <ul className="text-sm text-gray-700 list-disc ml-4 space-y-1">
+            {insightsData.slice(0, 3).map((insight, index) => (
+              <li key={`${insight.type ?? 'insight'}-${index}`}>{insight.message}</li>
+            ))}
+            {insightsData.length === 0 && cooData.length > 0 && (
+              <li>{cooData.length} ordens de produção em atraso.</li>
+            )}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+}

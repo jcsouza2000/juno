@@ -1,0 +1,4 @@
+codigo,produto,categoria,custo_padrao,preco_venda
+P001,Torno CNC Exemplo,Usinagem,45000.00,85000.00
+P002,Centro de Usinagem,Usinagem,120000.00,210000.00
+P003,Peça Customizada,Componentes,1200.00,2400.00

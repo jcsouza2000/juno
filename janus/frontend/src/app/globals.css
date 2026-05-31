@@ -1,0 +1,36 @@
+﻿@import "tailwindcss";
+
+:root {
+  --background: #F5F7FA;
+  --foreground: #1F2937;
+  --JUNO-blue: #0A2342;
+  --JUNO-gold: #C9A959;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer components {
+  .btn-JUNO {
+    @apply bg-[#0A2342] text-white px-4 py-2 rounded-md hover:bg-[#0c2d54] transition-colors;
+  }
+  
+  .card-juno {
+    @apply bg-white rounded-lg shadow-sm border border-gray-100 p-6;
+  }
+
+  .text-JUNO-blue {
+    color: #0A2342;
+  }
+
+  .bg-JUNO-blue {
+    background-color: #0A2342;
+  }
+
+  .border-JUNO-gold {
+    border-color: #C9A959;
+  }
+}

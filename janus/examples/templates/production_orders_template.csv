@@ -1,0 +1,4 @@
+op,produto,qtd_planejada,qtd_real,custo_planejado,custo_real,data_planejada,data_real,status
+OP001,Torno CNC Exemplo,5,4,225000.00,248000.00,01/02/2025,10/02/2025,Concluído
+OP002,Centro de Usinagem,2,2,240000.00,240000.00,05/02/2025,05/02/2025,Concluído
+OP003,Peça Customizada,40,40,48000.00,47500.00,10/02/2025,10/02/2025,Concluído

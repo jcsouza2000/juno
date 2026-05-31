@@ -1,0 +1,74 @@
+# =============================================================================
+# ObjectType: Empresa
+# =============================================================================
+# Tenant logico do JUNO — uma organizacao para qual os dados pertencem.
+# Mapeia para app.models.Company.
+# =============================================================================
+
+apiVersion: ontology.juno.gravithy.com.br/v1
+kind: ObjectType
+metadata:
+  name: Empresa
+  description: |
+    Organizacao tenant do JUNO. Carrega meta-dados de identificacao,
+    setor e faturamento anual de referencia. Toda entidade operacional
+    (Produto, Pedido, OrdemProducao, etc.) e' particionada por Empresa
+    via marking TenantScoped.
+  owner: platform
+  tags: [tenant, core]
+
+spec:
+  backing:
+    type: sqlalchemy
+    model: app.models.Company
+    primary_key: id
+
+  title_property: name
+  identifier_properties: [id]
+
+  properties:
+    id:
+      type: integer
+      required: true
+      readonly: true
+    name:
+      type: string
+      required: true
+      max_length: 255
+    sector:
+      type: string
+      max_length: 255
+      description: Setor economico declarado (livre — JUNO e' agnostico de setor)
+    revenue_year:
+      type: number
+      min: 0
+      marking: FinanceiroConsolidado
+      description: Faturamento anual de referencia (R$)
+    created_at:
+      type: datetime
+      readonly: true
+
+  links:
+    produtos:
+      target: Produto
+      cardinality: one_to_many
+      backing:
+        type: foreign_key
+        target_column: company_id
+    pedidos:
+      target: PedidoVenda
+      cardinality: one_to_many
+      backing:
+        type: foreign_key
+        target_column: company_id
+    ordens_producao:
+      target: OrdemProducao
+      cardinality: one_to_many
+      backing:
+        type: foreign_key
+        target_column: company_id
+
+  markings:
+    inherit: []   # Empresa em si nao tem TenantScoped — ela define o tenant
+
+  actions: []

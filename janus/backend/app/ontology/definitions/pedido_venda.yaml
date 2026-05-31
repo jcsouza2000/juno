@@ -1,0 +1,191 @@
+# =============================================================================
+# ObjectType: PedidoVenda
+# =============================================================================
+# Pedido comercial — receita, desconto, total. Mapeia para app.models.SalesOrder.
+# =============================================================================
+
+apiVersion: ontology.juno.gravithy.com.br/v1
+kind: ObjectType
+metadata:
+  name: PedidoVenda
+  description: |
+    Pedido de venda registrado no sistema. Contém receita bruta, desconto
+    aplicado e total líquido. Liga produto, cliente e empresa.
+  owner: comercial
+  tags: [comercial, financeiro]
+
+spec:
+  backing:
+    type: sqlalchemy
+    model: app.models.SalesOrder
+    primary_key: id
+
+  title_property: id
+  identifier_properties: [id]
+
+  properties:
+    id:
+      type: integer
+      required: true
+      readonly: true
+    company_id:
+      type: integer
+      required: true
+      readonly: true
+      marking: TenantScoped
+    customer_id:
+      type: integer
+    product_id:
+      type: integer
+    revenue:
+      type: money
+      currency: BRL
+      min: 0
+      marking: ConfidencialComercial
+      description: Receita bruta do pedido
+    discount:
+      type: money
+      currency: BRL
+      min: 0
+      marking: ConfidencialComercial
+    total:
+      type: money
+      currency: BRL
+      min: 0
+      marking: ConfidencialComercial
+      description: Total líquido (revenue - discount)
+    order_date:
+      type: datetime
+    created_at:
+      type: datetime
+      readonly: true
+
+  computed_properties:
+    desconto_percentual:
+      type: percent
+      formula: "(discount / revenue * 100) if revenue > 0 else 0"
+    desconto_alto:
+      type: boolean
+      formula: "(discount / revenue) > 0.15 if revenue > 0 else false"
+      description: Desconto > 15% — exige aprovação adicional pela política comercial
+
+  links:
+    empresa:
+      target: Empresa
+      cardinality: many_to_one
+      backing:
+        type: foreign_key
+        column: company_id
+    cliente:
+      target: Cliente
+      cardinality: many_to_one
+      backing:
+        type: foreign_key
+        column: customer_id
+      reverse_name: pedidos
+    produto:
+      target: Produto
+      cardinality: many_to_one
+      backing:
+        type: foreign_key
+        column: product_id
+      reverse_name: pedidos_venda
+
+  markings:
+    inherit: [TenantScoped]
+
+  actions:
+    - aprovarPedido
+    - aplicarDesconto
+
+---
+# =============================================================================
+# Action: aprovarPedido
+# =============================================================================
+apiVersion: ontology.juno.gravithy.com.br/v1
+kind: ActionType
+metadata:
+  name: aprovarPedido
+  description: |
+    Aprova um pedido pendente (workflow comercial). Disparam-se notificações
+    e o pedido fica liberado para faturamento.
+  owner: comercial
+
+spec:
+  target: PedidoVenda
+
+  inputs:
+    observacao:
+      type: string
+      required: false
+      max_length: 500
+
+  validation:
+    - rule: "not desconto_alto"
+      message: "Pedido tem desconto > 15% — requer aprovação de diretoria, não gerência."
+      severity: error
+
+  authorization:
+    roles: [admin, gerente_comercial, diretor_comercial]
+    require_confirmation: false
+
+  effect:
+    handler: app.ontology.actions.sales.approve
+
+  # NOTA: SalesOrder atual não tem 'status' — aprovação registra apenas o ato
+  # em audit_logs via extra_context. Adicionar 'status' como property quando
+  # criarmos a migration de workflow comercial (Sem2+).
+  audit:
+    fields_before: []
+    fields_after: []
+    extra_context: [observacao]
+
+---
+# =============================================================================
+# Action: aplicarDesconto
+# =============================================================================
+apiVersion: ontology.juno.gravithy.com.br/v1
+kind: ActionType
+metadata:
+  name: aplicarDesconto
+  description: |
+    Aplica desconto a um pedido. Política: desconto > 15% requer role de diretoria.
+  owner: comercial
+
+spec:
+  target: PedidoVenda
+
+  inputs:
+    valor_desconto:
+      type: money
+      currency: BRL
+      min: 0
+      required: true
+    motivo:
+      type: string
+      required: true
+      max_length: 500
+      enum_hint: [fidelizacao, volume, retencao, ajuste-pricing, negociacao]
+
+  validation:
+    - rule: "valor_desconto <= revenue * 0.5"
+      message: "Desconto > 50% da receita bloqueado por padrão (aprovação manual fora do sistema)."
+      severity: error
+    - rule: "valor_desconto != discount"
+      message: "Valor de desconto igual ao atual — sem efeito."
+      severity: warning
+
+  authorization:
+    roles: [admin, gerente_comercial, diretor_comercial]
+    require_markings: [ConfidencialComercial]
+    require_confirmation: true
+
+  effect:
+    handler: app.ontology.actions.sales.apply_discount
+
+  audit:
+    fields_before: [discount, total]
+    fields_after: [discount, total]
+    extra_context: [motivo]
+
+  dry_run: supported

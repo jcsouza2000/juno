@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Torno CNC Romi 250",
+    "category": "Maquinas",
+    "standard_cost": 180000,
+    "sale_price": 220000
+  },
+  {
+    "name": "Centro de Usinagem 500",
+    "category": "Maquinas",
+    "standard_cost": 450000,
+    "sale_price": 380000
+  },
+  {
+    "name": "Fresa Universal 300",
+    "category": "Maquinas",
+    "standard_cost": 95000,
+    "sale_price": 120000
+  }
+]

@@ -1,0 +1,11 @@
+﻿apiVersion: 1
+providers:
+  - name: 'JUNO Dashboards'
+    orgId: 1
+    folder: 'JUNO'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards

@@ -1,0 +1,315 @@
+JUNO Industrial Diagnostic - Manual Operacional Atualizado
+Versao funcional: 0.3.2
+Data da revisao: 2026-05-25
+Base de referencia: "JUNO Industrial Diagnostic v0.3.2 - Manual v1.0 - Maio 2026"
+Diretorio operacional: C:\Souza\juno
+Diretorio original auditado: C:\Souza\Flutter\JANUS_AI
+
+======================================================================
+1. Conclusao executiva
+======================================================================
+
+O JUNO esta operacionalmente completo para a etapa atual de desenvolvimento:
+
+- backend FastAPI validado;
+- frontend Next.js validado;
+- migrations Alembic sobem ate head;
+- testes backend passam;
+- auditoria, seguranca, ERP, relatorios, ML base e ontology estao integrados;
+- documentos legados da raiz original foram preservados em _archive/docs_legacy;
+- compose de producao foi consolidado em docker-compose.prod.yml.
+
+Ponto critico de leitura: C:\Souza\juno nao e um espelho byte a byte da raiz
+original C:\Souza\Flutter\JANUS_AI. A copia foi transformada em workspace
+operacional: arquivos legados grandes, documentos antigos e composes antigos
+foram arquivados. Portanto, a conclusao correta e:
+
+- produto operacional: sim, completo conforme a arquitetura atual;
+- preservacao documental: sim, documentos originais preservados byte a byte;
+- espelho literal da raiz antiga: nao, por decisao de limpeza e consolidacao.
+
+======================================================================
+2. Evidencias de validacao em 2026-05-25
+======================================================================
+
+Backend:
+
+- mypy app: sucesso, 0 erros em 133 arquivos.
+- ruff check app: sucesso.
+- black --check app: sucesso.
+- pytest -q --no-cov: 190 passed, 0 failed.
+- alembic upgrade head: validado em SQLite temporario na rodada anterior.
+
+Frontend:
+
+- npm audit --audit-level=moderate: 0 vulnerabilidades.
+- npm run lint: sucesso.
+- npm run build: sucesso.
+- Next.js: 16.2.6.
+- React: 19.2.4.
+
+Docker:
+
+- docker-compose.prod.yml existe e e o compose oficial de producao.
+- Build real validado com Docker Desktop ativo.
+- Stack real validada com Postgres, Redis, backend e frontend saudaveis.
+- Alembic upgrade head executado dentro do container backend contra PostgreSQL.
+
+Integridade documental:
+
+- Manual original, escopos e decks antigos foram preservados em:
+  C:\Souza\juno\_archive\docs_legacy
+- Hashes SHA256 dos documentos principais conferem com a origem.
+
+======================================================================
+3. Arquitetura atual
+======================================================================
+
+Frontend:
+
+- Diretorio: C:\Souza\juno\janus\frontend
+- Framework: Next.js 16.2.6
+- React: 19.2.4
+- Porta dev/start: 4000
+- Rotas principais:
+  - /
+  - /login
+  - /demo
+  - /pilot
+  - /romi
+  - /fachini
+  - /workshop
+  - /workshop/[type]
+  - /financials
+  - /integrations
+  - /audit
+  - /ai
+  - /autotest
+  - /admin/markings
+
+Backend:
+
+- Diretorio: C:\Souza\juno\janus\backend
+- Framework: FastAPI
+- ORM: SQLAlchemy 2.0
+- Migrations: Alembic
+- Banco dev: SQLite
+- Banco producao: PostgreSQL 16 via docker-compose.prod.yml
+- Cache/fila: Redis 7 via docker-compose.prod.yml
+- Porta: 8000
+
+IA:
+
+- Motor local principal: Ollama qwen3:8b
+- Motor legado/opcional: OpenAI gpt-4o-mini
+- Fluxo governado atual: /ai + ontology tools + action confirmation.
+
+Ontology Engine:
+
+- ObjectTypes e ActionTypes em YAML.
+- Markings sensiveis com grants por usuario.
+- Snapshots e time-travel.
+- Lineage de pipelines e actions.
+- SDK generator Python/TypeScript.
+- Auditoria de actions com before/after/diff.
+
+Seguranca:
+
+- JWT.
+- Rate limit em login.
+- CORS por env.
+- /docs e /redoc desligados em producao.
+- Fernet para senhas/API keys ERP.
+- LGPD/GDPR: consentimentos, data subject requests e configuracoes.
+- Auditoria consolidada em audit_logs.
+
+ERP:
+
+- Base comum: app/connectors/base.py.
+- Conectores: TOTVS, Senior, SAP, Sankhya, Oracle, Infor e Generic.
+- Importacao file-based em app/integrations.
+- Credenciais sensiveis criptografadas.
+
+Relatorios e dados:
+
+- PDF/reportlab.
+- Dashboards CEO/CFO/COO.
+- Financials: DRE, balanco, DFC e uploads financeiros.
+- ML base: prediction engine, chatbot engine e recomendacoes.
+
+======================================================================
+4. O que mudou em relacao ao manual antigo
+======================================================================
+
+O manual de referencia ainda descrevia partes antigas do sistema, incluindo:
+
+- Next.js 16.2.4; atual: 16.2.6.
+- Backend com versao exposta 0.1.0-fase1; atual: Settings.APP_VERSION = 0.3.2.
+- Documentos e decks na raiz original; atual: legados arquivados em _archive/docs_legacy.
+- Testes antigos em menor volume; atual: 190 testes backend passando.
+- Pendencias de routers opcionais; atual: routers carregam por _try_include e dependencias principais foram consolidadas.
+- Tipagem SQLAlchemy pendente; atual: mypy passa com stub app/models.pyi e ajustes estruturais.
+
+======================================================================
+5. Como iniciar em desenvolvimento
+======================================================================
+
+Backend:
+
+cd C:\Souza\juno\janus\backend
+.\.venv\Scripts\activate
+pip install -r requirements-dev.txt
+alembic upgrade head
+uvicorn app.main:app --reload --port 8000
+
+Frontend:
+
+cd C:\Souza\juno\janus\frontend
+npm install
+npm run dev
+
+Acessos:
+
+- Backend: http://localhost:8000
+- Swagger dev: http://localhost:8000/docs
+- Frontend: http://localhost:4000
+
+======================================================================
+6. Como validar antes de alteracoes ou publicacao
+======================================================================
+
+Backend:
+
+cd C:\Souza\juno\janus\backend
+.\.venv\Scripts\mypy app
+.\.venv\Scripts\ruff check app
+.\.venv\Scripts\black --check app
+$env:PYTHONPATH='.'
+$env:JUNO_ENV='development'
+$env:SECRET_KEY='test-secret-key-must-have-at-least-32-chars'
+$env:ENCRYPTION_KEY='N6zYqfBC2CxUgdztuLcM5nVSyxe7S6TjzS-ZmrkcmCM='
+$env:DATABASE_URL='sqlite:///./validation.db'
+.\.venv\Scripts\pytest -q --no-cov
+
+Frontend:
+
+cd C:\Souza\juno\janus\frontend
+npm audit --audit-level=moderate
+npm run lint
+npm run build
+
+Docker, quando Docker Desktop estiver ativo:
+
+cd C:\Souza\juno
+docker compose --env-file .env.prod -f docker-compose.prod.yml build
+docker compose --env-file .env.prod -f docker-compose.prod.yml up
+
+======================================================================
+7. Variaveis obrigatorias para producao
+======================================================================
+
+Revisar SECURITY_ENV_REVIEW.md antes de qualquer publicacao.
+
+Obrigatorias:
+
+- POSTGRES_PASSWORD
+- SECRET_KEY
+- ENCRYPTION_KEY
+- ALLOWED_ORIGINS
+- LOGIN_RATE_LIMIT
+- NEXT_PUBLIC_API_URL
+- NEXTAUTH_SECRET
+- AUTH_SECRET
+
+Geracao segura:
+
+python -c "import secrets; print(secrets.token_urlsafe(64))"
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+openssl rand -base64 32
+
+Nao commitar:
+
+- .env.prod
+- deploy/.env.production
+- deploy/.env.staging
+- janus/backend/.env
+- janus/frontend/.env.local
+- bancos .db
+- dumps
+- tokens
+- logs de producao
+
+======================================================================
+8. Pontos que ainda preocupam
+======================================================================
+
+Resolvido - Docker real
+
+Docker Desktop foi iniciado, as imagens foram construidas, a stack subiu e os
+healthchecks ficaram saudaveis. Postgres e Redis rodam apenas na rede interna do
+Compose, evitando conflito com containers legados do host.
+
+Resolvido - Warnings de testes
+
+pytest.ini recebeu asyncio_default_fixture_loop_scope=function, filtro especifico
+para PyparsingDeprecationWarning e basetemp local. A suite fecha com 190 passed,
+sem warnings e sem excecao de cleanup.
+
+Resolvido - Tipagem mais estrita
+
+check_untyped_defs = true foi ativado no pyproject.toml. mypy app passa com 0
+erros em 133 arquivos.
+
+Resolvido - ChatInterface legado
+
+O componente nao era importado por nenhuma rota e foi removido. A tela /ai segue
+como fluxo governado oficial do coordinator.
+
+P3 - Documentacao historica
+
+Arquivos em docs/MIGRATION_NOTES.md e docs/CHANGELOG.md preservam fases antigas.
+Eles sao historicos, mas podem mencionar pendencias que ja foram resolvidas.
+Para consumo executivo, usar este Manual_Juno.txt e Juno.pptx.
+Para treinamento de usuarios e implantacao em novas empresas, usar tambem
+Manual_Usuario_Juno.txt.
+
+======================================================================
+9. Status de completude contra C:\Souza\Flutter\JANUS_AI
+======================================================================
+
+Confirmado:
+
+- Os documentos grandes e decks antigos da raiz original estao preservados em
+  C:\Souza\juno\_archive\docs_legacy.
+- Os hashes dos documentos principais conferem com a origem.
+- A aplicacao operacional vive em C:\Souza\juno\janus\backend e
+  C:\Souza\juno\janus\frontend.
+- A copia operacional possui mais artefatos que a origem porque contem venv,
+  caches/builds e saidas de validacao locais.
+
+Nao confirmado como equivalencia literal:
+
+- C:\Souza\juno nao deve ser tratado como clone byte a byte da raiz original.
+- A estrutura foi deliberadamente saneada: legados sairam da raiz, compose foi
+  consolidado, documentos foram arquivados e novos artefatos foram gerados.
+
+Veredito:
+
+JUNO esta completo para a arquitetura atual e para a continuidade tecnica.
+A stack Docker real ja foi validada. Antes de publicacao externa, resta revisar
+os segredos definitivos do .env.prod e testar login/fluxo /ai no ambiente alvo.
+
+======================================================================
+10. Checklist final antes de autorizacao para proxima etapa
+======================================================================
+
+[x] Ligar Docker Desktop.
+[x] Rodar docker compose build.
+[x] Rodar docker compose up.
+[x] Validar http://localhost:8000/health dentro da stack.
+[x] Validar frontend em http://localhost:4000.
+[ ] Testar login e fluxo /ai.
+[ ] Revisar .env.prod sem expor segredos.
+[ ] Remover qualquer .db temporario.
+[ ] Rodar backend e frontend validation completa.
+[ ] Publicar apenas depois de todos os itens acima.

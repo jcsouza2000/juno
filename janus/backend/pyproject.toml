@@ -1,0 +1,59 @@
+# Configuracao de ferramentas Python para o backend JUNO.
+# As dependencias continuam em requirements.txt para compatibilidade
+# com pip/Docker; este arquivo configura apenas ruff, black, mypy etc.
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+extend-exclude = [".venv", "alembic", "__pycache__"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "W",   # pycodestyle warnings
+    "I",   # isort
+    "B",   # bugbear
+    "UP",  # pyupgrade
+    "S",   # bandit (security)
+]
+ignore = [
+    "E501",  # line too long (black cuida)
+    "E711",  # SQLAlchemy usa ==/!= None em expressoes de filtro
+    "E712",  # SQLAlchemy usa == True/False em expressoes de filtro
+    "W291",  # algumas SQL strings preservam espacos finais intencionalmente
+    "W293",  # prompts multiline podem conter linhas em branco indentadas
+    "S101",  # use of assert (OK em testes)
+    "S106",  # falso positivo em campos como token_type="bearer"
+    "S110",  # alguns fallbacks silenciosos sao intencionais em integracoes opcionais
+    "S112",  # tentativas de parse em loop usam continue por design
+    "S301",  # modelos ML internos sao serializados em pickle/joblib
+    "S608",  # SQL dinamico validado por allowlists locais
+    "B904",  # FastAPI converte excecoes em HTTPException; chaining e opcional
+    "B008",  # function-call-default (FastAPI usa Depends() como default)
+    "UP038", # isinstance((A, B)) e mais legivel e estavel para este codigo
+]
+
+[tool.ruff.lint.per-file-ignores]
+"app/tests/*" = ["S101", "S105", "S106", "S107", "B017", "E402"]
+"app/ontology/tests/*" = ["S101", "S105", "S106", "S107", "B017", "B007", "E402", "S110", "S603"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+extend-exclude = '''
+/(
+    \.venv
+  | alembic
+)/
+'''
+
+[tool.mypy]
+python_version = "3.11"
+warn_redundant_casts = true
+warn_unused_ignores = true
+allow_redefinition = true
+check_untyped_defs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+exclude = ["alembic", "\\.venv"]

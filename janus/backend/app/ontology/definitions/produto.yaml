@@ -1,0 +1,221 @@
+# =============================================================================
+# ObjectType: Produto
+# =============================================================================
+# Item comercializável da empresa — produto acabado, semi-acabado ou serviço.
+# Mapeia para app.models.Product (tabela products).
+# =============================================================================
+
+apiVersion: ontology.juno.gravithy.com.br/v1
+kind: ObjectType
+metadata:
+  name: Produto
+  description: |
+    Item comercializável da empresa. Inclui produtos acabados, semi-acabados
+    e serviços. Carrega custo padrão, preço de venda e nível de estoque.
+  owner: catalog-team
+  tags: [catalogo, comercial, operacao]
+
+spec:
+  backing:
+    type: sqlalchemy
+    model: app.models.Product
+    primary_key: id
+
+  title_property: name
+  identifier_properties: [id]
+
+  properties:
+    id:
+      type: integer
+      required: true
+      readonly: true
+    company_id:
+      type: integer
+      required: true
+      readonly: true
+      marking: TenantScoped
+    name:
+      type: string
+      required: true
+      max_length: 255
+    category:
+      type: string
+      enum_hint: [servico, materia-prima, produto-acabado, semi-acabado, comercializado]
+      max_length: 255
+    standard_cost:
+      type: money
+      currency: BRL
+      min: 0
+      marking: ConfidencialComercial
+      description: Custo padrão unitário (fonte de cálculo de margem)
+    sale_price:
+      type: money
+      currency: BRL
+      min: 0
+      marking: ConfidencialComercial
+    stock_quantity:
+      type: integer
+      min: 0
+    min_stock:
+      type: integer
+      min: 0
+      description: Ponto de ressuprimento
+    created_at:
+      type: datetime
+      readonly: true
+
+  computed_properties:
+    margem_unitaria:
+      type: money
+      formula: "sale_price - standard_cost"
+      description: Margem nominal por unidade (preço - custo)
+    margem_percentual:
+      type: percent
+      formula: "((sale_price - standard_cost) / sale_price * 100) if sale_price > 0 else 0"
+      description: Margem em percentual sobre o preço de venda
+    abaixo_minimo:
+      type: boolean
+      formula: "stock_quantity < min_stock"
+      description: Indica se está abaixo do ponto de ressuprimento
+    margem_critica:
+      type: boolean
+      formula: "((sale_price - standard_cost) / sale_price < 0.1) if sale_price > 0 else true"
+      description: Margem < 10% (gatilho de alerta executivo)
+
+  links:
+    empresa:
+      target: Empresa
+      cardinality: many_to_one
+      backing:
+        type: foreign_key
+        column: company_id
+      reverse_name: produtos
+    ordens_producao:
+      target: OrdemProducao
+      cardinality: one_to_many
+      backing:
+        type: foreign_key
+        target_column: product_id
+    pedidos_venda:
+      target: PedidoVenda
+      cardinality: one_to_many
+      backing:
+        type: foreign_key
+        target_column: product_id
+
+  markings:
+    inherit: [TenantScoped]
+
+  actions:
+    - atualizarPreco
+    - desativarProduto
+
+---
+# =============================================================================
+# Action: atualizarPreco
+# =============================================================================
+apiVersion: ontology.juno.gravithy.com.br/v1
+kind: ActionType
+metadata:
+  name: atualizarPreco
+  description: |
+    Atualiza o preço de venda de um produto com validação de margem mínima,
+    histórico de motivo e auditoria automática. Suporta dry-run para a IA
+    propor mudanças que o gestor confirma.
+  owner: comercial
+  tags: [pricing, comercial]
+
+spec:
+  target: Produto
+
+  inputs:
+    novo_preco:
+      type: money
+      currency: BRL
+      required: true
+      min: 0
+    motivo:
+      type: string
+      required: true
+      max_length: 500
+      description: Justificativa para o ajuste (obrigatório por compliance)
+    aplicar_em_pedidos_abertos:
+      type: boolean
+      required: false
+      description: Se true, atualiza pedidos não-faturados; default false
+
+  validation:
+    - rule: "novo_preco >= standard_cost * 0.8"
+      message: "Novo preço fica > 20% abaixo do custo padrão (margem fortemente negativa). Bloqueado por padrão."
+      severity: error
+    - rule: "(abs(novo_preco - sale_price) / sale_price < 0.5) if sale_price > 0 else true"
+      message: "Variação > 50% do preço atual — confirme a intenção antes de aplicar."
+      severity: warning
+    - rule: "novo_preco != sale_price"
+      message: "Novo preço é igual ao atual — operação sem efeito."
+      severity: warning
+
+  authorization:
+    roles: [admin, gerente_comercial, diretor_comercial]
+    require_markings: [ConfidencialComercial]
+    require_confirmation: true   # IA propõe; humano confirma
+
+  effect:
+    handler: app.ontology.actions.product.update_price
+    transactional: true
+
+  audit:
+    fields_before: [sale_price]
+    fields_after: [sale_price]
+    extra_context: [motivo, aplicar_em_pedidos_abertos]
+
+  dry_run: supported
+
+---
+# =============================================================================
+# Action: desativarProduto
+# =============================================================================
+apiVersion: ontology.juno.gravithy.com.br/v1
+kind: ActionType
+metadata:
+  name: desativarProduto
+  description: |
+    Marca um produto como descontinuado. Bloqueia novos pedidos mas mantém
+    histórico. Não deleta — soft delete via status.
+  owner: catalog-team
+
+spec:
+  target: Produto
+
+  inputs:
+    motivo:
+      type: string
+      required: true
+      max_length: 500
+    data_efetiva:
+      type: date
+      required: false
+      description: Quando o status passa a vigorar; default = hoje
+
+  validation:
+    - rule: "stock_quantity == 0"
+      message: "Há estoque remanescente. Recomenda-se zerar antes de desativar."
+      severity: warning
+
+  authorization:
+    roles: [admin, gerente_comercial]
+    require_confirmation: true
+
+  effect:
+    handler: app.ontology.actions.product.deactivate
+
+  # NOTA: o model atual nao tem coluna 'status' — desativar e' soft delete por
+  # convencao (ex: setando sale_price=0 + stock_quantity=0 + flag em metadata).
+  # Quando adicionarmos 'status' em app.models.Product (Sem2 migration), trocar
+  # extra_context por fields_before/after.
+  audit:
+    fields_before: [sale_price, stock_quantity]
+    fields_after: [sale_price, stock_quantity]
+    extra_context: [motivo, data_efetiva]
+
+  dry_run: supported

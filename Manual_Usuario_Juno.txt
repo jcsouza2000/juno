@@ -1,0 +1,1800 @@
+JUNO Industrial Diagnostic - Manual de Usuario e Implantacao
+Versao do produto: 0.3.2
+Data: 2026-05-25
+Arquivo: Manual_Usuario_Juno.txt
+Ambiente de referencia: http://localhost:4000
+
+======================================================================
+1. Objetivo deste manual
+======================================================================
+
+Este manual orienta novos usuarios, consultores e equipes de implantacao
+no uso do JUNO Industrial Diagnostic em empresas cliente.
+
+Ele explica, passo a passo, cada aba do menu lateral:
+
+1. Visao Geral
+2. Minha Empresa
+3. IA Operacional
+4. Demonstracoes
+5. Integracoes ERP
+6. Auditoria
+7. KPIs Executivos
+8. Auto Teste
+9. Demo Executivo
+10. Piloto
+
+O foco e permitir que uma nova empresa seja configurada, tenha dados
+importados, seja auditada, receba diagnostico executivo e possa iniciar
+um piloto controlado.
+
+Observacao importante:
+
+- Em ambiente de desenvolvimento local, o login pode ficar desativado
+  para acelerar testes e implantacao.
+- Em producao, o login, perfis de acesso, auditoria e politicas de
+  seguranca devem ser reativados e validados antes de expor o sistema.
+
+======================================================================
+2. Conceitos basicos do JUNO
+======================================================================
+
+O JUNO organiza o diagnostico empresarial em quatro camadas:
+
+1. Dados operacionais
+   Produtos, clientes, pedidos, ordens de producao, estoque, fornecedores
+   e outros dados vindos do ERP ou de planilhas.
+
+2. Dados financeiros
+   DRE, Balanco Patrimonial e DFC carregados por template financeiro.
+
+3. Governanca e confiabilidade
+   Validacao de dados, Data Trust Score, eventos, auditoria e historico
+   de importacoes.
+
+4. Inteligencia operacional
+   IA local, perguntas executivas, RAG, ontology tools e sugestoes de
+   acao com confirmacao humana.
+
+Fluxo recomendado para implantar uma empresa:
+
+1. Abrir o sistema.
+2. Usar a aba Piloto para mapear sponsor, ERP, dados e problema principal.
+3. Usar Integracoes ERP para importar dados operacionais.
+4. Usar Demonstracoes para importar dados financeiros.
+5. Usar Auditoria para validar a confiabilidade dos dados.
+6. Usar Minha Empresa para gerar diagnostico 360 e PDF executivo.
+7. Usar IA Operacional para explorar perguntas e propostas de acao.
+8. Usar Auto Teste antes de demonstracoes formais.
+9. Usar Demo Executivo para apresentacoes comerciais ou de diretoria.
+
+======================================================================
+3. Acesso ao sistema
+======================================================================
+
+Endereco local padrao:
+
+http://localhost:4000
+
+Backend local padrao:
+
+http://localhost:8000
+
+Como abrir:
+
+1. Execute C:\Souza\juno\Smart_Juno.bat.
+2. Aguarde o script validar backend e frontend.
+3. O navegador deve abrir em http://localhost:4000.
+4. Se o navegador nao abrir automaticamente, cole o endereco manualmente.
+
+Se aparecer a tela de login em desenvolvimento:
+
+1. Atualize a pagina.
+2. Acesse diretamente http://localhost:4000/.
+3. Confirme que o frontend foi reiniciado apos as alteracoes.
+4. Em desenvolvimento, a tela /login deve redirecionar para o dashboard.
+
+Se o sistema nao abrir:
+
+1. Verifique se a porta 4000 esta ativa.
+2. Verifique se a porta 8000 esta ativa.
+3. Abra os logs:
+   C:\Souza\juno\logs\frontend-smart-juno.log
+   C:\Souza\juno\logs\backend-smart-juno.log
+4. Execute novamente Smart_Juno.bat.
+
+======================================================================
+4. Menu lateral - visao geral das abas
+======================================================================
+
+O menu lateral e o ponto central de navegacao. Cada aba tem uma funcao
+especifica dentro da implantacao.
+
+Visao Geral:
+Tela inicial, usada para direcionar o usuario para os principais modulos.
+
+Minha Empresa:
+Painel principal de diagnostico operacional 360 graus.
+
+IA Operacional:
+Chat governado com IA local para perguntas, analises e propostas de acao.
+
+Demonstracoes:
+Upload de demonstracoes financeiras: DRE, Balanco e DFC.
+
+Integracoes ERP:
+Upload de dados operacionais exportados do ERP.
+
+Auditoria:
+Validacao da qualidade dos dados, Data Trust Score e eventos.
+
+KPIs Executivos:
+Dashboards separados para CEO, CFO, COO e Consultoria.
+
+Auto Teste:
+Rotina de validacao tecnica do sistema antes de reunioes ou pilotos.
+
+Demo Executivo:
+Roteiro de demonstracao para apresentacoes comerciais ou executivas.
+
+Piloto:
+Checklist de implantacao, data request e plano de piloto.
+
+======================================================================
+5. Aba: Visao Geral
+======================================================================
+
+Finalidade:
+
+A aba Visao Geral e a porta de entrada do sistema. Ela apresenta os
+atalhos principais para iniciar o uso do JUNO.
+
+O que o usuario ve:
+
+- Cartao Minha Empresa.
+- Cartao IA Operacional.
+- Cartao Score Industrial.
+- Botoes "Abrir Diagnostico".
+
+Quando usar:
+
+- No primeiro acesso ao sistema.
+- Quando o usuario nao sabe por qual modulo comecar.
+- Em treinamento de novos usuarios.
+- Em demonstracoes rapidas.
+
+Passo a passo:
+
+1. Acesse http://localhost:4000.
+2. Confirme se o menu lateral esta visivel.
+3. Leia o titulo da pagina:
+   "JUNO - Sistema Operacional de Dados e IA".
+4. Escolha uma das opcoes:
+   - Minha Empresa: para diagnostico operacional.
+   - IA Operacional: para perguntas e analises via IA.
+   - Score Industrial: para verificar confiabilidade e auditoria.
+5. Clique em "Abrir Diagnostico" no cartao desejado.
+
+Boas praticas:
+
+- Para implantacao, comece por Piloto ou Integracoes ERP, nao pela IA.
+- Para apresentacao executiva, comece por Demo Executivo ou Minha Empresa.
+- Para validacao tecnica, comece por Auto Teste.
+
+Problemas comuns:
+
+- Se a tela mostrar login, confirme que o ambiente esta em modo
+  desenvolvimento e acesse / diretamente.
+- Se os cartoes nao carregarem, confira se o frontend esta rodando.
+
+======================================================================
+6. Aba: Minha Empresa
+======================================================================
+
+Finalidade:
+
+A aba Minha Empresa e o painel principal do JUNO. Ela consolida dados
+operacionais e financeiros para gerar um diagnostico 360 graus.
+
+O que o usuario ve:
+
+- Score JUNO.
+- Receita liquida.
+- Margem media.
+- Alertas criticos.
+- Insights executivos.
+- Tabela de margem por produto.
+- Tabela de atrasos.
+- Provas de ontologia de produtos e ordens.
+- Botao "Gerar Diagnostico 360".
+- Botao "Baixar PDF Executivo".
+
+Quando usar:
+
+- Apos importar dados do ERP.
+- Apos carregar demonstracoes financeiras.
+- Antes de apresentar resultados ao cliente.
+- Durante reunioes com CEO, CFO, COO ou consultoria.
+
+Passo a passo para leitura:
+
+1. Abra a aba Minha Empresa.
+2. Aguarde a mensagem de carregamento terminar.
+3. Verifique o Score JUNO.
+4. Leia os indicadores principais:
+   - Receita Liquida.
+   - Margem Media.
+   - Alertas Criticos.
+5. Role a pagina ate os insights executivos.
+6. Verifique a tabela de margem por produto.
+7. Identifique produtos com margem negativa.
+8. Verifique a tabela de atrasos.
+9. Identifique ordens com atraso e possivel impacto financeiro.
+10. Revise as provas de ontologia.
+
+Passo a passo para gerar diagnostico:
+
+1. Clique em "Gerar Diagnostico 360".
+2. Aguarde o processamento.
+3. Revise o bloco de diagnostico gerado.
+4. Verifique se as recomendacoes fazem sentido com os dados importados.
+5. Use o diagnostico como base para reuniao executiva.
+
+Passo a passo para baixar PDF:
+
+1. Clique em "Baixar PDF Executivo".
+2. Aguarde a geracao do arquivo.
+3. Salve o PDF em uma pasta do projeto ou do cliente.
+4. Revise o PDF antes de enviar ao cliente.
+5. Nao envie se os dados ainda nao foram validados na aba Auditoria.
+
+Como interpretar:
+
+Score JUNO:
+- Alto: empresa com dados e operacao em condicao mais saudavel.
+- Medio: existem riscos ou inconsistencias que exigem investigacao.
+- Baixo: nao usar para decisao executiva sem auditoria e saneamento.
+
+Margem Media:
+- Margem positiva indica operacao saudavel no agregado.
+- Margem negativa ou muito baixa exige revisao de custos, precos e mix.
+
+Alertas Criticos:
+- Mostram eventos, atrasos ou inconsistencias relevantes.
+- Devem ser cruzados com Auditoria antes de recomendacoes finais.
+
+Cuidados:
+
+- Nao interpretar a aba sem dados atualizados.
+- Nao apresentar o PDF sem validar a importacao.
+- Se os dados aparecerem zerados, volte para Integracoes ERP e
+  Demonstracoes.
+
+======================================================================
+7. Aba: IA Operacional
+======================================================================
+
+Finalidade:
+
+A aba IA Operacional permite conversar com o JUNO Coordinator. A IA usa
+dados operacionais, contexto do dominio, RAG e ferramentas de ontologia
+para responder perguntas e propor acoes.
+
+O que o usuario ve:
+
+- Status do motor local.
+- Area de conversa.
+- Perguntas rapidas.
+- Campo para digitar pergunta.
+- Botoes de envio.
+- Possiveis cards de acao proposta.
+
+Perguntas rapidas disponiveis:
+
+- Faca um diagnostico completo da minha empresa.
+- Quais produtos estao sendo vendidos com prejuizo?
+- Os dados estao prontos para apresentar ao conselho?
+- Quais ordens estao mais atrasadas e qual o impacto financeiro?
+- Quanto estou perdendo por mes em margem negativa?
+- Gere um resumo executivo da operacao.
+
+Quando usar:
+
+- Apos importar e auditar os dados.
+- Para preparar reunioes executivas.
+- Para explorar causas de margem negativa.
+- Para perguntar sobre atrasos, gargalos e riscos.
+- Para transformar dados em linguagem de decisao.
+
+Passo a passo:
+
+1. Abra a aba IA Operacional.
+2. Verifique se aparece status online.
+3. Escolha uma pergunta rapida ou digite uma pergunta propria.
+4. Clique em enviar.
+5. Aguarde a resposta em streaming.
+6. Observe se a IA acionou ferramentas.
+7. Leia a resposta completa.
+8. Se houver proposta de acao, revise o diff antes de confirmar.
+9. Confirme a acao somente se entender o impacto.
+10. Registre a conclusao na ata ou no plano de acao do cliente.
+
+Exemplos de perguntas boas:
+
+- "Quais produtos mais prejudicam a margem neste mes?"
+- "O que devo apresentar ao CFO com base nos dados atuais?"
+- "Liste os principais riscos operacionais por impacto financeiro."
+- "Quais dados faltam para confiar no diagnostico?"
+- "Explique o Score JUNO para um diretor industrial."
+
+Perguntas ruins:
+
+- "O que devo fazer?" sem contexto.
+- "Esta tudo certo?" sem indicar area.
+- "Me de uma resposta final" antes da auditoria.
+
+Cuidados:
+
+- A IA apoia decisao, mas nao substitui validacao humana.
+- Acoes propostas devem ser confirmadas conscientemente.
+- Em cliente real, nunca use dados sensiveis sem politica de acesso.
+- Se a IA responder sem dados, volte para Integracoes ERP e Demonstracoes.
+
+======================================================================
+8. Aba: Demonstracoes
+======================================================================
+
+Finalidade:
+
+A aba Demonstracoes importa e analisa dados financeiros. Ela recebe DRE,
+Balanco Patrimonial e DFC em template Excel ou CSV.
+
+O que o usuario ve:
+
+- Passo 1: Baixar template.
+- Passo 2: Preencher abas.
+- Passo 3: Carregar no JUNO.
+- Seletor de empresa.
+- Area para arrastar arquivo.
+- Botao "Carregar Demonstracoes Financeiras".
+- Resumo financeiro.
+- Historico de uploads.
+
+Quando usar:
+
+- Antes de diagnostico financeiro.
+- Antes de perguntas sobre margem, EBITDA, caixa e liquidez.
+- Antes de gerar PDF executivo.
+- Ao iniciar implantacao em uma nova empresa.
+
+Dados esperados:
+
+DRE:
+- Conta.
+- Periodo no formato AAAA-MM.
+- Valor.
+- Receita bruta.
+- Receita liquida.
+- Custos.
+- Despesas.
+- EBITDA.
+- Lucro liquido.
+
+Balanco:
+- Ativo circulante.
+- Passivo circulante.
+- Patrimonio liquido.
+- Outros grupos patrimoniais relevantes.
+
+DFC:
+- Caixa operacional.
+- Caixa de investimento.
+- Caixa de financiamento.
+- Variacao de caixa.
+- Caixa final.
+
+Passo a passo:
+
+1. Abra a aba Demonstracoes.
+2. Clique em "Baixar template".
+3. Abra o arquivo Excel baixado.
+4. Preencha as abas DRE, Balanco e DFC.
+5. Use periodos no padrao AAAA-MM.
+6. Use valores numericos, sem texto misturado.
+7. Use valores negativos para saidas, quando aplicavel.
+8. Salve o arquivo.
+9. Volte ao JUNO.
+10. Selecione a empresa.
+11. Arraste o arquivo para a area de upload ou clique para selecionar.
+12. Clique em "Carregar Demonstracoes Financeiras".
+13. Aguarde a mensagem de sucesso ou erro.
+14. Se houver erro, corrija o arquivo e repita.
+15. Revise o resumo financeiro gerado.
+16. Abra o historico para confirmar data e status do upload.
+
+Como validar:
+
+- Confira se os periodos importados estao corretos.
+- Confira se a receita liquida e o lucro liquido fazem sentido.
+- Confira se liquidez e endividamento nao estao absurdos.
+- Compare os totais com o balancete ou demonstrativo oficial.
+
+Erros comuns:
+
+- Periodo em formato errado.
+- Colunas renomeadas incorretamente.
+- Valores com texto, simbolos ou separadores inconsistentes.
+- Abas vazias.
+- Arquivo salvo em formato nao aceito.
+
+======================================================================
+9. Aba: Integracoes ERP
+======================================================================
+
+Finalidade:
+
+A aba Integracoes ERP importa dados operacionais exportados do ERP ou
+de planilhas. Ela e o principal ponto de entrada para produtos, clientes,
+pedidos, ordens e outros registros.
+
+O que o usuario ve:
+
+- Instrucoes em tres passos.
+- Seletor de empresa.
+- Seletor de tipo de dado.
+- Download de template quando disponivel.
+- Area de upload de CSV ou Excel.
+- Botao "Importar para JUNO".
+- Resumo da importacao.
+- Historico de importacoes.
+
+Tipos de dados disponiveis:
+
+1. Produtos.
+2. Clientes.
+3. Pedidos de Venda.
+4. Ordens de Producao.
+5. Estoque.
+6. Financeiro.
+7. Fornecedores.
+
+Quando usar:
+
+- No inicio da implantacao.
+- Sempre que houver novo lote de dados do ERP.
+- Antes de usar Minha Empresa.
+- Antes de usar Auditoria.
+- Antes de usar IA Operacional com perguntas de negocio.
+
+Passo a passo:
+
+1. Abra a aba Integracoes ERP.
+2. Selecione a empresa.
+3. Escolha o tipo de dado.
+4. Se houver template, clique em "Baixar CSV".
+5. Exporte os dados do ERP no formato correspondente.
+6. Ajuste os nomes de colunas conforme o template.
+7. Salve em CSV, XLSX ou XLS.
+8. Arraste o arquivo para a area de upload.
+9. Confirme que o nome do arquivo aparece na tela.
+10. Clique em "Importar para JUNO".
+11. Aguarde o processamento.
+12. Leia o resumo:
+    - linhas recebidas;
+    - linhas importadas;
+    - linhas rejeitadas;
+    - erros encontrados;
+    - status final.
+13. Se o status for "Sucesso", siga para Auditoria.
+14. Se o status for "Parcial", corrija as linhas rejeitadas.
+15. Se o status for "Erro", revise formato, colunas e conteudo.
+16. Abra o Historico de Importacoes para documentar a carga.
+
+Upload por tipo de estrutura:
+
+A integracao ERP do JUNO deve ser tratada como uma camada plugavel, e nao
+como dependencia de um unico fornecedor. A mesma rotina deve aceitar dados
+vindos de TOTVS, Senior, SAP, Sankhya, Oracle, Infor ou Generic, desde que a
+empresa consiga exportar os dados em CSV, XLSX ou XLS e mapear as colunas
+para a estrutura canonica do JUNO.
+
+Na implantacao existem dois caminhos:
+
+1. Conector ERP:
+   - Usado quando a empresa liberar API, banco de leitura ou rotina tecnica.
+   - Credenciais devem ser armazenadas criptografadas.
+   - O sincronismo deve registrar logs, data, status e quantidade de linhas.
+   - Deve existir fallback por arquivo caso o conector falhe ou nao esteja
+     aprovado pelo TI.
+
+2. Importacao por arquivo:
+   - Caminho recomendado para piloto, POC e primeira implantacao.
+   - O usuario exporta CSV ou Excel do ERP.
+   - O arquivo e carregado na aba Integracoes ERP.
+   - O JUNO normaliza nomes de colunas conhecidos e valida campos
+     obrigatorios.
+   - A Auditoria deve ser rodada apos cada carga relevante.
+
+Padrao dos arquivos:
+
+- Extensoes aceitas: .csv, .xlsx e .xls.
+- Cada arquivo deve conter apenas uma empresa.
+- Cada arquivo deve conter apenas um tipo de dado.
+- A primeira linha deve conter os nomes das colunas.
+- Evite celulas mescladas, cabecalhos duplos, totais no rodape e comentarios.
+- Valores monetarios devem vir como numero, sem "R$", texto ou formulas.
+- Datas devem usar preferencialmente AAAA-MM-DD.
+- Periodos mensais devem usar preferencialmente AAAA-MM.
+- Codigos externos podem vir do ERP, mas nomes tambem devem estar claros.
+- Antes do lote completo, importe uma amostra pequena para validar o formato.
+
+Como usar a tela para cada estrutura:
+
+1. Produtos
+
+Finalidade:
+
+Cadastrar ou atualizar a base de produtos usada nas analises industriais.
+Produtos sao referencia para pedidos, ordens de producao, estoque, custos e
+margem.
+
+Quando importar:
+
+- Sempre no inicio da implantacao.
+- Antes de pedidos de venda.
+- Antes de ordens de producao.
+- Sempre que houver mudanca relevante de cadastro ou preco.
+
+Template disponivel:
+
+- products_template.csv.
+
+Colunas minimas:
+
+- name: nome ou descricao do produto.
+
+Colunas recomendadas:
+
+- external_code: codigo do produto no ERP.
+- category: grupo, familia ou categoria.
+- standard_cost: custo padrao.
+- sale_price: preco de venda.
+
+Nomes de colunas aceitos por mapeamento:
+
+- produto, descricao, desc_produto ou nome_produto -> name.
+- codigo, cod_produto ou product_code -> external_code.
+- categoria, grupo ou grupo_produto -> category.
+- custo, custo_padrao ou standard_cost -> standard_cost.
+- preco, preco_venda, valor_venda ou sale_price -> sale_price.
+
+Passo a passo:
+
+1. Abra Integracoes ERP.
+2. Selecione a empresa.
+3. Clique em "Produtos".
+4. Baixe o CSV de template, se desejar.
+5. Exporte do ERP o cadastro de produtos.
+6. Garanta que cada linha representa um produto.
+7. Confira se o nome do produto esta preenchido.
+8. Salve em CSV, XLSX ou XLS.
+9. Arraste o arquivo para a area de upload.
+10. Clique em "Importar para JUNO".
+11. Confira linhas importadas e rejeitadas.
+12. Se houver rejeicao, corrija produtos sem nome ou colunas incorretas.
+
+2. Clientes
+
+Finalidade:
+
+Cadastrar clientes para relacionar pedidos de venda, receita e segmentos de
+mercado.
+
+Quando importar:
+
+- Depois de Produtos.
+- Antes de Pedidos de Venda.
+- Sempre que houver novos clientes ou mudanca de segmentacao.
+
+Template disponivel:
+
+- customers_template.csv.
+
+Colunas minimas:
+
+- name: nome, cliente ou razao social.
+
+Colunas recomendadas:
+
+- external_code: codigo do cliente no ERP.
+- segment: segmento, setor ou tipo do cliente.
+
+Nomes de colunas aceitos por mapeamento:
+
+- cliente, nome_cliente ou razao_social -> name.
+- codigo_cliente, cod_cliente ou customer_code -> external_code.
+- segmento, setor ou tipo_cliente -> segment.
+
+Passo a passo:
+
+1. Abra Integracoes ERP.
+2. Selecione a empresa.
+3. Clique em "Clientes".
+4. Exporte o cadastro de clientes do ERP.
+5. Confira se cada linha possui nome de cliente.
+6. Padronize o segmento quando existir.
+7. Carregue o arquivo.
+8. Clique em "Importar para JUNO".
+9. Verifique o resumo da importacao.
+
+3. Pedidos de Venda
+
+Finalidade:
+
+Carregar receita, desconto, cliente, produto e data dos pedidos para calculo
+de volume comercial, margem e relacao entre demanda e producao.
+
+Quando importar:
+
+- Depois de Produtos e Clientes.
+- Antes de Minha Empresa, Auditoria e IA Operacional.
+- Em cargas recorrentes, conforme periodo de analise.
+
+Template disponivel:
+
+- sales_orders_template.csv.
+
+Colunas minimas:
+
+- customer_name: nome do cliente.
+- product_name: nome do produto.
+- revenue: valor de receita do pedido.
+
+Colunas recomendadas:
+
+- external_order_id: numero do pedido no ERP.
+- discount: desconto.
+- order_date: data do pedido.
+
+Nomes de colunas aceitos por mapeamento:
+
+- pedido, num_pedido, numero_pedido ou order_number -> external_order_id.
+- cliente ou nome_cliente -> customer_name.
+- produto, descricao ou nome_produto -> product_name.
+- receita, faturamento, valor_total ou valor -> revenue.
+- desconto ou desc -> discount.
+- data_pedido, data_emissao ou data -> order_date.
+
+Passo a passo:
+
+1. Abra Integracoes ERP.
+2. Selecione a empresa.
+3. Clique em "Pedidos de Venda".
+4. Exporte pedidos do ERP no periodo definido com o cliente.
+5. Garanta que produto, cliente e receita estejam preenchidos.
+6. Confira se produtos e clientes usam nomes iguais aos cadastros ja
+   carregados.
+7. Salve em CSV, XLSX ou XLS.
+8. Faca o upload.
+9. Clique em "Importar para JUNO".
+10. Se aparecer "Parcial", corrija linhas sem produto ou sem receita.
+
+4. Ordens de Producao
+
+Finalidade:
+
+Carregar planejamento e realizacao da producao para detectar atraso,
+desvio de quantidade, desvio de custo e problemas de execucao industrial.
+
+Quando importar:
+
+- Depois de Produtos.
+- Antes de Auditoria e Demo Executivo.
+- Sempre que a analise envolver atraso, capacidade, custo real ou eficiencia.
+
+Template disponivel:
+
+- production_orders_template.csv.
+
+Colunas minimas:
+
+- product_name: nome do produto.
+- planned_qty: quantidade planejada.
+- actual_qty: quantidade real.
+
+Colunas recomendadas:
+
+- external_order_id: numero da OP.
+- planned_cost: custo planejado.
+- actual_cost: custo real.
+- planned_date: data planejada ou inicio previsto.
+- actual_date: data real ou conclusao.
+- status: situacao da ordem.
+
+Nomes de colunas aceitos por mapeamento:
+
+- op, num_op, ordem_producao ou order_id -> external_order_id.
+- produto, descricao ou nome_produto -> product_name.
+- qtd_planejada ou quantidade_planejada -> planned_qty.
+- qtd_real ou quantidade_real -> actual_qty.
+- custo_planejado ou custo_previsto -> planned_cost.
+- custo_real ou custo_realizado -> actual_cost.
+- data_planejada, data_prevista ou data_inicio -> planned_date.
+- data_real, data_conclusao ou data_fim -> actual_date.
+- status ou situacao -> status.
+
+Passo a passo:
+
+1. Abra Integracoes ERP.
+2. Selecione a empresa.
+3. Clique em "Ordens de Producao".
+4. Exporte as OPs do ERP ou MES.
+5. Confira produto, quantidade planejada e quantidade real.
+6. Inclua datas e custos sempre que disponiveis.
+7. Faca uma importacao pequena de teste.
+8. Revise o resumo.
+9. Importe o lote completo.
+10. Rode Auditoria para verificar volume de OPs e consistencia.
+
+5. Estoque
+
+Finalidade:
+
+Estrutura prevista para carregar saldo, localizacao e custo de estoque por
+produto. Serve para analises futuras de capital parado, ruptura, cobertura e
+conflito entre estoque e producao.
+
+Observacao critica:
+
+Na versao atual, Estoque aparece como estrutura de integracao, mas a
+persistencia direta no diagnostico principal deve ser validada antes de
+uso executivo. Para piloto, use como carga controlada e confirme na aba
+Auditoria se os dados foram considerados no relatorio esperado.
+
+Colunas minimas:
+
+- product_name: nome do produto.
+
+Colunas recomendadas:
+
+- external_code: codigo do produto no ERP.
+- warehouse_location: deposito, almoxarifado ou local.
+- quantity_on_hand: quantidade em estoque.
+- quantity_reserved: quantidade reservada.
+- unit_cost: custo unitario.
+
+Passo a passo:
+
+1. Abra Integracoes ERP.
+2. Selecione a empresa.
+3. Clique em "Estoque".
+4. Exporte saldo de estoque por produto e local.
+5. Nao misture estoque atual com historico no mesmo arquivo.
+6. Carregue o arquivo.
+7. Verifique se a importacao foi aceita.
+8. Rode Auditoria.
+9. Se o dado nao aparecer no diagnostico, registre como insumo tecnico para
+   a proxima evolucao do conector.
+
+6. Financeiro
+
+Finalidade:
+
+Estrutura operacional para lancamentos ou visoes financeiras ligadas ao ERP.
+Nao substitui a aba Demonstracoes, que e o fluxo correto para DRE, Balanco e
+DFC.
+
+Quando usar:
+
+- Quando a empresa exportar lancamentos, contas, receitas operacionais ou
+  dados financeiros auxiliares do ERP.
+- Quando o objetivo for cruzar operacional com financeiro.
+
+Observacao critica:
+
+Para demonstracoes contabeis oficiais, use a aba Demonstracoes. A estrutura
+Financeiro em Integracoes ERP deve ser usada como apoio operacional e deve
+ser validada na Auditoria antes de qualquer conclusao executiva.
+
+Colunas minimas:
+
+- revenue: receita, faturamento ou valor positivo de entrada.
+
+Colunas recomendadas:
+
+- document_type: tipo de documento.
+- document_number: numero do documento.
+- account_code: codigo da conta.
+- account_name: nome da conta.
+- debit: debito.
+- credit: credito.
+- period: periodo AAAA-MM.
+
+Passo a passo:
+
+1. Abra Integracoes ERP.
+2. Selecione a empresa.
+3. Clique em "Financeiro".
+4. Exporte o arquivo do ERP.
+5. Confira periodo, valor e conta.
+6. Carregue o arquivo.
+7. Valide se a carga foi aceita.
+8. Para DRE, Balanco e DFC, volte para a aba Demonstracoes e use o template
+   oficial de demonstracoes.
+
+7. Fornecedores
+
+Finalidade:
+
+Estrutura para cadastrar fornecedores, lead time e condicoes comerciais. Deve
+apoiar analises futuras de compras, risco de suprimento e dependencia de
+fornecedores.
+
+Observacao critica:
+
+Na versao atual, Fornecedores aparece como estrutura de integracao. Antes de
+usar em apresentacao executiva, confirme se o dado importado esta refletido
+na Auditoria ou no relatorio usado pelo cliente.
+
+Colunas minimas:
+
+- name: nome do fornecedor.
+
+Colunas recomendadas:
+
+- cnpj: CNPJ.
+- contact_name: contato principal.
+- email: email.
+- phone: telefone.
+- payment_terms: prazo ou condicao de pagamento.
+- lead_time_days: lead time em dias.
+- supplied_item: insumo ou item fornecido.
+- average_price: preco medio.
+
+Passo a passo:
+
+1. Abra Integracoes ERP.
+2. Selecione a empresa.
+3. Clique em "Fornecedores".
+4. Exporte o cadastro de fornecedores do ERP.
+5. Confira nome, CNPJ e lead time quando disponiveis.
+6. Carregue o arquivo.
+7. Revise o resumo da importacao.
+8. Use Auditoria para confirmar se a carga ficou registrada.
+
+Fluxo recomendado para arquivos vindos de qualquer ERP:
+
+1. TI exporta os arquivos por modulo, sem consolidar tudo em uma planilha.
+2. Implantador copia os arquivos originais para uma pasta de evidencia.
+3. Implantador baixa templates do JUNO quando existirem.
+4. Implantador compara nomes de colunas do ERP com nomes aceitos pelo JUNO.
+5. Se necessario, cria uma versao ajustada do arquivo para upload.
+6. Implantador carrega primeiro 5 a 20 linhas de teste.
+7. Implantador verifica status, erros e historico.
+8. Implantador corrige colunas, datas, numeros e obrigatorios.
+9. Implantador carrega o lote completo.
+10. Implantador roda Auditoria.
+11. Implantador registra data, responsavel e origem do arquivo.
+12. Somente depois usa Minha Empresa, IA Operacional ou Demo Executivo.
+
+Checklist antes do upload:
+
+[ ] Empresa correta selecionada.
+[ ] Tipo de dado correto selecionado.
+[ ] Arquivo contem apenas uma estrutura.
+[ ] Arquivo contem apenas uma empresa.
+[ ] Cabecalho esta na primeira linha.
+[ ] Sem linhas de total, subtotais ou comentarios.
+[ ] Datas padronizadas.
+[ ] Valores numericos sem simbolos.
+[ ] Campos obrigatorios preenchidos.
+[ ] Arquivo salvo em CSV, XLSX ou XLS.
+[ ] Copia original preservada.
+[ ] Responsavel pela carga identificado.
+
+Checklist apos o upload:
+
+[ ] Status da importacao revisado.
+[ ] Linhas recebidas conferidas.
+[ ] Linhas importadas conferidas.
+[ ] Linhas rejeitadas analisadas.
+[ ] Historico de importacoes aberto.
+[ ] Auditoria rodada.
+[ ] Data Trust Score revisado.
+[ ] Pendencias registradas.
+[ ] Arquivo corrigido, se necessario.
+
+Ordem recomendada de importacao:
+
+1. Produtos.
+2. Clientes.
+3. Pedidos de Venda.
+4. Ordens de Producao.
+5. Estoque.
+6. Fornecedores.
+7. Financeiro operacional, se aplicavel.
+
+Boas praticas:
+
+- Importe primeiro poucos registros para validar o formato.
+- Depois importe o lote completo.
+- Guarde os arquivos originais exportados do ERP.
+- Registre a data e o responsavel por cada carga.
+- Nao misture empresas diferentes no mesmo arquivo.
+
+Erros comuns:
+
+- Codigo de produto inexistente em pedidos.
+- Datas em formato diferente.
+- Numeros com virgula/ponto misturados.
+- Campos obrigatorios vazios.
+- Arquivo do tipo errado para a categoria escolhida.
+
+======================================================================
+10. Aba: Auditoria
+======================================================================
+
+Finalidade:
+
+A aba Auditoria mede a confiabilidade dos dados antes de qualquer
+apresentacao executiva. Ela ajuda a responder: "podemos confiar nesses
+numeros?"
+
+O que o usuario ve:
+
+- Botao "Validar Dados".
+- Data Trust Score.
+- Problemas detectados.
+- Severidade: Alto, Medio ou Baixo.
+- Ultima importacao ERP.
+- Eventos recentes.
+- Filtros de periodo e tipo de evento.
+- Resumo executivo de prontidao dos dados.
+
+Quando usar:
+
+- Sempre apos importar dados do ERP.
+- Sempre apos carregar demonstracoes financeiras.
+- Antes de gerar PDF executivo.
+- Antes de reuniao com CFO, COO, CEO ou conselho.
+- Antes de deixar a IA responder perguntas conclusivas.
+
+Passo a passo:
+
+1. Abra a aba Auditoria.
+2. Confirme que a empresa correta esta selecionada.
+3. Clique em "Validar Dados".
+4. Aguarde o relatorio.
+5. Leia o Data Trust Score.
+6. Verifique as deducoes do score.
+7. Leia a lista de problemas.
+8. Priorize problemas de severidade Alta.
+9. Verifique a ultima importacao ERP.
+10. Use os filtros de eventos se precisar investigar um periodo.
+11. Revise o resumo executivo.
+12. Se o score estiver baixo, volte para Integracoes ERP ou Demonstracoes.
+
+Interpretacao do Data Trust Score:
+
+80 a 100:
+- Dados confiaveis para diagnostico e apresentacao.
+
+60 a 79:
+- Dados parcialmente confiaveis.
+- Apresentar com ressalvas.
+- Corrigir problemas relevantes antes de decisoes financeiras.
+
+Abaixo de 60:
+- Dados nao devem ser usados como base final de decisao.
+- Necessario saneamento antes de apresentacao.
+
+Eventos comuns:
+
+- Importacao ERP.
+- Atualizacao de preco.
+- Mudancas em registros.
+- Eventos de auditoria de dados.
+
+Boas praticas:
+
+- Tire evidencia do score antes e depois de correcoes.
+- Mantenha rastreabilidade de cada importacao.
+- Nunca ignore problemas de severidade Alta.
+- Use Auditoria como etapa obrigatoria antes do PDF.
+
+Leitura completa da nova Auditoria:
+
+A aba Auditoria e o centro de confianca do JUNO. Ela consolida dados de
+uploads, demonstracoes, eventos, validacoes e prontidao executiva. O usuario
+nao precisa mais clicar obrigatoriamente em "Validar Dados" para iniciar a
+leitura: ao abrir a aba, o JUNO carrega automaticamente o resumo inicial.
+O botao continua existindo para revalidar apos novo upload ou correcao.
+
+Endpoints usados pela aba:
+
+- /audit/data-quality/{company_id}
+- /events/{company_id}
+
+O endpoint /audit/data-quality/{company_id} retorna o relatorio consolidado.
+O endpoint /events/{company_id} retorna a linha do tempo de eventos e tambem
+suporta contagem por periodo.
+
+Blocos da aba Auditoria:
+
+1. Data Trust Score:
+   - Mostra score de confianca de 0 a 100.
+   - Mostra classificacao Alta, Media ou Baixa.
+   - Mostra deducoes que explicam por que o score caiu.
+   - Deve ser usado antes de qualquer decisao executiva.
+
+2. Cobertura de Dados:
+   - Mostra quais fontes foram carregadas.
+   - Fontes avaliadas: Produtos, Clientes, Pedidos, Ordens de Producao,
+     Estoque, Fornecedores, DRE, Balanco, DFC, Historico ERP e Historico
+     Financeiro.
+   - Cada fonte aparece como carregada ou pendente.
+   - Fontes pendentes indicam o modulo onde o usuario deve corrigir:
+     Integracoes ERP ou Demonstracoes.
+
+3. Validacoes por Dominio:
+   - Produtos: produtos sem custo e sem preco.
+   - Pedidos: pedidos sem cliente, sem produto, com receita negativa ou
+     zerada.
+   - Ordens de Producao: OPs sem produto, quantidade real incoerente e custo
+     real extremo.
+   - Estoque: saldo negativo e quantidade reservada maior que saldo.
+   - Fornecedores: fornecedor sem lead time.
+   - Demonstracoes: DRE, Balanco e DFC ausentes.
+
+4. Reconciliacao:
+   - Compara Receita de Pedidos versus Receita da DRE.
+   - Compara produtos vendidos versus cadastro de produtos.
+   - Compara OPs versus cadastro de produtos.
+   - Status OK indica coerencia suficiente.
+   - Status Atencao ou Critico exige investigacao antes da apresentacao.
+
+5. Problemas Detectados:
+   - Lista problemas encontrados pela auditoria.
+   - Cada problema mostra severidade, mensagem e acao recomendada.
+   - Problemas de severidade Alta bloqueiam apresentacao executiva.
+
+6. Ultima Importacao ERP:
+   - Mostra tipo de dado, arquivo, linhas importadas, status e data.
+   - Ajuda a provar origem e atualidade da carga.
+
+7. Governanca de Eventos:
+   - Mostra eventos dos ultimos 7 e 30 dias.
+   - Mostra importacoes ERP.
+   - Mostra mudancas de preco, quando houver.
+   - Ajuda a identificar se os dados foram alterados recentemente.
+
+8. Linha do Tempo de Eventos:
+   - Lista eventos recentes por data.
+   - Permite filtrar por tipo e periodo.
+   - Deve ser usada como evidencia de implantacao e governanca.
+
+9. Pendencias e Plano de Acao:
+   - Converte falhas em tarefas.
+   - Cada tarefa mostra prioridade, responsavel sugerido, motivo e status.
+   - Responsaveis possiveis: CFO, COO, TI/Consultoria ou Consultoria.
+
+10. Prontidao Executiva:
+    - Mostra se os dados estao prontos para CEO, CFO, COO e Conselho.
+    - Bloqueia quando ha Data Trust baixo, fontes incompletas ou pendencias
+      de alta prioridade.
+
+11. Exportacoes de Auditoria:
+    - PDF de Auditoria.
+    - CSV de Pendencias.
+    - JSON de Evidencias.
+    - Esses itens documentam o que deve ser exportado para cliente, diretoria
+      ou equipe tecnica.
+
+Como usar na implantacao:
+
+1. Importe Produtos, Clientes, Pedidos e Ordens em Integracoes ERP.
+2. Importe DRE, Balanco e DFC em Demonstracoes.
+3. Abra Auditoria.
+4. Aguarde o carregamento automatico.
+5. Confira Data Trust Score.
+6. Confira Cobertura de Dados.
+7. Analise Validacoes por Dominio.
+8. Revise Reconciliacao.
+9. Corrija problemas de severidade Alta.
+10. Reimporte arquivos corrigidos, se necessario.
+11. Clique em "Validar Dados" para recalcular.
+12. So avance para KPIs Executivos, Minha Empresa, IA Operacional ou PDF
+    quando a Prontidao Executiva estiver aceitavel.
+
+Criterios minimos para apresentacao:
+
+- Data Trust Score igual ou superior a 80.
+- Produtos carregados.
+- Pedidos carregados.
+- DRE carregada.
+- Balanco carregado.
+- Sem problema de severidade Alta.
+- Receita de pedidos reconciliada com DRE ou explicada.
+- Pendencias documentadas.
+
+======================================================================
+11. Aba: KPIs Executivos
+======================================================================
+
+Finalidade:
+
+A aba KPIs Executivos organiza os indicadores da empresa por responsavel:
+CEO, CFO, COO e Consultoria. O objetivo e permitir que a mesma base de
+dados seja lida de formas diferentes, sem misturar prioridades de diretoria,
+financeiro, operacao e implantacao.
+
+Essa aba nao substitui Demonstracoes, Integracoes ERP ou Auditoria. Ela
+consolida os resultados dessas fontes em dashboards executivos.
+
+O que o usuario ve:
+
+- Abas ou botoes para CEO, CFO, COO e Consultoria.
+- Cards principais de cada responsavel.
+- Indicadores agrupados por categoria.
+- Status de cada KPI: OK, Atencao, Critico ou Sem dados.
+- Fontes de dados carregadas e pendentes.
+- Plano de acao sugerido.
+- No dashboard CFO, tabela executiva de DRE e indicadores em formato
+  semelhante a planilha gerencial.
+
+Regra critica:
+
+O JUNO nao deve inventar indicador. Se a fonte nao foi carregada, o KPI deve
+aparecer como "Dados insuficientes". Isso e intencional e protege a empresa
+contra conclusoes baseadas em numeros incompletos.
+
+Quando usar:
+
+- Depois de importar dados em Integracoes ERP.
+- Depois de carregar DRE, Balanco e DFC em Demonstracoes.
+- Depois de rodar Auditoria.
+- Antes de reuniao com CEO, CFO, COO, consultoria ou conselho.
+- Para explicar quais dados ainda faltam para uma leitura executiva completa.
+
+Dashboard CEO:
+
+Finalidade:
+
+Mostrar saude geral, risco, caixa, margem e prioridades de decisao.
+
+KPIs padrao:
+
+1. Score JUNO:
+   - Fonte: Score v2.
+   - Interpreta a saude empresarial em escala 0 a 100.
+   - Requer produtos, pedidos, OPs e demonstracoes para leitura completa.
+
+2. Receita liquida:
+   - Fonte: DRE ou Pedidos de Venda.
+   - Mostra a receita apos deducoes.
+   - Sem DRE, pode usar pedidos como referencia operacional.
+
+3. Margem liquida:
+   - Fonte: DRE.
+   - Lucro liquido dividido pela receita liquida.
+   - Indica quanto sobra efetivamente apos custos e despesas.
+
+4. Margem EBITDA:
+   - Fonte: DRE.
+   - EBITDA dividido pela receita liquida.
+   - Mede resultado operacional antes de estrutura financeira e impostos.
+
+5. Fluxo de caixa operacional:
+   - Fonte: DFC.
+   - Mostra se a operacao gera ou consome caixa.
+
+6. Capital de giro:
+   - Fonte: Balanco.
+   - Ativo circulante menos passivo circulante.
+
+7. Liquidez corrente:
+   - Fonte: Balanco.
+   - Ativo circulante dividido por passivo circulante.
+
+8. Endividamento:
+   - Fonte: Balanco.
+   - Percentual de capital de terceiros na estrutura.
+
+9. Concentracao de clientes:
+   - Fonte: Clientes e Pedidos.
+   - Mede dependencia do maior cliente.
+
+10. Perda estimada:
+    - Fonte: margem por produto e ordens atrasadas.
+    - Estima impacto financeiro de margem negativa e atrasos.
+
+11. Data Trust Score:
+    - Fonte: Auditoria.
+    - Mede confiabilidade dos dados antes da decisao.
+
+Como interpretar para CEO:
+
+- Score alto com Data Trust baixo nao deve ser apresentado como decisao final.
+- Receita crescendo com margem caindo exige plano de preco, custo ou mix.
+- Perda estimada maior que zero deve virar prioridade executiva.
+- Alta concentracao de cliente aumenta risco comercial.
+- Caixa operacional negativo exige revisao imediata com CFO.
+
+Dashboard CFO:
+
+Finalidade:
+
+Concentrar DRE, caixa, liquidez, endividamento, capital de giro e margem.
+Esse painel deve ser o mais proximo da linguagem de controladoria.
+
+KPIs padrao:
+
+1. Receita bruta.
+2. Receita liquida.
+3. Custo variavel.
+4. Margem bruta.
+5. Margem bruta percentual.
+6. Despesas fixas.
+7. EBITDA.
+8. Lucro liquido.
+9. Liquidez corrente.
+10. Endividamento.
+11. Fluxo de caixa operacional.
+12. Capital de giro.
+13. Divida liquida / EBITDA.
+14. Produtos com margem negativa.
+
+Tabela executiva CFO:
+
+A tabela do CFO deve seguir o conceito da planilha gerencial:
+
+- unidade em R$ mil, quando aplicavel;
+- colunas por periodo;
+- coluna de total ou acumulado;
+- coluna de percentual sobre vendas liquidas;
+- linhas de receita, custo, margem, despesas, EBITDA, liquidez,
+  endividamento, fluxo de caixa e capital de giro.
+
+Linhas recomendadas:
+
+1. Vendas liquidas.
+2. (-) Custo Variavel.
+3. Margem Bruta.
+4. (-) Mao de Obra.
+5. (-) Manutencao.
+6. (-) Servicos de 3os.
+7. (-) Aluguel.
+8. (-) Depreciacao.
+9. (-) Outros Gastos.
+10. Soma de despesas fixas.
+11. Margem liquida.
+12. EBITDA.
+13. Liquidez.
+14. Endividamento.
+15. Fluxo de caixa.
+16. Capital de giro.
+
+Como interpretar para CFO:
+
+- Margem bruta positiva com margem liquida negativa indica excesso de
+  despesas fixas ou estrutura.
+- EBITDA positivo com caixa operacional negativo indica pressao de capital de
+  giro, recebimentos ou estoque.
+- Liquidez abaixo de 1,0 e critica.
+- Endividamento elevado exige plano de desalavancagem.
+- Produtos com margem negativa devem ser revisados por preco, custo ou mix.
+
+Dashboard COO:
+
+Finalidade:
+
+Transformar dados de operacao em fila de acao. O COO deve enxergar atraso,
+desvio de custo, desvio de quantidade, estoque, fornecedores e perda
+operacional.
+
+KPIs padrao:
+
+1. Ordens atrasadas:
+   - Fonte: Ordens de Producao.
+   - OPs com data real maior que data planejada.
+
+2. Taxa de atraso:
+   - Fonte: Ordens de Producao.
+   - Ordens atrasadas divididas pelo total de ordens.
+
+3. Desvio de custo:
+   - Fonte: Ordens de Producao.
+   - Custo real versus custo planejado.
+
+4. Desvio de quantidade:
+   - Fonte: Ordens de Producao.
+   - Quantidade real versus quantidade planejada.
+
+5. Eficiencia de producao:
+   - Fonte: Ordens de Producao.
+   - Indicador composto de prazo, custo e quantidade.
+
+6. Valor de estoque:
+   - Fonte: Estoque.
+   - Quantidade em estoque multiplicada por custo unitario.
+
+7. Estoque disponivel:
+   - Fonte: Estoque.
+   - Quantidade disponivel para producao ou venda.
+
+8. Estoque reservado:
+   - Fonte: Estoque.
+   - Quantidade ja comprometida.
+
+9. Lead time medio:
+   - Fonte: Fornecedores.
+   - Prazo medio de reposicao.
+
+10. Fornecedores criticos:
+    - Fonte: Fornecedores.
+    - Fornecedores sem lead time ou com prazo alto.
+
+11. Perda operacional estimada:
+    - Fonte: margem por produto e OPs.
+    - Impacto estimado de atrasos e margem negativa.
+
+Como interpretar para COO:
+
+- Alta taxa de atraso exige revisao de capacidade, sequenciamento ou suprimento.
+- Desvio de custo alto exige analise de apontamento, consumo e retrabalho.
+- Desvio de quantidade indica problema de planejamento, perdas ou cadastro.
+- Estoque disponivel baixo com OP atrasada indica risco de ruptura.
+- Lead time alto aumenta risco de atraso futuro.
+
+Dashboard Consultoria:
+
+Finalidade:
+
+Dar controle de implantacao, governanca, evidencias e prontidao executiva.
+Esse painel responde se o diagnostico pode ser apresentado ao cliente com
+seguranca.
+
+KPIs padrao:
+
+1. Data Trust Score:
+   - Fonte: Auditoria.
+   - Confiabilidade da base.
+
+2. Problemas criticos:
+   - Fonte: Auditoria.
+   - Pendencias de severidade alta.
+
+3. Uploads ERP:
+   - Fonte: Historico de Integracoes ERP.
+   - Quantidade de cargas operacionais registradas.
+
+4. Uploads financeiros:
+   - Fonte: Historico de Demonstracoes.
+   - Quantidade de cargas financeiras registradas.
+
+5. Cobertura de dados:
+   - Fonte: modelo JUNO.
+   - Percentual de fontes essenciais carregadas.
+
+6. Fontes pendentes:
+   - Fonte: checklist de implantacao.
+   - Quantidade de fontes ainda ausentes.
+
+7. Prontidao executiva:
+   - Fonte: Data Trust e cobertura de dados.
+   - Indica se a base esta pronta para apresentacao.
+
+Como interpretar para Consultoria:
+
+- Data Trust abaixo de 80 exige ressalva.
+- Problema critico deve ser resolvido antes de apresentacao.
+- Cobertura baixa indica que o diagnostico ainda e parcial.
+- Upload sem evidencia deve ser registrado no historico de implantacao.
+- Prontidao executiva deve ser alta antes de enviar PDF ao conselho.
+
+Passo a passo de uso:
+
+1. Abra KPIs Executivos.
+2. Escolha a aba CEO, CFO, COO ou Consultoria.
+3. Leia os cards principais.
+4. Verifique os status de cada KPI.
+5. Abra as categorias detalhadas.
+6. No CFO, revise a tabela executiva de DRE e indicadores.
+7. Revise fontes carregadas e pendentes.
+8. Leia o plano de acao.
+9. Se houver "Dados insuficientes", volte para Integracoes ERP ou
+   Demonstracoes.
+10. Rode Auditoria novamente apos nova carga.
+11. Use Minha Empresa ou Demo Executivo somente depois da validacao.
+
+Boas praticas:
+
+- Nao apresentar KPI sem fonte carregada.
+- Nao misturar KPIs de personas diferentes na mesma narrativa.
+- CEO precisa de decisao e prioridade, nao de detalhe operacional excessivo.
+- CFO precisa de formula, periodo e fonte.
+- COO precisa de fila de acao operacional.
+- Consultoria precisa de evidencia e governanca.
+- Registrar no plano de acao quais KPIs estavam indisponiveis.
+
+======================================================================
+12. Aba: Auto Teste
+======================================================================
+
+Finalidade:
+
+A aba Auto Teste executa uma bateria tecnica para verificar se o sistema
+esta pronto para uso, demonstracao ou piloto.
+
+O que o usuario ve:
+
+- Botao para iniciar diagnostico completo.
+- Progresso de testes.
+- Lista de testes por categoria.
+- Status pass/fail.
+- Duracao dos testes.
+- Resumo final.
+- Opcao de analise pela IA, quando disponivel.
+
+Quando usar:
+
+- Antes de uma demonstracao com cliente.
+- Antes de uma reuniao executiva.
+- Apos atualizacao de codigo.
+- Apos mudar ambiente, banco ou configuracao.
+- Quando algum modulo parecer instavel.
+
+Passo a passo:
+
+1. Abra a aba Auto Teste.
+2. Clique no botao de diagnostico completo.
+3. Aguarde a execucao dos testes.
+4. Observe a barra de progresso.
+5. Leia cada linha de teste.
+6. Confira se todos aparecem como aprovados.
+7. Se houver falha, abra o detalhe.
+8. Corrija o problema indicado.
+9. Rode o Auto Teste novamente.
+10. Somente siga para apresentacao se o resultado for aprovado ou se as
+    falhas forem conhecidas e aceitaveis para o contexto.
+
+Categorias de teste:
+
+- Sistema.
+- Minha Empresa.
+- IA Coordinator.
+- Demonstracoes.
+- Dados e backend.
+
+Como agir em caso de falha:
+
+Falha de backend:
+- Verificar http://localhost:8000/health.
+- Reiniciar Smart_Juno.bat.
+
+Falha de frontend:
+- Verificar http://localhost:4000.
+- Conferir logs do frontend.
+
+Falha de IA:
+- Verificar se o motor local esta ativo.
+- Confirmar configuracoes do backend.
+
+Falha financeira:
+- Verificar se ha dados financeiros carregados.
+- Reimportar template financeiro.
+
+======================================================================
+13. Aba: Demo Executivo
+======================================================================
+
+Finalidade:
+
+A aba Demo Executivo oferece um roteiro pronto para apresentacoes comerciais,
+workshops e reunioes com decisores.
+
+O que o usuario ve:
+
+- Empresa de demonstracao.
+- Botao para carregar demo.
+- Opcao de baixar PDF.
+- Fluxos de apresentacao:
+  - Dashboard Executivo.
+  - Insights + Diagnostico.
+  - Auditoria de Dados.
+- Navegacao entre etapas.
+
+Quando usar:
+
+- Em primeira reuniao com cliente.
+- Em apresentacao para diretoria.
+- Em demonstracao de valor antes do piloto.
+- Em treinamento de consultores.
+
+Passo a passo:
+
+1. Abra a aba Demo Executivo.
+2. Selecione a empresa de demonstracao.
+3. Clique para carregar a demo, se necessario.
+4. Comece pelo fluxo "Dashboard Executivo".
+5. Explique Score JUNO, receita, margem e ordens em atraso.
+6. Avance para "Insights + Diagnostico".
+7. Mostre riscos detectados e plano de acao.
+8. Avance para "Auditoria de Dados".
+9. Explique Data Trust Score e confiabilidade.
+10. Se apropriado, baixe o PDF para deixar como evidencia.
+
+Roteiro sugerido de fala:
+
+1. "O JUNO consolida dados que hoje estao dispersos."
+2. "A primeira leitura e o score operacional."
+3. "Depois abrimos margem, perdas e atrasos."
+4. "Antes de recomendar acao, o sistema mede confiabilidade dos dados."
+5. "O resultado vira diagnostico e plano de acao para piloto."
+
+Cuidados:
+
+- Deixe claro se os dados sao demonstrativos ou reais.
+- Nao prometa integracao automatica antes de mapear o ERP.
+- Use a aba Piloto para transformar interesse em proximo passo.
+
+======================================================================
+14. Aba: Piloto
+======================================================================
+
+Finalidade:
+
+A aba Piloto organiza a implantacao inicial em uma empresa cliente. Ela
+serve como checklist comercial, tecnico e operacional.
+
+O que o usuario ve:
+
+- Medidor de prontidao do piloto.
+- Checklist do piloto.
+- Campos para anotacoes.
+- Data Request List.
+- Botao "Copiar tudo".
+- Estrutura da apresentacao.
+- Evolucao futura do produto.
+
+Quando usar:
+
+- Antes de implantar em uma nova empresa.
+- Durante reuniao de kickoff.
+- Ao falar com TI, financeiro e operacoes.
+- Para preparar exportacao de dados.
+- Para organizar responsabilidades.
+
+Checklist do Piloto:
+
+1. Sponsor interno identificado.
+2. ERP utilizado mapeado.
+3. Dados a exportar definidos.
+4. Responsavel pela validacao dos numeros definido.
+5. Problema prioritario definido.
+6. ROI esperado estimado.
+
+Passo a passo:
+
+1. Abra a aba Piloto.
+2. Leia o percentual de prontidao.
+3. Abra a secao Checklist do Piloto.
+4. Para cada item, preencha a anotacao.
+5. Marque o item quando estiver resolvido.
+6. Confirme se a prontidao aumentou.
+7. Abra a Data Request List.
+8. Clique em "Copiar tudo".
+9. Envie a lista para TI, controladoria ou responsavel pelo ERP.
+10. Revise as colunas necessarias.
+11. Combine data de entrega dos arquivos.
+12. Use a estrutura da apresentacao para conduzir a reuniao.
+
+Como preencher cada item:
+
+Sponsor interno:
+- Nome da pessoa que patrocina o projeto.
+- Cargo.
+- Area.
+- Poder de decisao.
+
+ERP utilizado:
+- Nome do ERP.
+- Versao.
+- Modulos usados.
+- Forma de exportacao disponivel.
+
+Dados a exportar:
+- Produtos.
+- Clientes.
+- Pedidos de venda.
+- Ordens de producao.
+- Estoque.
+- Financeiro.
+- Custos.
+
+Responsavel pela validacao:
+- Pessoa que conhece os numeros oficiais.
+- Normalmente controller, BI, financeiro ou operacoes.
+
+Problema prioritario:
+- Margem negativa.
+- Atrasos.
+- Custo fora de controle.
+- Baixa confiabilidade dos dados.
+- Falta de visao executiva.
+
+ROI esperado:
+- Valor financeiro a recuperar.
+- Custo a reduzir.
+- Tempo a economizar.
+- Risco a evitar.
+
+Data Request List:
+
+Use a lista para solicitar dados ao TI ou responsavel pelo ERP. Cada linha
+indica:
+
+- tipo de dado;
+- nome de arquivo sugerido;
+- colunas necessarias;
+- formato;
+- prioridade.
+
+Ordem de implantacao do piloto:
+
+1. Preencher checklist.
+2. Solicitar arquivos.
+3. Importar dados em Integracoes ERP.
+4. Carregar Demonstracoes.
+5. Rodar Auditoria.
+6. Corrigir inconsistencias.
+7. Gerar diagnostico em Minha Empresa.
+8. Validar com responsavel interno.
+9. Apresentar Demo Executivo.
+10. Formalizar plano de acao.
+
+======================================================================
+14. Preparacao para implantar uma nova empresa
+======================================================================
+
+Antes da primeira reuniao:
+
+1. Confirmar setor da empresa.
+2. Confirmar ERP usado.
+3. Identificar sponsor.
+4. Identificar responsavel financeiro.
+5. Identificar responsavel operacional.
+6. Definir problema prioritario.
+7. Preparar data request.
+8. Confirmar se os dados serao reais ou demonstrativos.
+
+Durante o kickoff:
+
+1. Abrir a aba Piloto.
+2. Preencher o checklist com o cliente.
+3. Copiar Data Request List.
+4. Explicar quais arquivos serao necessarios.
+5. Definir prazo de entrega.
+6. Definir quem validara os numeros.
+7. Definir agenda de revisao.
+
+Apos receber arquivos:
+
+1. Salvar copia original dos arquivos.
+2. Importar dados operacionais.
+3. Importar demonstracoes financeiras.
+4. Rodar Auditoria.
+5. Corrigir inconsistencias.
+6. Rodar Auto Teste.
+7. Gerar diagnostico.
+8. Preparar PDF.
+
+Antes da apresentacao executiva:
+
+1. Confirmar Data Trust Score.
+2. Confirmar se os totais batem com fonte oficial.
+3. Revisar margem e atrasos.
+4. Revisar recomendacoes da IA.
+5. Gerar PDF executivo.
+6. Abrir Demo Executivo.
+7. Testar navegacao entre abas.
+
+======================================================================
+15. Checklist rapido de validacao diaria
+======================================================================
+
+Use este checklist antes de trabalhar com cliente:
+
+[ ] http://localhost:4000 abre o dashboard.
+[ ] http://localhost:8000/health responde online.
+[ ] Menu lateral aparece sem sobreposicao.
+[ ] Nao ha indicador visual do Next.js no rodape.
+[ ] Aba Visao Geral abre.
+[ ] Aba Minha Empresa carrega.
+[ ] Aba IA Operacional abre.
+[ ] Aba Demonstracoes abre.
+[ ] Aba Integracoes ERP abre.
+[ ] Aba Auditoria abre.
+[ ] Aba Auto Teste roda.
+[ ] Aba Demo Executivo carrega.
+[ ] Aba Piloto exibe checklist.
+[ ] Logs nao mostram erro critico.
+
+======================================================================
+16. Troubleshooting
+======================================================================
+
+Problema: dashboard nao abre.
+
+1. Verifique se o frontend esta na porta 4000.
+2. Execute Smart_Juno.bat.
+3. Leia C:\Souza\juno\logs\frontend-smart-juno.log.
+
+Problema: backend nao responde.
+
+1. Acesse http://localhost:8000/health.
+2. Se nao responder, reinicie o backend.
+3. Leia C:\Souza\juno\logs\backend-smart-juno.log.
+
+Problema: dados aparecem zerados.
+
+1. Verifique se dados foram importados em Integracoes ERP.
+2. Verifique se Demonstracoes foram carregadas.
+3. Rode Auditoria.
+
+Problema: upload falha.
+
+1. Confirme extensao CSV, XLSX ou XLS.
+2. Confira colunas obrigatorias.
+3. Remova formulas complexas do Excel.
+4. Salve novamente.
+5. Tente importar em lote menor.
+
+Problema: IA nao responde.
+
+1. Verifique se backend esta online.
+2. Verifique se o motor local de IA esta ativo.
+3. Tente uma pergunta curta.
+4. Verifique logs do backend.
+
+Problema: PDF nao baixa.
+
+1. Confirme se backend esta online.
+2. Confirme se ha dados importados.
+3. Rode Minha Empresa novamente.
+4. Tente gerar diagnostico antes de baixar.
+
+======================================================================
+17. Regras de uso em cliente real
+======================================================================
+
+1. Nao usar dados reais sem autorizacao.
+2. Nao misturar dados de empresas diferentes.
+3. Nao apresentar diagnostico sem Auditoria.
+4. Nao confirmar acoes de IA sem revisao humana.
+5. Nao publicar ambiente com login desativado.
+6. Nao expor .env.prod.
+7. Nao enviar arquivos sensiveis por canais nao aprovados.
+8. Registrar responsavel por cada importacao.
+9. Guardar evidencia das validacoes.
+10. Revisar politicas LGPD/GDPR antes de producao.
+
+======================================================================
+18. Encerramento
+======================================================================
+
+O uso correto do JUNO segue a sequencia:
+
+Piloto -> Integracoes ERP -> Demonstracoes -> Auditoria -> KPIs Executivos
+-> Minha Empresa -> IA Operacional -> Demo Executivo -> Decisao de expansao.
+
+Essa ordem reduz risco, melhora confiabilidade e evita conclusoes baseadas
+em dados incompletos.
+
+Para novas empresas, este manual deve ser usado junto com:
+
+- Manual_Juno.txt
+- README.md
+- SECURITY_ENV_REVIEW.md
+- Juno_Presentation.pptx
+- Juno.pptx

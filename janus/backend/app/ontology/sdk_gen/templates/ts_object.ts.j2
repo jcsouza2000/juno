@@ -1,0 +1,87 @@
+/**
+ * juno_ontology/{{ camel_name }} - cliente para ObjectType '{{ object_type }}'.
+ *
+ * GERADO AUTOMATICAMENTE. Stamp: {{ stamp }}
+ */
+
+import {
+  ActionResult,
+  ListResult,
+  OntologyClient,
+  executeAction,
+  fetchById,
+  getClient,
+  listObjects,
+  searchObjects,
+} from "./_base";
+
+export interface {{ class_name }} {
+  {% for prop_name, prop in properties.items() %}
+  {{ prop_name }}{% if not prop.required %}?{% endif %}: {{ prop.ts_type }};
+  {% endfor %}
+  {% if computed_properties %}
+  // Computed properties (read-only, calculadas no servidor)
+  {% for cp_name, cp in computed_properties.items() %}
+  {{ cp_name }}?: {{ cp.ts_type }};
+  {% endfor %}
+  {% endif %}
+}
+
+export const {{ class_name }}Meta = {
+  OBJECT_TYPE: "{{ object_type }}" as const,
+};
+
+// =============================================================================
+// Funcoes de acesso
+// =============================================================================
+
+export function get{{ class_name }}(id: number, client?: OntologyClient): Promise<{{ class_name }}> {
+  return fetchById<{{ class_name }}>({{ class_name }}Meta, id, client);
+}
+
+export function list{{ class_name }}s(
+  opts: { limit?: number; offset?: number; orderBy?: string } = {},
+  client?: OntologyClient,
+): Promise<ListResult<{{ class_name }}>> {
+  return listObjects<{{ class_name }}>({{ class_name }}Meta, opts, client);
+}
+
+export function search{{ class_name }}s(q: string, limit = 20, client?: OntologyClient): Promise<{{ class_name }}[]> {
+  return searchObjects<{{ class_name }}>({{ class_name }}Meta, q, limit, client);
+}
+
+{% if links %}
+// =============================================================================
+// Links
+// =============================================================================
+
+{% for link_name, link in links.items() %}
+export function get{{ class_name }}{{ link.camel }}(id: number, client?: OntologyClient): Promise<unknown> {
+  const c = client ?? getClient();
+  return c.get(`/api/v1/ontology/{{ object_type }}/${id}/links/{{ link_name }}`);
+}
+{% endfor %}
+{% endif %}
+
+{% if actions %}
+// =============================================================================
+// Actions
+// =============================================================================
+
+{% for action_name, action in actions.items() %}
+export interface {{ action.input_iface }} {
+  {% for input_name, input_spec in action.inputs.items() %}
+  {{ input_name }}{% if not input_spec.required %}?{% endif %}: {{ input_spec.ts_type }};
+  {% endfor %}
+}
+
+export function {{ action.camel_name }}(
+  id: number,
+  inputs: {{ action.input_iface }},
+  opts: { dryRun?: boolean; actorType?: string; confirmedBy?: number | null } = {},
+  client?: OntologyClient,
+): Promise<ActionResult> {
+  return executeAction({{ class_name }}Meta, id, "{{ action_name }}", inputs as unknown as Record<string, unknown>, opts, client);
+}
+{% endfor %}
+{% endif %}

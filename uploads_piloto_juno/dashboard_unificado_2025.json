@@ -1,0 +1,555 @@
+{
+  "meta": {
+    "fonte": "Demontrações Financeiras_Templates.xlsx",
+    "templates_dir": "C:\\Souza\\juno\\Templates",
+    "unidade": "R$ milhoes",
+    "periodo_competencia": "2025",
+    "periodo_patrimonial": "4T25",
+    "source_mode": "templates",
+    "modelo_kpi": "Templates/KPIs_Templates.md"
+  },
+  "governanca": {
+    "erp_conexao": {
+      "label": "Conexao ERP",
+      "status": "ativa"
+    },
+    "auditoria_lgpd": {
+      "label": "Auditoria LGPD",
+      "status": "ok"
+    },
+    "busca_inteligente_placeholder": "Pergunte ao UNO sobre a operacao..."
+  },
+  "core": {
+    "score_industrial": 76.5,
+    "sintese_ia": "Operacao em monitoramento com Score 76.5; margem EBITDA ajustada em 37.9% e margem liquida em 8.1%. Giro de estoque financeiro de 4.08x conforme modelo Templates; OEE/FTT aguardam conector de producao."
+  },
+  "quadrantes": {
+    "operacoes": {
+      "titulo": "Operacoes",
+      "series": {
+        "oee": {
+          "valor": null,
+          "meta_wcm": 85.0,
+          "fonte": "integracao_producao_pendente"
+        },
+        "ftt_fpy": {
+          "valor": null,
+          "meta_wcm": 98.0,
+          "fonte": "integracao_producao_pendente"
+        },
+        "giro_estoque": {
+          "valor": 4.08,
+          "meta_wcm": null,
+          "fonte": "templates_balanco_dre"
+        }
+      },
+      "tendencia_giro_estoque": [
+        {
+          "periodo": "1T25",
+          "valor": 1.06
+        },
+        {
+          "periodo": "2T25",
+          "valor": 0.93
+        },
+        {
+          "periodo": "3T25",
+          "valor": 1.11
+        },
+        {
+          "periodo": "4T25",
+          "valor": 1.09
+        }
+      ]
+    },
+    "financeiro": {
+      "titulo": "Financeiro",
+      "cards": {
+        "faturamento": 20697.507,
+        "margem_bruta_pct": 27.32,
+        "margem_liquida_pct": 8.11,
+        "ebitda_ajustado_pct": 37.92
+      },
+      "tendencia_faturamento": [
+        {
+          "periodo": "1T25",
+          "valor": 4858.534
+        },
+        {
+          "periodo": "2T25",
+          "valor": 5247.202
+        },
+        {
+          "periodo": "3T25",
+          "valor": 5426.467
+        },
+        {
+          "periodo": "4T25",
+          "valor": 5165.304
+        }
+      ],
+      "tendencia_margens": [
+        {
+          "periodo": "1T25",
+          "margem_bruta": 25.66,
+          "margem_liquida": 9.19,
+          "margem_ebitda": 38.26
+        },
+        {
+          "periodo": "2T25",
+          "margem_bruta": 33.79,
+          "margem_liquida": 11.16,
+          "margem_ebitda": 38.89
+        },
+        {
+          "periodo": "3T25",
+          "margem_bruta": 27.56,
+          "margem_liquida": 8.81,
+          "margem_ebitda": 39.01
+        },
+        {
+          "periodo": "4T25",
+          "margem_bruta": 22.05,
+          "margem_liquida": 3.26,
+          "margem_ebitda": 35.46
+        }
+      ]
+    },
+    "risco_pessoas": {
+      "titulo": "Risco e Pessoas",
+      "indicadores": {
+        "tfa": {
+          "valor": null,
+          "meta_wcm": 0.0,
+          "fonte": "integracao_rh_pendente"
+        },
+        "turnover": {
+          "valor": null,
+          "meta_wcm": null,
+          "fonte": "integracao_rh_pendente"
+        },
+        "racio_administrativo_pct": 5.11
+      },
+      "contas_receber": 2404.326
+    }
+  },
+  "kpis_unificados": {
+    "Margem Bruta": {
+      "formula": "((Receita Líquida + CPV) / Receita Líquida) * 100",
+      "valores": "Receita Líq: 20,697.51 | CPV: -15,043.96",
+      "resultado": "27.32%",
+      "valor_numerico": 27.32
+    },
+    "Margem Líquida": {
+      "formula": "(Lucro Líquido / Receita Líquida) * 100",
+      "valores": "Lucro Líq: 1,678.21 | Receita Líq: 20,697.51",
+      "resultado": "8.11%",
+      "valor_numerico": 8.11
+    },
+    "Margem EBITDA Ajustada": {
+      "formula": "(EBITDA Ajustado / Receita Líquida) * 100",
+      "valores": "EBITDA Ajustado: 7,848.12 | Receita Líq: 20,697.51",
+      "resultado": "37.92%",
+      "valor_numerico": 37.92
+    },
+    "Rácio Custos Administrativos": {
+      "formula": "(Despesas Administrativas / Receita Bruta) * 100",
+      "valores": "Desp Admin: 1,217.69 | Receita Bruta: 23,842.90",
+      "resultado": "5.11%",
+      "valor_numerico": 5.11
+    },
+    "Giro de Estoque (Financeiro)": {
+      "formula": "CPV / Saldo de Estoques",
+      "valores": "CPV Absoluto: 15,043.96 | Estoque: 3,683.98",
+      "resultado": "4.08 vezes no ano",
+      "valor_numerico": 4.08
+    }
+  },
+  "resumo_demonstracoes": {
+    "unidade": "R$ milhoes",
+    "competencia": "2025",
+    "patrimonial": "4T25",
+    "fonte": "Demontrações Financeiras_Templates.xlsx",
+    "dre": {
+      "titulo": "Resumo DRE",
+      "receita_bruta": 23842.896,
+      "receita_liquida": 20697.507,
+      "cpv": -15043.958,
+      "lucro_bruto": 7324.91,
+      "despesas_admin": -1217.691
+    },
+    "balanco": {
+      "titulo": "Resumo Balanco Patrimonial",
+      "caixa_equivalentes": 10106.016,
+      "contas_receber": 2404.326,
+      "estoques": 3683.984,
+      "ativo_circulante": 18049.685
+    },
+    "dfc": {
+      "titulo": "Resumo Fluxo de Caixa",
+      "lucro_antes_tributos": 2379.403,
+      "depreciacao_amortizacao": 4990.436
+    },
+    "kpis": {
+      "titulo": "Indicadores Chave (KPIs)",
+      "margem_bruta_pct": 35.39,
+      "margem_ebitda_pct": 37.92,
+      "margem_liquida_pct": 8.11,
+      "racio_admin_pct": 5.11,
+      "giro_estoque": 4.08,
+      "score_industrial": 76.5
+    }
+  },
+  "busca_inteligente": {
+    "ativo": true,
+    "placeholder": "Pergunte ao UNO sobre a operacao...",
+    "exemplos": [
+      "Qual a margem EBITDA?",
+      "Como esta o giro de estoque?",
+      "Resumo do balanco patrimonial",
+      "Qual o lucro liquido?"
+    ],
+    "faq": [
+      {
+        "tags": [
+          "receita",
+          "faturamento",
+          "vendas",
+          "dre"
+        ],
+        "resposta": "Receita liquida consolidada em 2025: R$ 20,697.51 mi (receita bruta R$ 23,842.90 mi). Fonte: Templates/Demontrações Financeiras_Templates.xlsx."
+      },
+      {
+        "tags": [
+          "margem bruta",
+          "lucro bruto",
+          "cpv",
+          "custo"
+        ],
+        "resposta": "Margem bruta: 35.39% sobre receita liquida. Lucro bruto DRE: R$ 7,324.91 mi; CPV: R$ 15,043.96 mi."
+      },
+      {
+        "tags": [
+          "ebitda",
+          "caixa operacional",
+          "geracao"
+        ],
+        "resposta": "EBITDA ajustado: R$ 7,848.12 mi (37.92% da receita liquida)."
+      },
+      {
+        "tags": [
+          "margem liquida",
+          "lucro liquido",
+          "resultado"
+        ],
+        "resposta": "Margem liquida: 8.11%. Lucro liquido: R$ 1,678.21 mi."
+      },
+      {
+        "tags": [
+          "administr",
+          "ga",
+          "estrutura",
+          "backoffice"
+        ],
+        "resposta": "Racio de custos administrativos: 5.11% sobre receita bruta (despesas G&A R$ 1,217.69 mi)."
+      },
+      {
+        "tags": [
+          "estoque",
+          "giro",
+          "cpv"
+        ],
+        "resposta": "Giro de estoque financeiro: 4.08x (CPV R$ 15,043.96 mi / estoques R$ 3,683.98 mi em 4T25)."
+      },
+      {
+        "tags": [
+          "caixa",
+          "balanco",
+          "disponibilidade",
+          "liquidez"
+        ],
+        "resposta": "Caixa e equivalentes (4T25): R$ 10,106.02 mi. Ativo circulante: R$ 18,049.69 mi."
+      },
+      {
+        "tags": [
+          "receber",
+          "clientes",
+          "contas a receber"
+        ],
+        "resposta": "Contas a receber (4T25): R$ 2,404.33 mi."
+      },
+      {
+        "tags": [
+          "fluxo",
+          "dfc",
+          "depreciacao",
+          "amortizacao"
+        ],
+        "resposta": "DFC 2025: lucro antes dos tributos R$ 2,379.40 mi; depreciacao/amortizacao R$ 4,990.44 mi."
+      },
+      {
+        "tags": [
+          "score",
+          "uno",
+          "industrial",
+          "operacional"
+        ],
+        "resposta": "Score industrial UNO: 76.5/100 com base nos KPIs do modelo Templates."
+      },
+      {
+        "tags": [
+          "kpi",
+          "indicador",
+          "resumo",
+          "demonstrac"
+        ],
+        "resposta": "KPIs consolidados (Templates): Margem Bruta 27.32%; Margem Líquida 8.11%; Margem EBITDA Ajustada 37.92%; Rácio Custos Administrativos 5.11%; Giro de Estoque (Financeiro) 4.08 vezes no ano"
+      }
+    ]
+  },
+  "relatorio_templates": {
+    "titulo": "Resumo das Demonstrações Financeiras",
+    "subtitulo": "Relatório Executivo — modelo Templates",
+    "fonte": "Demontrações Financeiras_Templates.xlsx",
+    "unidade": "R$ milhões",
+    "competencia": "2025",
+    "patrimonial": "4T25",
+    "secoes": [
+      {
+        "id": "dre",
+        "titulo": "Demonstração do Resultado do Exercício (DRE)",
+        "periodos": [
+          "1T25",
+          "2T25",
+          "3T25",
+          "4T25",
+          "2025"
+        ],
+        "linhas": [
+          {
+            "conta": "Receita Bruta",
+            "valores": [
+              5630.158,
+              6001.082,
+              6238.529,
+              5973.127,
+              23842.896
+            ],
+            "destaque": false
+          },
+          {
+            "conta": "Receita Líquida",
+            "valores": [
+              4858.534,
+              5247.202,
+              5426.467,
+              5165.304,
+              20697.507
+            ],
+            "destaque": false
+          },
+          {
+            "conta": "Custo dos Produtos Vendidos (CPV)",
+            "valores": [
+              -3612.042,
+              -3474.372,
+              -3930.96,
+              -4026.584,
+              -15043.958
+            ],
+            "destaque": false
+          },
+          {
+            "conta": "Lucro Bruto",
+            "valores": [
+              1634.536,
+              2149.457,
+              2058.656,
+              1482.261,
+              7324.91
+            ],
+            "destaque": true
+          },
+          {
+            "conta": "Gerais & Administrativas",
+            "valores": [
+              -297.28,
+              -276.094,
+              -308.3,
+              -336.017,
+              -1217.691
+            ],
+            "destaque": false
+          },
+          {
+            "conta": "Lucro (Prejuízo) Líquido",
+            "valores": [
+              446.499,
+              585.329,
+              477.884,
+              168.499,
+              1678.211
+            ],
+            "destaque": true
+          },
+          {
+            "conta": "EBITDA Ajustado",
+            "valores": [
+              1858.811,
+              2040.855,
+              2116.9414994199997,
+              1831.5091368700023,
+              7848.117
+            ],
+            "destaque": true
+          }
+        ]
+      },
+      {
+        "id": "balanco",
+        "titulo": "Balanço Patrimonial",
+        "periodos": [
+          "4T25"
+        ],
+        "linhas": [
+          {
+            "conta": "Caixa e equivalente de caixa",
+            "valores": [
+              10106.016
+            ],
+            "destaque": false
+          },
+          {
+            "conta": "Contas a Receber",
+            "valores": [
+              2404.326
+            ],
+            "destaque": false
+          },
+          {
+            "conta": "Estoques",
+            "valores": [
+              3683.984
+            ],
+            "destaque": false
+          },
+          {
+            "conta": "Ativo Circulante",
+            "valores": [
+              18049.685
+            ],
+            "destaque": true
+          },
+          {
+            "conta": "Ativo Total",
+            "valores": [
+              63796.777
+            ],
+            "destaque": true
+          },
+          {
+            "conta": "Passivo Circulante",
+            "valores": [
+              8767.397
+            ],
+            "destaque": true
+          },
+          {
+            "conta": "Patrim.Líquido - atribuido aos controladores",
+            "valores": [
+              7885.946
+            ],
+            "destaque": false
+          },
+          {
+            "conta": "Patrimônio Líquido - Não Controladores",
+            "valores": [
+              6515.155
+            ],
+            "destaque": false
+          }
+        ]
+      },
+      {
+        "id": "dfc",
+        "titulo": "Demonstração de Fluxo de Caixa (DFC)",
+        "periodos": [
+          "2025"
+        ],
+        "linhas": [
+          {
+            "conta": "Lucro antes dos tributos sobre o lucro",
+            "valores": [
+              2379.403
+            ],
+            "destaque": false
+          },
+          {
+            "conta": "Depreciação e amortização",
+            "valores": [
+              4990.436
+            ],
+            "destaque": false
+          }
+        ]
+      },
+      {
+        "id": "kpis",
+        "titulo": "Indicadores-Chave de Performance (KPIs)",
+        "periodos": [
+          "2025"
+        ],
+        "linhas": [
+          {
+            "conta": "Margem Bruta Consolidada",
+            "valores": [
+              35.39
+            ],
+            "unit": "percent",
+            "destaque": false
+          },
+          {
+            "conta": "Margem EBITDA Ajustada",
+            "valores": [
+              37.92
+            ],
+            "unit": "percent",
+            "destaque": false
+          },
+          {
+            "conta": "Margem Líquida Final",
+            "valores": [
+              8.11
+            ],
+            "unit": "percent",
+            "destaque": false
+          },
+          {
+            "conta": "Peso Estrutura Administrativa (G&A / Rec. Bruta)",
+            "valores": [
+              5.11
+            ],
+            "unit": "percent",
+            "destaque": false
+          },
+          {
+            "conta": "Giro de Estoque Financeiro",
+            "valores": [
+              4.08
+            ],
+            "unit": "ratio",
+            "destaque": false
+          },
+          {
+            "conta": "Score Industrial UNO",
+            "valores": [
+              76.5
+            ],
+            "unit": "score",
+            "destaque": true
+          }
+        ]
+      }
+    ]
+  }
+}

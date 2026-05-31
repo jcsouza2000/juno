@@ -1,0 +1,19 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "../docker/Dockerfile.backend"
+
+[deploy]
+startCommand = "uvicorn app.main:app --host 0.0.0.0 --port 8000"
+healthcheckPath = "/health"
+healthcheckTimeout = 100
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+[deploy.envs]
+PORT = "8000"
+DATABASE_URL = "${{ secrets.DATABASE_URL }}"
+REDIS_URL = "${{ secrets.REDIS_URL }}"
+OPENAI_API_KEY = "${{ secrets.OPENAI_API_KEY }}"
+LANGFUSE_SECRET_KEY = "${{ secrets.LANGFUSE_SECRET_KEY }}"
+LANGFUSE_PUBLIC_KEY = "${{ secrets.LANGFUSE_PUBLIC_KEY }}"
+JWT_SECRET = "${{ secrets.JWT_SECRET }}"

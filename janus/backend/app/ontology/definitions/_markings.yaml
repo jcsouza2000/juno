@@ -1,0 +1,62 @@
+# =============================================================================
+# Markings do tenant — etiquetas de sensibilidade que viajam com o dado.
+# =============================================================================
+# Toda property/row marcada é filtrada automaticamente em runtime conforme as
+# regras abaixo. Markings são AND, não OR — o user precisa de TODAS as markings
+# requeridas para ver/operar o dado.
+#
+# Enforcement levels:
+#   row_level    — filtra na query (WHERE)
+#   column_level — omite a coluna no retorno
+#   object_level — bloqueia o ObjectType inteiro
+# =============================================================================
+
+apiVersion: ontology.juno.gravithy.com.br/v1
+kind: MarkingSet
+metadata:
+  name: default
+  description: Markings padrão do JUNO. Definem a fronteira mínima de governança.
+  owner: security-team
+
+spec:
+  markings:
+
+    # ── Multi-tenancy ────────────────────────────────────────────────────────
+    TenantScoped:
+      description: |
+        Dado pertence a uma empresa específica (company_id). Só usuários com
+        acesso àquela empresa podem ver. Aplicado a praticamente tudo no JUNO.
+      enforcement: row_level
+      predicate: "row.company_id in user.company_ids"
+
+    # ── LGPD ─────────────────────────────────────────────────────────────────
+    PII:
+      description: |
+        Informação pessoal identificável (LGPD art. 5). Nome de pessoa física,
+        CPF, e-mail pessoal, telefone. Visível só para data stewards e admin.
+      enforcement: column_level
+      requires_role: [data_steward, admin]
+
+    # ── Confidencialidade comercial ──────────────────────────────────────────
+    ConfidencialComercial:
+      description: |
+        Preços negociados, margens, custos reais, contratos. Exige grant
+        explícito (não basta o role — precisa aprovação do data owner).
+      enforcement: column_level
+      requires_marking_grant: true
+
+    # ── Financeiro consolidado ───────────────────────────────────────────────
+    FinanceiroConsolidado:
+      description: |
+        DRE, Balanço, DFC e indicadores derivados. Roles que enxergam
+        operação não veem necessariamente o consolidado.
+      enforcement: object_level
+      requires_role: [cfo, ceo, controller, admin]
+
+    # ── Auditoria interna ────────────────────────────────────────────────────
+    AuditoriaSomente:
+      description: |
+        Tabelas de audit_logs e eventos governados. Apenas leitura por
+        auditores; nem admin operacional altera.
+      enforcement: object_level
+      requires_role: [auditor, admin]

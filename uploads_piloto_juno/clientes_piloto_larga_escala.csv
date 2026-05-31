@@ -1,0 +1,251 @@
+id_cliente,razao_social,estado_uf,segmento
+C0001,Cliente Piloto 1 S/A,SP,Varejo
+C0002,Cliente Piloto 2 S/A,BA,Industria
+C0003,Cliente Piloto 3 S/A,PR,Industria
+C0004,Cliente Piloto 4 S/A,RJ,Distribuicao
+C0005,Cliente Piloto 5 S/A,SP,Varejo
+C0006,Cliente Piloto 6 S/A,SP,Industria
+C0007,Cliente Piloto 7 S/A,SP,Distribuicao
+C0008,Cliente Piloto 8 S/A,SC,Varejo
+C0009,Cliente Piloto 9 S/A,RJ,Distribuicao
+C0010,Cliente Piloto 10 S/A,PR,Comercio Atacadista
+C0011,Cliente Piloto 11 S/A,SP,Industria
+C0012,Cliente Piloto 12 S/A,BA,Comercio Atacadista
+C0013,Cliente Piloto 13 S/A,SC,Varejo
+C0014,Cliente Piloto 14 S/A,SP,Comercio Atacadista
+C0015,Cliente Piloto 15 S/A,SP,Comercio Atacadista
+C0016,Cliente Piloto 16 S/A,SP,Varejo
+C0017,Cliente Piloto 17 S/A,SP,Distribuicao
+C0018,Cliente Piloto 18 S/A,MG,Comercio Atacadista
+C0019,Cliente Piloto 19 S/A,MG,Distribuicao
+C0020,Cliente Piloto 20 S/A,SP,Comercio Atacadista
+C0021,Cliente Piloto 21 S/A,RJ,Distribuicao
+C0022,Cliente Piloto 22 S/A,SP,Varejo
+C0023,Cliente Piloto 23 S/A,SP,Comercio Atacadista
+C0024,Cliente Piloto 24 S/A,SP,Varejo
+C0025,Cliente Piloto 25 S/A,MG,Comercio Atacadista
+C0026,Cliente Piloto 26 S/A,PR,Varejo
+C0027,Cliente Piloto 27 S/A,SP,Varejo
+C0028,Cliente Piloto 28 S/A,MG,Comercio Atacadista
+C0029,Cliente Piloto 29 S/A,RJ,Comercio Atacadista
+C0030,Cliente Piloto 30 S/A,SP,Comercio Atacadista
+C0031,Cliente Piloto 31 S/A,RJ,Industria
+C0032,Cliente Piloto 32 S/A,SP,Distribuicao
+C0033,Cliente Piloto 33 S/A,SP,Industria
+C0034,Cliente Piloto 34 S/A,GO,Industria
+C0035,Cliente Piloto 35 S/A,BA,Varejo
+C0036,Cliente Piloto 36 S/A,SC,Comercio Atacadista
+C0037,Cliente Piloto 37 S/A,SP,Distribuicao
+C0038,Cliente Piloto 38 S/A,SP,Varejo
+C0039,Cliente Piloto 39 S/A,RJ,Industria
+C0040,Cliente Piloto 40 S/A,MG,Comercio Atacadista
+C0041,Cliente Piloto 41 S/A,SP,Varejo
+C0042,Cliente Piloto 42 S/A,MG,Comercio Atacadista
+C0043,Cliente Piloto 43 S/A,SP,Varejo
+C0044,Cliente Piloto 44 S/A,GO,Comercio Atacadista
+C0045,Cliente Piloto 45 S/A,SP,Industria
+C0046,Cliente Piloto 46 S/A,RJ,Distribuicao
+C0047,Cliente Piloto 47 S/A,SP,Industria
+C0048,Cliente Piloto 48 S/A,MG,Distribuicao
+C0049,Cliente Piloto 49 S/A,MG,Comercio Atacadista
+C0050,Cliente Piloto 50 S/A,SP,Varejo
+C0051,Cliente Piloto 51 S/A,BA,Industria
+C0052,Cliente Piloto 52 S/A,PR,Distribuicao
+C0053,Cliente Piloto 53 S/A,GO,Industria
+C0054,Cliente Piloto 54 S/A,SC,Distribuicao
+C0055,Cliente Piloto 55 S/A,RJ,Industria
+C0056,Cliente Piloto 56 S/A,GO,Distribuicao
+C0057,Cliente Piloto 57 S/A,SP,Distribuicao
+C0058,Cliente Piloto 58 S/A,SP,Comercio Atacadista
+C0059,Cliente Piloto 59 S/A,SP,Distribuicao
+C0060,Cliente Piloto 60 S/A,SP,Comercio Atacadista
+C0061,Cliente Piloto 61 S/A,SP,Distribuicao
+C0062,Cliente Piloto 62 S/A,SP,Varejo
+C0063,Cliente Piloto 63 S/A,SC,Varejo
+C0064,Cliente Piloto 64 S/A,SP,Varejo
+C0065,Cliente Piloto 65 S/A,SP,Distribuicao
+C0066,Cliente Piloto 66 S/A,MG,Comercio Atacadista
+C0067,Cliente Piloto 67 S/A,SP,Comercio Atacadista
+C0068,Cliente Piloto 68 S/A,SC,Distribuicao
+C0069,Cliente Piloto 69 S/A,SP,Varejo
+C0070,Cliente Piloto 70 S/A,BA,Varejo
+C0071,Cliente Piloto 71 S/A,PR,Comercio Atacadista
+C0072,Cliente Piloto 72 S/A,SP,Varejo
+C0073,Cliente Piloto 73 S/A,SP,Industria
+C0074,Cliente Piloto 74 S/A,SC,Comercio Atacadista
+C0075,Cliente Piloto 75 S/A,PR,Varejo
+C0076,Cliente Piloto 76 S/A,PR,Comercio Atacadista
+C0077,Cliente Piloto 77 S/A,PR,Industria
+C0078,Cliente Piloto 78 S/A,SP,Comercio Atacadista
+C0079,Cliente Piloto 79 S/A,SP,Comercio Atacadista
+C0080,Cliente Piloto 80 S/A,SP,Comercio Atacadista
+C0081,Cliente Piloto 81 S/A,SC,Comercio Atacadista
+C0082,Cliente Piloto 82 S/A,RJ,Industria
+C0083,Cliente Piloto 83 S/A,SP,Distribuicao
+C0084,Cliente Piloto 84 S/A,SP,Comercio Atacadista
+C0085,Cliente Piloto 85 S/A,SP,Comercio Atacadista
+C0086,Cliente Piloto 86 S/A,SP,Varejo
+C0087,Cliente Piloto 87 S/A,PR,Comercio Atacadista
+C0088,Cliente Piloto 88 S/A,RJ,Varejo
+C0089,Cliente Piloto 89 S/A,SC,Distribuicao
+C0090,Cliente Piloto 90 S/A,MG,Industria
+C0091,Cliente Piloto 91 S/A,SP,Industria
+C0092,Cliente Piloto 92 S/A,PR,Distribuicao
+C0093,Cliente Piloto 93 S/A,PR,Industria
+C0094,Cliente Piloto 94 S/A,RJ,Distribuicao
+C0095,Cliente Piloto 95 S/A,PR,Distribuicao
+C0096,Cliente Piloto 96 S/A,MG,Distribuicao
+C0097,Cliente Piloto 97 S/A,MG,Industria
+C0098,Cliente Piloto 98 S/A,MG,Varejo
+C0099,Cliente Piloto 99 S/A,SP,Distribuicao
+C0100,Cliente Piloto 100 S/A,SP,Comercio Atacadista
+C0101,Cliente Piloto 101 S/A,SP,Industria
+C0102,Cliente Piloto 102 S/A,RJ,Distribuicao
+C0103,Cliente Piloto 103 S/A,SP,Distribuicao
+C0104,Cliente Piloto 104 S/A,MG,Comercio Atacadista
+C0105,Cliente Piloto 105 S/A,GO,Varejo
+C0106,Cliente Piloto 106 S/A,SP,Varejo
+C0107,Cliente Piloto 107 S/A,MG,Varejo
+C0108,Cliente Piloto 108 S/A,PR,Distribuicao
+C0109,Cliente Piloto 109 S/A,SP,Distribuicao
+C0110,Cliente Piloto 110 S/A,SP,Distribuicao
+C0111,Cliente Piloto 111 S/A,SP,Industria
+C0112,Cliente Piloto 112 S/A,SP,Comercio Atacadista
+C0113,Cliente Piloto 113 S/A,GO,Distribuicao
+C0114,Cliente Piloto 114 S/A,SC,Comercio Atacadista
+C0115,Cliente Piloto 115 S/A,RJ,Comercio Atacadista
+C0116,Cliente Piloto 116 S/A,SC,Varejo
+C0117,Cliente Piloto 117 S/A,SC,Industria
+C0118,Cliente Piloto 118 S/A,SP,Distribuicao
+C0119,Cliente Piloto 119 S/A,SC,Varejo
+C0120,Cliente Piloto 120 S/A,MG,Varejo
+C0121,Cliente Piloto 121 S/A,SC,Distribuicao
+C0122,Cliente Piloto 122 S/A,SC,Comercio Atacadista
+C0123,Cliente Piloto 123 S/A,SP,Varejo
+C0124,Cliente Piloto 124 S/A,SP,Comercio Atacadista
+C0125,Cliente Piloto 125 S/A,SP,Industria
+C0126,Cliente Piloto 126 S/A,MG,Comercio Atacadista
+C0127,Cliente Piloto 127 S/A,SC,Industria
+C0128,Cliente Piloto 128 S/A,SC,Comercio Atacadista
+C0129,Cliente Piloto 129 S/A,SP,Varejo
+C0130,Cliente Piloto 130 S/A,MG,Varejo
+C0131,Cliente Piloto 131 S/A,MG,Industria
+C0132,Cliente Piloto 132 S/A,SP,Distribuicao
+C0133,Cliente Piloto 133 S/A,SP,Industria
+C0134,Cliente Piloto 134 S/A,SP,Industria
+C0135,Cliente Piloto 135 S/A,GO,Comercio Atacadista
+C0136,Cliente Piloto 136 S/A,SP,Comercio Atacadista
+C0137,Cliente Piloto 137 S/A,MG,Industria
+C0138,Cliente Piloto 138 S/A,PR,Varejo
+C0139,Cliente Piloto 139 S/A,SP,Comercio Atacadista
+C0140,Cliente Piloto 140 S/A,BA,Distribuicao
+C0141,Cliente Piloto 141 S/A,BA,Comercio Atacadista
+C0142,Cliente Piloto 142 S/A,SP,Comercio Atacadista
+C0143,Cliente Piloto 143 S/A,MG,Distribuicao
+C0144,Cliente Piloto 144 S/A,SP,Industria
+C0145,Cliente Piloto 145 S/A,SP,Distribuicao
+C0146,Cliente Piloto 146 S/A,SP,Industria
+C0147,Cliente Piloto 147 S/A,RJ,Industria
+C0148,Cliente Piloto 148 S/A,MG,Industria
+C0149,Cliente Piloto 149 S/A,SP,Distribuicao
+C0150,Cliente Piloto 150 S/A,SP,Industria
+C0151,Cliente Piloto 151 S/A,GO,Varejo
+C0152,Cliente Piloto 152 S/A,SP,Distribuicao
+C0153,Cliente Piloto 153 S/A,SP,Varejo
+C0154,Cliente Piloto 154 S/A,MG,Industria
+C0155,Cliente Piloto 155 S/A,BA,Comercio Atacadista
+C0156,Cliente Piloto 156 S/A,SP,Industria
+C0157,Cliente Piloto 157 S/A,RJ,Varejo
+C0158,Cliente Piloto 158 S/A,PR,Varejo
+C0159,Cliente Piloto 159 S/A,SP,Distribuicao
+C0160,Cliente Piloto 160 S/A,PR,Comercio Atacadista
+C0161,Cliente Piloto 161 S/A,SP,Distribuicao
+C0162,Cliente Piloto 162 S/A,RJ,Varejo
+C0163,Cliente Piloto 163 S/A,RJ,Industria
+C0164,Cliente Piloto 164 S/A,MG,Comercio Atacadista
+C0165,Cliente Piloto 165 S/A,SP,Industria
+C0166,Cliente Piloto 166 S/A,SC,Industria
+C0167,Cliente Piloto 167 S/A,SP,Comercio Atacadista
+C0168,Cliente Piloto 168 S/A,SP,Distribuicao
+C0169,Cliente Piloto 169 S/A,SP,Industria
+C0170,Cliente Piloto 170 S/A,RJ,Varejo
+C0171,Cliente Piloto 171 S/A,RJ,Industria
+C0172,Cliente Piloto 172 S/A,SP,Comercio Atacadista
+C0173,Cliente Piloto 173 S/A,MG,Comercio Atacadista
+C0174,Cliente Piloto 174 S/A,SP,Comercio Atacadista
+C0175,Cliente Piloto 175 S/A,RJ,Distribuicao
+C0176,Cliente Piloto 176 S/A,SP,Industria
+C0177,Cliente Piloto 177 S/A,RJ,Distribuicao
+C0178,Cliente Piloto 178 S/A,SP,Distribuicao
+C0179,Cliente Piloto 179 S/A,GO,Comercio Atacadista
+C0180,Cliente Piloto 180 S/A,SP,Comercio Atacadista
+C0181,Cliente Piloto 181 S/A,SP,Distribuicao
+C0182,Cliente Piloto 182 S/A,SP,Industria
+C0183,Cliente Piloto 183 S/A,GO,Varejo
+C0184,Cliente Piloto 184 S/A,SC,Distribuicao
+C0185,Cliente Piloto 185 S/A,SP,Industria
+C0186,Cliente Piloto 186 S/A,RJ,Comercio Atacadista
+C0187,Cliente Piloto 187 S/A,SC,Comercio Atacadista
+C0188,Cliente Piloto 188 S/A,RJ,Industria
+C0189,Cliente Piloto 189 S/A,MG,Varejo
+C0190,Cliente Piloto 190 S/A,SP,Comercio Atacadista
+C0191,Cliente Piloto 191 S/A,SP,Comercio Atacadista
+C0192,Cliente Piloto 192 S/A,SC,Comercio Atacadista
+C0193,Cliente Piloto 193 S/A,GO,Industria
+C0194,Cliente Piloto 194 S/A,RJ,Distribuicao
+C0195,Cliente Piloto 195 S/A,SP,Comercio Atacadista
+C0196,Cliente Piloto 196 S/A,SP,Distribuicao
+C0197,Cliente Piloto 197 S/A,PR,Varejo
+C0198,Cliente Piloto 198 S/A,SC,Comercio Atacadista
+C0199,Cliente Piloto 199 S/A,SC,Comercio Atacadista
+C0200,Cliente Piloto 200 S/A,PR,Varejo
+C0201,Cliente Piloto 201 S/A,RJ,Comercio Atacadista
+C0202,Cliente Piloto 202 S/A,SP,Distribuicao
+C0203,Cliente Piloto 203 S/A,SP,Industria
+C0204,Cliente Piloto 204 S/A,SC,Distribuicao
+C0205,Cliente Piloto 205 S/A,RJ,Industria
+C0206,Cliente Piloto 206 S/A,SP,Industria
+C0207,Cliente Piloto 207 S/A,SP,Distribuicao
+C0208,Cliente Piloto 208 S/A,RJ,Distribuicao
+C0209,Cliente Piloto 209 S/A,SP,Distribuicao
+C0210,Cliente Piloto 210 S/A,SP,Distribuicao
+C0211,Cliente Piloto 211 S/A,MG,Varejo
+C0212,Cliente Piloto 212 S/A,RJ,Comercio Atacadista
+C0213,Cliente Piloto 213 S/A,RJ,Industria
+C0214,Cliente Piloto 214 S/A,SP,Distribuicao
+C0215,Cliente Piloto 215 S/A,PR,Distribuicao
+C0216,Cliente Piloto 216 S/A,SP,Distribuicao
+C0217,Cliente Piloto 217 S/A,SP,Varejo
+C0218,Cliente Piloto 218 S/A,PR,Distribuicao
+C0219,Cliente Piloto 219 S/A,RJ,Distribuicao
+C0220,Cliente Piloto 220 S/A,SC,Distribuicao
+C0221,Cliente Piloto 221 S/A,RJ,Comercio Atacadista
+C0222,Cliente Piloto 222 S/A,RJ,Varejo
+C0223,Cliente Piloto 223 S/A,SP,Distribuicao
+C0224,Cliente Piloto 224 S/A,SP,Industria
+C0225,Cliente Piloto 225 S/A,SP,Industria
+C0226,Cliente Piloto 226 S/A,SP,Industria
+C0227,Cliente Piloto 227 S/A,BA,Varejo
+C0228,Cliente Piloto 228 S/A,SP,Varejo
+C0229,Cliente Piloto 229 S/A,SC,Industria
+C0230,Cliente Piloto 230 S/A,RJ,Distribuicao
+C0231,Cliente Piloto 231 S/A,PR,Varejo
+C0232,Cliente Piloto 232 S/A,MG,Industria
+C0233,Cliente Piloto 233 S/A,RJ,Industria
+C0234,Cliente Piloto 234 S/A,MG,Distribuicao
+C0235,Cliente Piloto 235 S/A,SP,Comercio Atacadista
+C0236,Cliente Piloto 236 S/A,PR,Varejo
+C0237,Cliente Piloto 237 S/A,SP,Distribuicao
+C0238,Cliente Piloto 238 S/A,SP,Industria
+C0239,Cliente Piloto 239 S/A,RJ,Industria
+C0240,Cliente Piloto 240 S/A,SP,Distribuicao
+C0241,Cliente Piloto 241 S/A,GO,Varejo
+C0242,Cliente Piloto 242 S/A,BA,Comercio Atacadista
+C0243,Cliente Piloto 243 S/A,GO,Comercio Atacadista
+C0244,Cliente Piloto 244 S/A,SP,Industria
+C0245,Cliente Piloto 245 S/A,SP,Varejo
+C0246,Cliente Piloto 246 S/A,GO,Comercio Atacadista
+C0247,Cliente Piloto 247 S/A,MG,Varejo
+C0248,Cliente Piloto 248 S/A,BA,Varejo
+C0249,Cliente Piloto 249 S/A,BA,Industria
+C0250,Cliente Piloto 250 S/A,SC,Comercio Atacadista

@@ -1,0 +1,19 @@
+﻿version: '3.8'
+
+services:
+  feast-redis:
+    image: redis:7-alpine
+    container_name: juno-feast-redis
+    ports:
+      - "6378:6379"
+    volumes:
+      - feast_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  feast_redis_data:

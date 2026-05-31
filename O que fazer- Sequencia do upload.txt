@@ -1,0 +1,22 @@
+Agora vem a validação do piloto. A ordem certa é:
+
+Auditoria
+Entre em Auditoria e clique em Validar Dados.
+Objetivo: ver se o JUNO reconhece os dados carregados, cobertura, problemas e Data Trust Score.
+
+KPIs Executivos
+Entre em KPIs Executivos.
+Objetivo: conferir se receita, margem, atraso, cobertura, Score JUNO e indicadores por CEO/CFO/COO aparecem.
+
+Minha Empresa
+Entre em Minha Empresa.
+Objetivo: ver o diagnóstico operacional 360: Score, receita líquida, margem média, alertas, produtos/OPs e insights.
+
+Financeiro
+Entre em Financeiro.
+Objetivo: confirmar se DRE, Balanço e DFC aparecem com 29 períodos e valores coerentes.
+
+Anotar divergências
+Se algum número parecer estranho, não corrigimos no visual. Validamos contra a fonte: CSV, parser, banco e fórmula.
+
+O objetivo agora não é “ficar bonito”; é responder: o JUNO conseguiu transformar upload bruto em diagnóstico confiável?
