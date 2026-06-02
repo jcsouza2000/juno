@@ -157,7 +157,6 @@ interface Props {
 }
 
 const GOLD = '#C9A959';
-const NAVY = '#0A2342';
 const CYAN = '#5EEAD4';
 const VIOLET = '#A78BFA';
 

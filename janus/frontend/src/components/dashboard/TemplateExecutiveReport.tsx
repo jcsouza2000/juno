@@ -34,7 +34,6 @@ interface Props {
 }
 
 const NAVY = '#0A2342';
-const GOLD = '#C9A959';
 
 function fmtMil(value: number | null | undefined) {
   if (value == null || Number.isNaN(value)) return '—';
