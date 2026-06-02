@@ -275,6 +275,8 @@ export default function AIPage() {
   }, []);
 
   useEffect(() => {
+    // loadOllamaHealth e' async; o setState inicial e' intencional (estado "checking").
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadOllamaHealth();
   }, [loadOllamaHealth]);
 
