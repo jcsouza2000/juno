@@ -19,7 +19,6 @@ from typing import Any
 
 from app.config import settings
 
-
 _RESERVED_LOG_FIELDS = set(logging.LogRecord("", 0, "", 0, "", (), None).__dict__.keys())
 
 
