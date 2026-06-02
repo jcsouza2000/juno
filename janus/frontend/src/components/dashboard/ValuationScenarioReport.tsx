@@ -10,6 +10,7 @@ export interface ValuationDreRow {
   custos_operacionais: number;
   ebitda: number;
   lucro_liquido: number;
+  [key: string]: unknown;
 }
 
 export interface ValuationDfcRow {
@@ -24,6 +25,7 @@ export interface ValuationDfcRow {
   fcf: number;
   fator_desconto: number;
   pv_fcf: number;
+  [key: string]: unknown;
 }
 
 export interface ValuationScenarioPayload {

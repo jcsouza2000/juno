@@ -560,7 +560,7 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
                     <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
                     <XAxis dataKey="periodo" tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} width={32} />
-                    <Tooltip {...tooltipStyle} formatter={(v: number) => [`${v.toFixed(2)}x`, 'Giro']} />
+                    <Tooltip {...tooltipStyle} formatter={(v) => [`${Number(v).toFixed(2)}x`, 'Giro']} />
                     <Line type="monotone" dataKey="valor" stroke={CYAN} strokeWidth={2.5} dot={{ r: 4, fill: CYAN }} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -590,7 +590,7 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
                   <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
                   <XAxis dataKey="name" tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} unit="%" width={36} />
-                  <Tooltip {...tooltipStyle} formatter={(v: number) => [`${v.toFixed(1)}%`, 'Margem']} />
+                  <Tooltip {...tooltipStyle} formatter={(v) => [`${Number(v).toFixed(1)}%`, 'Margem']} />
                   <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                     {marginBars.map(entry => (
                       <Cell key={entry.name} fill={entry.fill} />
@@ -615,7 +615,7 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
                     <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
                     <XAxis dataKey="periodo" tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} width={48} />
-                    <Tooltip {...tooltipStyle} formatter={(v: number) => [`R$ ${fmtCurrency(v)}`, 'Receita']} />
+                    <Tooltip {...tooltipStyle} formatter={(v) => [`R$ ${fmtCurrency(Number(v))}`, 'Receita']} />
                     <Area type="monotone" dataKey="valor" stroke={GOLD} fill="url(#revenueFill)" strokeWidth={2} />
                   </AreaChart>
                 </ResponsiveContainer>
