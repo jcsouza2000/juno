@@ -14,6 +14,7 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 
+from app.auth import dev_auth_bypass_enabled
 from app.config import settings
 from app.core.logger import get_logger, setup_logging
 from app.database import engine
@@ -25,7 +26,6 @@ logger = get_logger(__name__)
 # SEGURANCA (C2): bypass de autenticacao so' pode existir em desenvolvimento.
 # Aqui apenas tornamos o estado VISIVEL no startup — nunca silencioso. A logica
 # de fato esta em app.auth.dev_auth_bypass_enabled() (exige is_development).
-from app.auth import dev_auth_bypass_enabled  # noqa: E402
 
 if dev_auth_bypass_enabled():
     logger.warning(
