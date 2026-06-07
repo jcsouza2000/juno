@@ -3,28 +3,30 @@
 import Link from 'next/link';
 import { Home, MessageSquare, ShieldCheck, Factory, Plug, Play, Rocket, BarChart2, ShieldAlert, Gauge, LockKeyhole, Database, Users } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useI18n } from '@/lib/i18n';
 
 export default function Sidebar() {
   const { data: session } = useSession();
+  const { t } = useI18n();
   const role = session?.user?.role;
   const isAdmin = role === 'admin' || role === 'platform_admin';
   const menuItems = [
-    { name: 'Visão Geral',        icon: <Home size={20} />,           href: '/',             highlight: false, danger: false },
-    { name: 'Minha Empresa',      icon: <Factory size={20} />,        href: '/romi',         highlight: false, danger: false },
-    { name: 'KPIs Executivos',    icon: <Gauge size={20} />,          href: '/executive',    highlight: false, danger: false },
-    { name: 'IA Operacional',     icon: <MessageSquare size={20} />,  href: '/ai',           highlight: false, danger: false },
-    { name: 'Financeiro',         icon: <BarChart2 size={20} />,      href: '/financials',   highlight: false, danger: false },
-    { name: 'Meus Dados',         icon: <Database size={20} />,       href: '/data',         highlight: false, danger: false },
-    { name: 'Integrações ERP',    icon: <Plug size={20} />,           href: '/integrations', highlight: false, danger: false },
-    { name: 'Auditoria',          icon: <ShieldCheck size={20} />,    href: '/audit',        highlight: false, danger: false },
-    { name: 'Trust Center',        icon: <LockKeyhole size={20} />,    href: '/trust',        highlight: false, danger: false },
+    { name: t('nav.overview'),      icon: <Home size={20} />,           href: '/',             highlight: false, danger: false },
+    { name: t('nav.company'),       icon: <Factory size={20} />,        href: '/romi',         highlight: false, danger: false },
+    { name: t('nav.executiveKpis'), icon: <Gauge size={20} />,          href: '/executive',    highlight: false, danger: false },
+    { name: t('nav.ai'),            icon: <MessageSquare size={20} />,  href: '/ai',           highlight: false, danger: false },
+    { name: t('nav.financial'),     icon: <BarChart2 size={20} />,      href: '/financials',   highlight: false, danger: false },
+    { name: t('nav.myData'),        icon: <Database size={20} />,       href: '/data',         highlight: false, danger: false },
+    { name: t('nav.integrations'),  icon: <Plug size={20} />,           href: '/integrations', highlight: false, danger: false },
+    { name: t('nav.audit'),         icon: <ShieldCheck size={20} />,    href: '/audit',        highlight: false, danger: false },
+    { name: t('nav.trust'),         icon: <LockKeyhole size={20} />,    href: '/trust',        highlight: false, danger: false },
     ...(isAdmin ? [
-      { name: 'Usuários',         icon: <Users size={20} />,          href: '/admin/users',    highlight: false, danger: false },
-      { name: 'Governança',       icon: <ShieldCheck size={20} />,    href: '/admin/markings', highlight: false, danger: false },
-      { name: 'Auto Teste',       icon: <ShieldAlert size={20} />,    href: '/autotest',     highlight: false, danger: true  },
+      { name: t('nav.users'),       icon: <Users size={20} />,          href: '/admin/users',    highlight: false, danger: false },
+      { name: t('nav.governance'),  icon: <ShieldCheck size={20} />,    href: '/admin/markings', highlight: false, danger: false },
+      { name: t('nav.autoTest'),    icon: <ShieldAlert size={20} />,    href: '/autotest',     highlight: false, danger: true  },
     ] : []),
-    { name: 'Demo Executivo',     icon: <Play size={20} />,           href: '/demo',         highlight: true,  danger: false },
-    { name: 'Piloto',             icon: <Rocket size={20} />,         href: '/pilot',        highlight: true,  danger: false },
+    { name: t('nav.demoExecutive'), icon: <Play size={20} />,           href: '/demo',         highlight: true,  danger: false },
+    { name: t('nav.pilot'),         icon: <Rocket size={20} />,         href: '/pilot',        highlight: true,  danger: false },
   ];
 
   return (
@@ -68,10 +70,10 @@ export default function Sidebar() {
       </nav>
 
       <div className="m-6 mt-auto p-4 rounded-lg bg-white/5">
-        <p className="text-[10px] text-gray-500 uppercase tracking-wider">Status Sistema</p>
+        <p className="text-[10px] text-gray-500 uppercase tracking-wider">{t('nav.systemStatus')}</p>
         <div className="flex items-center gap-2 mt-2">
           <div className="w-2 h-2 rounded-full bg-green-500" />
-          <span className="text-xs font-semibold">v0.3.2 — ONLINE</span>
+          <span className="text-xs font-semibold">v0.3.2 — {t('nav.online')}</span>
         </div>
       </div>
     </aside>

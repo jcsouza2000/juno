@@ -5,6 +5,22 @@ Substitui os antigos `main_update_fase*.py` que foram removidos do código.
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/).
 
+## [Não publicado] — Trilíngue PT/EN/ES (Fase 2, fundação) 2026-06-07
+
+### Adicionado (frontend)
+- Camada de i18n leve via React Context (`src/lib/i18n.tsx`) — sem dependência
+  externa nem reestruturação de rotas. Idioma persistido em localStorage e
+  sincronizado entre abas.
+- Dicionários `src/locales/{pt,en,es}.ts` com tipo `Dictionary` derivado do PT
+  (en/es validados por estrutura no build).
+- Seletor de idioma (PT/EN/ES) no Header.
+- Telas traduzidas nos 3 idiomas: navegação (Sidebar), Header, "Meus Dados"
+  (`/data`) e administração de usuários (`/admin/users`).
+
+### Pendente (próximos incrementos da Fase 2)
+- Traduzir `/executive`, `/financials`, `/integrations`, `/ai`.
+- Backend: mensagens de API por `Accept-Language`; IA: SYSTEM_PROMPT por idioma.
+
 ## [Não publicado] — IA Operacional treinável (Fase 4) 2026-06-07
 
 ### Adicionado

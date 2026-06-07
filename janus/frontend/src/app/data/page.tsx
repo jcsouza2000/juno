@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { api, getApiErrorMessage } from '@/lib/api';
 import { useActiveCompany } from '@/lib/tenant';
+import { useI18n } from '@/lib/i18n';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 interface InventoryTable { table: string; rows: number }
@@ -39,22 +40,19 @@ interface PurgeResult {
 
 type Scope = 'financial' | 'erp' | 'all';
 
-const SCOPE_LABELS: Record<Scope, { title: string; desc: string }> = {
-  financial: { title: 'Financeiro', desc: 'DRE, Balanço, DFC e lançamentos. Também recalcula KPIs.' },
-  erp: { title: 'Operacional ERP', desc: 'Produtos, clientes, fornecedores, pedidos e estoque.' },
-  all: { title: 'Tudo', desc: 'Todos os dados de negócio do tenant (mantém usuários e conexões).' },
-};
-
 const GROUP_ICON: Record<string, React.ReactNode> = {
   financial: <FileStack size={16} className="text-[#C9A959]" />,
   erp: <Database size={16} className="text-[#C9A959]" />,
   derived: <RefreshCw size={16} className="text-[#C9A959]" />,
 };
 
+const SCOPES: Scope[] = ['financial', 'erp', 'all'];
+
 // ── Page ───────────────────────────────────────────────────────────────────
 export default function DataPage() {
   const { company, companyId, isLoading: companyLoading } = useActiveCompany();
   const { data: session } = useSession();
+  const { t } = useI18n();
   const role = session?.user?.role;
   const isAdmin = role === 'admin' || role === 'platform_admin';
 
@@ -70,6 +68,9 @@ export default function DataPage() {
   const [purgeError, setPurgeError] = useState<string | null>(null);
 
   const expectedToken = companyId != null ? `PURGE-${companyId}` : '';
+
+  const scopeTitle = (s: Scope) => t(`data.scope.${s}Title`);
+  const scopeDesc = (s: Scope) => t(`data.scope.${s}Desc`);
 
   const loadInventory = useCallback(async () => {
     if (!companyId) {
@@ -97,8 +98,7 @@ export default function DataPage() {
   const handlePurge = async () => {
     if (!companyId || confirmation !== expectedToken) return;
     if (!window.confirm(
-      `Confirma a exclusão "${SCOPE_LABELS[scope].title}" do tenant ${company?.name ?? companyId}? ` +
-      `Esta ação é irreversível.`,
+      t('data.confirmDialog', { scope: scopeTitle(scope), company: company?.name ?? companyId }),
     )) return;
 
     setPurging(true);
@@ -121,30 +121,27 @@ export default function DataPage() {
       {/* Header */}
       <div className="border-b border-gray-200 pb-4 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#0A2342]">Meus Dados</h1>
-          <p className="text-gray-500 text-sm mt-1">
-            Tudo que está depositado no JUNO para a empresa ativa — e exclusão controlada
-            sob comando do administrador.
-          </p>
+          <h1 className="text-2xl font-bold text-[#0A2342]">{t('data.title')}</h1>
+          <p className="text-gray-500 text-sm mt-1">{t('data.subtitle')}</p>
         </div>
         <button
           onClick={() => void loadInventory()}
           disabled={loading || !companyId}
           className="flex items-center gap-2 text-sm font-semibold text-[#0A2342] border border-gray-200 rounded-lg px-3 py-2 hover:bg-gray-50 disabled:opacity-40"
         >
-          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> Atualizar
+          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> {t('common.refresh')}
         </button>
       </div>
 
       {companyLoading && (
         <div className="bg-white border border-gray-100 rounded-xl p-6 text-sm text-gray-500">
-          Carregando tenant ativo...
+          {t('common.loadingTenant')}
         </div>
       )}
 
       {!companyLoading && !companyId && (
         <div className="bg-yellow-50 border border-yellow-100 rounded-xl p-6 text-sm text-yellow-800">
-          Nenhuma empresa vinculada ao usuário. Vincule um tenant para ver os dados.
+          {t('common.noCompany')}
         </div>
       )}
 
@@ -159,30 +156,32 @@ export default function DataPage() {
         <>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="rounded-xl border border-[#0A2342] bg-[#0A2342] p-4">
-              <p className="text-xs uppercase tracking-widest font-semibold text-[#C9A959]">Total de registros</p>
+              <p className="text-xs uppercase tracking-widest font-semibold text-[#C9A959]">{t('data.totalRecords')}</p>
               <div className="text-3xl font-extrabold mt-1 text-white">
                 {loading ? '—' : (inventory?.total_rows ?? 0).toLocaleString('pt-BR')}
               </div>
-              <p className="text-xs mt-1 text-white/60">{company?.name ?? 'Tenant ativo'}</p>
+              <p className="text-xs mt-1 text-white/60">{company?.name ?? ''}</p>
             </div>
 
             {(inventory?.groups ?? []).map((g) => (
               <div key={g.group} className="rounded-xl border border-gray-100 bg-white p-4">
                 <div className="flex items-center gap-2">
                   {GROUP_ICON[g.group] ?? <Database size={16} className="text-[#C9A959]" />}
-                  <p className="text-xs uppercase tracking-widest font-semibold text-gray-400">{g.label}</p>
+                  <p className="text-xs uppercase tracking-widest font-semibold text-gray-400">
+                    {t(`data.group.${g.group}`)}
+                  </p>
                 </div>
                 <div className="text-2xl font-extrabold mt-1 text-[#0A2342]">
                   {g.total_rows.toLocaleString('pt-BR')}
                 </div>
                 <div className="mt-2 space-y-0.5">
-                  {g.tables.filter((t) => t.rows > 0).map((t) => (
-                    <div key={t.table} className="flex justify-between text-[11px] text-gray-500">
-                      <span className="truncate">{t.table}</span>
-                      <span className="font-semibold">{t.rows.toLocaleString('pt-BR')}</span>
+                  {g.tables.filter((tbl) => tbl.rows > 0).map((tbl) => (
+                    <div key={tbl.table} className="flex justify-between text-[11px] text-gray-500">
+                      <span className="truncate">{tbl.table}</span>
+                      <span className="font-semibold">{tbl.rows.toLocaleString('pt-BR')}</span>
                     </div>
                   ))}
-                  {g.total_rows === 0 && <p className="text-[11px] text-gray-300">vazio</p>}
+                  {g.total_rows === 0 && <p className="text-[11px] text-gray-300">{t('common.empty')}</p>}
                 </div>
               </div>
             ))}
@@ -194,7 +193,7 @@ export default function DataPage() {
               <div className="flex items-center gap-2 mb-3">
                 <Calendar size={16} className="text-[#C9A959]" />
                 <h2 className="text-sm font-bold text-[#0A2342] uppercase tracking-wider">
-                  Períodos disponíveis ({inventory?.periods.length})
+                  {t('data.periods', { count: inventory?.periods.length ?? 0 })}
                 </h2>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -209,22 +208,22 @@ export default function DataPage() {
           <div className="bg-white rounded-xl border border-gray-100 p-5">
             <div className="flex items-center gap-2 mb-3">
               <FileStack size={16} className="text-[#C9A959]" />
-              <h2 className="text-sm font-bold text-[#0A2342] uppercase tracking-wider">Histórico de depósitos</h2>
+              <h2 className="text-sm font-bold text-[#0A2342] uppercase tracking-wider">{t('data.depositHistory')}</h2>
             </div>
             {loading ? (
               <div className="flex justify-center py-6"><Loader2 className="animate-spin text-gray-400" size={20} /></div>
             ) : (inventory?.uploads.length ?? 0) === 0 ? (
-              <p className="text-sm text-gray-400 text-center py-6">Nenhum depósito registrado.</p>
+              <p className="text-sm text-gray-400 text-center py-6">{t('data.noDeposits')}</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="text-gray-400 uppercase tracking-wider border-b border-gray-100">
-                      <th className="text-left py-2 pr-4">Origem</th>
-                      <th className="text-left py-2 pr-4">Arquivo / Tipo</th>
-                      <th className="text-left py-2 pr-4">Períodos</th>
-                      <th className="text-right py-2 pr-4">Linhas</th>
-                      <th className="text-right py-2">Data</th>
+                      <th className="text-left py-2 pr-4">{t('data.origin')}</th>
+                      <th className="text-left py-2 pr-4">{t('data.fileOrType')}</th>
+                      <th className="text-left py-2 pr-4">{t('data.periodsColumn')}</th>
+                      <th className="text-right py-2 pr-4">{t('common.rows')}</th>
+                      <th className="text-right py-2">{t('common.date')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -234,7 +233,7 @@ export default function DataPage() {
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                             d.source === 'financial' ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-800'
                           }`}>
-                            {d.source === 'financial' ? 'Financeiro' : 'ERP'}
+                            {t(`data.source.${d.source}`)}
                           </span>
                         </td>
                         <td className="py-2 pr-4 font-medium max-w-[200px] truncate">
@@ -258,16 +257,13 @@ export default function DataPage() {
             <div className="bg-white rounded-xl border-2 border-red-200 p-6 space-y-4">
               <div className="flex items-center gap-2">
                 <ShieldAlert size={18} className="text-red-600" />
-                <h2 className="text-sm font-bold text-red-700 uppercase tracking-wider">Zona de exclusão controlada</h2>
+                <h2 className="text-sm font-bold text-red-700 uppercase tracking-wider">{t('data.dangerZone')}</h2>
               </div>
-              <p className="text-sm text-gray-600">
-                A exclusão remove apenas <strong>dados de negócio</strong> do tenant. Usuários, vínculos,
-                conexões ERP e auditoria são <strong>preservados</strong>. A ação é irreversível.
-              </p>
+              <p className="text-sm text-gray-600">{t('data.dangerIntro')}</p>
 
               {/* Scope selector */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {(Object.keys(SCOPE_LABELS) as Scope[]).map((s) => (
+                {SCOPES.map((s) => (
                   <button
                     key={s}
                     onClick={() => setScope(s)}
@@ -275,8 +271,8 @@ export default function DataPage() {
                       scope === s ? 'border-red-400 bg-red-50' : 'border-gray-150 hover:border-red-200'
                     }`}
                   >
-                    <p className="font-bold text-sm text-[#0A2342]">{SCOPE_LABELS[s].title}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">{SCOPE_LABELS[s].desc}</p>
+                    <p className="font-bold text-sm text-[#0A2342]">{scopeTitle(s)}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{scopeDesc(s)}</p>
                   </button>
                 ))}
               </div>
@@ -284,7 +280,8 @@ export default function DataPage() {
               {/* Confirmation */}
               <div>
                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-                  Para confirmar, digite <span className="text-red-600 font-mono">{expectedToken}</span>
+                  {t('data.confirmLabel', { token: '' })}{' '}
+                  <span className="text-red-600 font-mono">{expectedToken}</span>
                 </label>
                 <input
                   type="text"
@@ -301,16 +298,18 @@ export default function DataPage() {
                 className="flex items-center gap-2 bg-red-600 text-white font-bold py-2.5 px-5 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {purging
-                  ? <><Loader2 className="animate-spin" size={18} /> Excluindo...</>
-                  : <><Trash2 size={18} /> Excluir dados ({SCOPE_LABELS[scope].title})</>}
+                  ? <><Loader2 className="animate-spin" size={18} /> {t('data.deleting')}</>
+                  : <><Trash2 size={18} /> {t('data.deleteButton', { scope: scopeTitle(scope) })}</>}
               </button>
 
               {purgeResult && (
                 <div className="rounded-lg border-2 border-green-300 bg-green-50 p-4 text-sm">
                   <div className="flex items-center gap-2 font-bold text-green-800">
                     <CheckCircle size={18} />
-                    {purgeResult.total_rows_deleted.toLocaleString('pt-BR')} registros excluídos
-                    (escopo: {purgeResult.scope})
+                    {t('data.deletedCount', {
+                      count: purgeResult.total_rows_deleted.toLocaleString('pt-BR'),
+                      scope: purgeResult.scope,
+                    })}
                   </div>
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {Object.entries(purgeResult.deleted)
@@ -332,7 +331,7 @@ export default function DataPage() {
             </div>
           ) : (
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm text-gray-500 flex items-center gap-2">
-              <ShieldAlert size={16} /> A exclusão de dados é restrita a administradores do tenant.
+              <ShieldAlert size={16} /> {t('data.adminOnly')}
             </div>
           )}
         </>

@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { api, getApiErrorMessage } from '@/lib/api';
 import { useActiveCompany } from '@/lib/tenant';
+import { useI18n } from '@/lib/i18n';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 type TenantRole = 'owner' | 'admin' | 'member' | 'viewer';
@@ -28,13 +29,6 @@ interface CreateResponse {
   temp_password: string | null;
 }
 
-const ROLE_LABELS: Record<TenantRole, string> = {
-  owner: 'Proprietário',
-  admin: 'Administrador',
-  member: 'Membro',
-  viewer: 'Visualizador',
-};
-
 const ROLE_STYLES: Record<TenantRole, string> = {
   owner: 'bg-[#C9A959]/20 text-[#8a6d2f]',
   admin: 'bg-indigo-100 text-indigo-800',
@@ -47,6 +41,9 @@ const ROLES: TenantRole[] = ['owner', 'admin', 'member', 'viewer'];
 // ── Page ───────────────────────────────────────────────────────────────────
 export default function TenantUsersPage() {
   const { company, companyId, isLoading: companyLoading } = useActiveCompany();
+  const { t } = useI18n();
+
+  const roleLabel = (r: TenantRole) => t(`users.role.${r}`);
 
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(false);
@@ -119,7 +116,7 @@ export default function TenantUsersPage() {
 
   const handleRemove = async (member: Member) => {
     if (!companyId) return;
-    if (!window.confirm(`Remover ${member.email} deste tenant? O usuário global é preservado.`)) return;
+    if (!window.confirm(t('users.removeConfirm', { email: member.email }))) return;
     try {
       await api.delete(`/tenants/${companyId}/members/${member.user_id}`);
       await loadMembers();
@@ -134,22 +131,22 @@ export default function TenantUsersPage() {
       <div className="border-b border-gray-200 pb-4">
         <div className="flex items-center gap-2">
           <Users size={22} className="text-[#0A2342]" />
-          <h1 className="text-2xl font-bold text-[#0A2342]">Usuários do Tenant</h1>
+          <h1 className="text-2xl font-bold text-[#0A2342]">{t('users.title')}</h1>
         </div>
         <p className="text-gray-500 text-sm mt-1">
-          Gerencie quem acessa <strong>{company?.name ?? 'a empresa ativa'}</strong> e o papel de cada um.
+          {t('users.subtitle', { company: company?.name ?? '—' })}
         </p>
       </div>
 
       {companyLoading && (
         <div className="bg-white border border-gray-100 rounded-xl p-6 text-sm text-gray-500">
-          Carregando tenant ativo...
+          {t('common.loadingTenant')}
         </div>
       )}
 
       {!companyLoading && !companyId && (
         <div className="bg-yellow-50 border border-yellow-100 rounded-xl p-6 text-sm text-yellow-800">
-          Nenhuma empresa vinculada ao usuário.
+          {t('common.noCompany')}
         </div>
       )}
 
@@ -165,7 +162,7 @@ export default function TenantUsersPage() {
           <form onSubmit={handleCreate} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
             <div className="flex items-center gap-2">
               <UserPlus size={18} className="text-[#C9A959]" />
-              <h2 className="text-sm font-bold text-[#0A2342] uppercase tracking-wider">Convidar usuário</h2>
+              <h2 className="text-sm font-bold text-[#0A2342] uppercase tracking-wider">{t('users.invite')}</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
               <input
@@ -173,14 +170,14 @@ export default function TenantUsersPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="email@empresa.com"
+                placeholder={t('users.emailPlaceholder')}
                 className="md:col-span-2 border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-[#0A2342] focus:outline-none"
               />
               <input
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Nome completo (opcional)"
+                placeholder={t('users.namePlaceholder')}
                 className="border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-[#0A2342] focus:outline-none"
               />
               <select
@@ -188,7 +185,7 @@ export default function TenantUsersPage() {
                 onChange={(e) => setRole(e.target.value as TenantRole)}
                 className="border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-[#0A2342] focus:outline-none bg-white"
               >
-                {ROLES.map((r) => <option key={r} value={r}>{ROLE_LABELS[r]}</option>)}
+                {ROLES.map((r) => <option key={r} value={r}>{roleLabel(r)}</option>)}
               </select>
             </div>
             <button
@@ -196,35 +193,33 @@ export default function TenantUsersPage() {
               disabled={creating || !email.trim()}
               className="flex items-center gap-2 bg-[#C9A959] text-[#0A2342] font-bold py-2.5 px-5 rounded-lg hover:bg-[#b8943f] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              {creating ? <><Loader2 className="animate-spin" size={18} /> Adicionando...</> : <><UserPlus size={18} /> Adicionar membro</>}
+              {creating ? <><Loader2 className="animate-spin" size={18} /> {t('users.adding')}</> : <><UserPlus size={18} /> {t('users.addMember')}</>}
             </button>
 
             {createMsg && (
               <div className="rounded-lg border-2 border-green-300 bg-green-50 p-4 text-sm space-y-2">
                 <div className="flex items-center gap-2 font-bold text-green-800">
                   <CheckCircle size={18} />
-                  {createMsg.member.email} adicionado como {ROLE_LABELS[createMsg.member.role_in_tenant]}
-                  {createMsg.created_user ? ' (usuário novo)' : ' (usuário já existente)'}
+                  {t('users.addedAs', { email: createMsg.member.email, role: roleLabel(createMsg.member.role_in_tenant) })}
+                  {' '}{createMsg.created_user ? t('users.createdNew') : t('users.createdExisting')}
                 </div>
                 {createMsg.temp_password && (
                   <div className="flex items-center gap-2 bg-white border border-green-200 rounded-lg px-3 py-2">
                     <KeyRound size={16} className="text-amber-600 shrink-0" />
-                    <span className="text-gray-600">Senha temporária:</span>
+                    <span className="text-gray-600">{t('users.tempPassword')}</span>
                     <code className="font-mono font-bold text-[#0A2342]">{createMsg.temp_password}</code>
                     <button
                       type="button"
                       onClick={() => navigator.clipboard?.writeText(createMsg.temp_password!)}
                       className="ml-auto text-gray-400 hover:text-[#0A2342]"
-                      title="Copiar"
+                      title="Copy"
                     >
                       <Copy size={15} />
                     </button>
                   </div>
                 )}
                 {createMsg.temp_password && (
-                  <p className="text-xs text-green-700">
-                    Anote e repasse com segurança — esta senha não será exibida novamente.
-                  </p>
+                  <p className="text-xs text-green-700">{t('users.tempPasswordNote')}</p>
                 )}
               </div>
             )}
@@ -239,22 +234,22 @@ export default function TenantUsersPage() {
           <div className="bg-white rounded-xl shadow-sm border border-gray-100">
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <h2 className="text-sm font-bold text-[#0A2342] uppercase tracking-wider">
-                Membros ({members.length})
+                {t('users.members', { count: members.length })}
               </h2>
             </div>
             {loading ? (
               <div className="flex justify-center py-10"><Loader2 className="animate-spin text-gray-400" size={22} /></div>
             ) : members.length === 0 ? (
-              <p className="text-sm text-gray-400 text-center py-10">Nenhum membro neste tenant.</p>
+              <p className="text-sm text-gray-400 text-center py-10">{t('users.noMembers')}</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="text-gray-400 text-xs uppercase tracking-wider border-b border-gray-100">
-                      <th className="text-left py-3 px-6">Usuário</th>
-                      <th className="text-left py-3 px-4">Papel</th>
-                      <th className="text-left py-3 px-4">Entrou em</th>
-                      <th className="text-right py-3 px-6">Ações</th>
+                      <th className="text-left py-3 px-6">{t('users.columnUser')}</th>
+                      <th className="text-left py-3 px-4">{t('users.columnRole')}</th>
+                      <th className="text-left py-3 px-4">{t('users.columnJoined')}</th>
+                      <th className="text-right py-3 px-6">{t('users.columnActions')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -268,7 +263,7 @@ export default function TenantUsersPage() {
                               <p className="text-xs text-gray-400">{m.email}</p>
                             </div>
                             {m.is_primary && (
-                              <span className="text-[10px] font-bold bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded uppercase">Primário</span>
+                              <span className="text-[10px] font-bold bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded uppercase">{t('users.primary')}</span>
                             )}
                           </div>
                         </td>
@@ -278,7 +273,7 @@ export default function TenantUsersPage() {
                             onChange={(e) => handleRoleChange(m.user_id, e.target.value as TenantRole)}
                             className={`text-xs font-bold rounded-full px-2.5 py-1 border-0 cursor-pointer ${ROLE_STYLES[m.role_in_tenant]}`}
                           >
-                            {ROLES.map((r) => <option key={r} value={r}>{ROLE_LABELS[r]}</option>)}
+                            {ROLES.map((r) => <option key={r} value={r}>{roleLabel(r)}</option>)}
                           </select>
                         </td>
                         <td className="py-3 px-4 text-gray-400 text-xs">
@@ -288,7 +283,7 @@ export default function TenantUsersPage() {
                           <button
                             onClick={() => handleRemove(m)}
                             className="text-red-400 hover:text-red-600 transition-colors"
-                            title="Remover do tenant"
+                            title={t('common.remove')}
                           >
                             <Trash2 size={16} />
                           </button>
@@ -303,10 +298,7 @@ export default function TenantUsersPage() {
 
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-xs text-gray-500 flex items-start gap-2">
             <ShieldAlert size={15} className="shrink-0 mt-0.5" />
-            <span>
-              O último <strong>Proprietário</strong> não pode ser rebaixado nem removido. Remover um membro
-              desfaz apenas o vínculo com este tenant — o usuário global é preservado.
-            </span>
+            <span>{t('users.ownerNote')}</span>
           </div>
         </>
       )}
