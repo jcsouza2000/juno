@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Link from 'next/link';
-import { Home, MessageSquare, ShieldCheck, Factory, Plug, Play, Rocket, BarChart2, ShieldAlert, Gauge, LockKeyhole, Database } from 'lucide-react';
+import { Home, MessageSquare, ShieldCheck, Factory, Plug, Play, Rocket, BarChart2, ShieldAlert, Gauge, LockKeyhole, Database, Users } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
 export default function Sidebar() {
@@ -19,6 +19,7 @@ export default function Sidebar() {
     { name: 'Auditoria',          icon: <ShieldCheck size={20} />,    href: '/audit',        highlight: false, danger: false },
     { name: 'Trust Center',        icon: <LockKeyhole size={20} />,    href: '/trust',        highlight: false, danger: false },
     ...(isAdmin ? [
+      { name: 'Usuários',         icon: <Users size={20} />,          href: '/admin/users',    highlight: false, danger: false },
       { name: 'Governança',       icon: <ShieldCheck size={20} />,    href: '/admin/markings', highlight: false, danger: false },
       { name: 'Auto Teste',       icon: <ShieldAlert size={20} />,    href: '/autotest',     highlight: false, danger: true  },
     ] : []),
