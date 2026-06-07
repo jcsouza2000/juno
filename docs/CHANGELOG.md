@@ -5,6 +5,21 @@ Substitui os antigos `main_update_fase*.py` que foram removidos do código.
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/).
 
+## [Não publicado] — Multi-usuário por tenant (Fase 1) 2026-06-07
+
+### Adicionado
+- `app/services/tenant_members.py` — CRUD de membros de tenant: vincular/criar
+  usuário, alterar papel e remover, mantendo `user_companies` e
+  `user_company_memberships` em sincronia. Protege o último owner (não pode ser
+  rebaixado nem removido) e isola operações por `company_id`.
+- `app/schemas/tenant.py` — papéis de tenant (owner/admin/member/viewer) e DTOs.
+- `app/routers/tenant_users.py` — endpoints sob `/tenants/{company_id}/members`:
+  - `GET` lista membros; `POST` convida/cria (gera senha temporária quando o
+    usuário é novo e sem senha); `PATCH` altera papel; `DELETE` remove vínculo.
+  - Autorização por papel no tenant (owner/admin) ou platform_admin.
+- `app/tests/test_tenant_members.py` — 13 testes (criação, papéis, proteção do
+  último owner, autorização e isolamento entre tenants).
+
 ## [Não publicado] — Gestão de dados do tenant (Fase 0+3) 2026-06-07
 
 ### Adicionado
