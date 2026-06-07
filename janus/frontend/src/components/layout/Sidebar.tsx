@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Link from 'next/link';
-import { Home, MessageSquare, ShieldCheck, Factory, Plug, Play, Rocket, BarChart2, ShieldAlert, Gauge, LockKeyhole } from 'lucide-react';
+import { Home, MessageSquare, ShieldCheck, Factory, Plug, Play, Rocket, BarChart2, ShieldAlert, Gauge, LockKeyhole, Database } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
 export default function Sidebar() {
@@ -14,6 +14,7 @@ export default function Sidebar() {
     { name: 'KPIs Executivos',    icon: <Gauge size={20} />,          href: '/executive',    highlight: false, danger: false },
     { name: 'IA Operacional',     icon: <MessageSquare size={20} />,  href: '/ai',           highlight: false, danger: false },
     { name: 'Financeiro',         icon: <BarChart2 size={20} />,      href: '/financials',   highlight: false, danger: false },
+    { name: 'Meus Dados',         icon: <Database size={20} />,       href: '/data',         highlight: false, danger: false },
     { name: 'Integrações ERP',    icon: <Plug size={20} />,           href: '/integrations', highlight: false, danger: false },
     { name: 'Auditoria',          icon: <ShieldCheck size={20} />,    href: '/audit',        highlight: false, danger: false },
     { name: 'Trust Center',        icon: <LockKeyhole size={20} />,    href: '/trust',        highlight: false, danger: false },
