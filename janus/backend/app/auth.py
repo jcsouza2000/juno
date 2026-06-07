@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 
 from fastapi import Depends, HTTPException, status
@@ -84,8 +85,56 @@ def ensure_dev_tenant_membership(db: Session, user: User) -> Company:
             )
         )
     db.commit()
+
+    # DEV: vincula tambem a empresa de demonstracao (mesma do dashboard) para que
+    # a IA e os endpoints v1 consultem o tenant com dados reais. Controlado por env
+    # JUNO_DEV_COMPANY_ID; quando definido, esse tenant vira o primario do dev-user.
+    _link_dev_demo_company(db, user)
+
     db.refresh(user)
     return company
+
+
+def _link_dev_demo_company(db: Session, user: User) -> None:
+    """Vincula o dev-user a JUNO_DEV_COMPANY_ID e marca-a como tenant primario."""
+    raw = os.getenv("JUNO_DEV_COMPANY_ID", "").strip()
+    if not raw:
+        return
+    try:
+        demo_id = int(raw)
+    except ValueError:
+        return
+
+    demo = db.query(Company).filter(Company.id == demo_id).first()
+    if demo is None:
+        return
+
+    if demo not in (user.companies or []):
+        user.companies.append(demo)
+        db.flush()
+
+    # Demais memberships deixam de ser primarias; a demo passa a ser a primaria.
+    memberships = db.query(UserCompany).filter(UserCompany.user_id == user.id).all()
+    demo_membership = None
+    for m in memberships:
+        if m.company_id == demo_id:
+            demo_membership = m
+        elif m.is_primary:
+            m.is_primary = False
+
+    if demo_membership is None:
+        db.add(
+            UserCompany(
+                user_id=user.id,
+                company_id=demo_id,
+                role_in_tenant="owner" if user.role in {"admin", "platform_admin"} else "member",
+                is_primary=True,
+            )
+        )
+    else:
+        demo_membership.is_primary = True
+
+    db.commit()
 
 
 def get_or_create_dev_user(db: Session) -> User:

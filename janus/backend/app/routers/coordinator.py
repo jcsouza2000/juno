@@ -64,6 +64,7 @@ class CoordinatorRequest(BaseModel):
     model_config = ConfigDict(extra="ignore")
     question: str
     history: list[dict[str, Any]] = []
+    company_id: int | None = None
 
 
 @router.post("/coordinator", summary="SSE stream do Coordinator")
@@ -77,7 +78,13 @@ def coordinator_endpoint(
 
     def event_stream():
         try:
-            for chunk in coordinate(payload.question, db, history=payload.history, user=user):
+            for chunk in coordinate(
+                payload.question,
+                db,
+                history=payload.history,
+                user=user,
+                company_id=payload.company_id,
+            ):
                 yield f"data: {chunk}\n\n"
         except Exception as e:  # noqa: BLE001
             import json

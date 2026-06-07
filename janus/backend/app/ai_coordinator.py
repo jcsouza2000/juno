@@ -394,7 +394,13 @@ def _strip_thinking(text: str) -> str:
     return re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
 
 
-def coordinate(question: str, db: Session, history: list | None = None, user=None):
+def coordinate(
+    question: str,
+    db: Session,
+    history: list | None = None,
+    user=None,
+    company_id: int | None = None,
+):
     """
     Generator — produz strings JSON (dados SSE):
       {"type": "tool_call",        "tool": str, "label": str}
@@ -470,6 +476,10 @@ def coordinate(question: str, db: Session, history: list | None = None, user=Non
 
                 yield json.dumps({"type": "tool_call", "tool": name, "label": label})
 
+                # Tenant da UI e' autoritativo: sobrescreve o que o modelo chutou.
+                # Ainda validado contra permissoes em _resolve_company_id.
+                if company_id is not None:
+                    args["company_id"] = company_id
                 result = _run_tool(name, args, db, user=user)
                 messages.append({"role": "tool", "content": result})
 
