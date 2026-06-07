@@ -5,6 +5,29 @@ Substitui os antigos `main_update_fase*.py` que foram removidos do código.
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/).
 
+## [Não publicado] — Gestão de dados do tenant (Fase 0+3) 2026-06-07
+
+### Adicionado
+- `app/data_management.py` — camada de "depósito de dados": inventário do que
+  está persistido por grupo (financeiro, operacional ERP, KPIs derivados) e
+  purge controlado por escopo. Reusa `FinancialUploadBatch` e `ERPImportBatch`
+  como histórico de depósito (sem tabela/migration nova).
+- `app/routers/data_management.py` — endpoints:
+  - `GET /data/{company_id}/inventory` — "Meus dados" (contagens, períodos,
+    histórico de uploads).
+  - `POST /data/{company_id}/purge` — exclusão controlada (`financial` / `erp`
+    / `all`), exigindo token de dupla confirmação `PURGE-{company_id}` e
+    restrita a admin com acesso ao tenant. Nunca apaga usuários, vínculos,
+    conexões ERP ou auditoria; remove tabelas-filho via FK antes dos pais.
+- `app/tests/test_data_management.py` — 7 testes (inventário, isolamento por
+  tenant, purge por escopo, FK dos filhos).
+
+### IA / Multi-tenant
+- `/ai/coordinator` passou a aceitar `company_id` no payload; o tenant da UI é
+  autoritativo e sobrescreve o escolhido pelo modelo, sempre validado em
+  `_resolve_company_id`. Em dev, `JUNO_DEV_COMPANY_ID` vincula o dev-user à
+  empresa de demonstração.
+
 ## [Não publicado] — Auditoria e adequação 2026-05-14
 
 ### Segurança
