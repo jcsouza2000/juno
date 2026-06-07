@@ -1,0 +1,98 @@
+# JUNO — Playbook da IA Operacional (Fase 4)
+#
+# Mapeia perguntas executivas recorrentes -> ferramenta(s) -> formato de
+# resposta. Carregado por app/ai_playbook.py e injetado no SYSTEM_PROMPT do
+# Coordinator para orientar a escolha de ferramentas, SEM fine-tuning.
+#
+# Como manter: adicione um intent com `perguntas` (exemplos), `tools` (uma ou
+# mais ferramentas existentes) e `resposta` (dica curta de formato). Mantenha as
+# dicas objetivas — o modelo e 8B e responde melhor com instrucoes curtas.
+
+version: 1
+description: Perguntas executivas cobertas pelo Coordinator, com dados reais via tools.
+
+intents:
+  - id: visao_geral
+    perguntas:
+      - "como está a empresa"
+      - "resumo executivo"
+      - "me dá uma visão geral"
+      - "qual a situação do negócio"
+    tools: [get_company_overview]
+    resposta: "Receita líquida (R$), Score JUNO, nº de produtos com margem negativa e ordens atrasadas. Destaque o que está crítico."
+
+  - id: diagnostico_completo
+    perguntas:
+      - "faça um diagnóstico completo"
+      - "análise completa"
+      - "raio-x da operação"
+    tools: [get_full_diagnostic]
+    resposta: "Síntese de KPIs, margens, atrasos, insights e qualidade dos dados em até 6 linhas, do mais ao menos crítico."
+
+  - id: margem_produto
+    perguntas:
+      - "quais produtos dão prejuízo"
+      - "margem por produto"
+      - "produtos abaixo do custo"
+    tools: [get_margin_analysis]
+    resposta: "Liste produtos com margem negativa primeiro (R$ e %). Some o prejuízo total e proponha ação."
+
+  - id: concentracao_clientes
+    perguntas:
+      - "quem são meus maiores clientes"
+      - "qual a concentração de clientes"
+      - "quanto o maior cliente representa"
+      - "risco de carteira de clientes"
+    tools: [get_customer_concentration]
+    resposta: "Top clientes com R$ e participação %. Se o maior cliente >= 30% da receita, alerte risco de dependência."
+
+  - id: curva_abc_produtos
+    perguntas:
+      - "curva ABC de produtos"
+      - "quais produtos concentram a receita"
+      - "mix de produtos"
+      - "itens classe A"
+    tools: [get_product_abc]
+    resposta: "Resuma quantos itens são classe A e quanto da receita representam. Liste os principais classe A."
+
+  - id: atrasos_producao
+    perguntas:
+      - "tem ordens atrasadas"
+      - "atrasos de produção"
+      - "o que está atrasado"
+    tools: [get_production_delays]
+    resposta: "Quantidade de ordens atrasadas e as mais críticas (produto, dias de atraso). Cite impacto."
+
+  - id: insights
+    perguntas:
+      - "quais os principais riscos"
+      - "o que devo olhar primeiro"
+      - "insights do negócio"
+    tools: [get_insights]
+    resposta: "Priorize riscos por impacto financeiro. Máximo 5 itens, cada um com a ação sugerida."
+
+  - id: qualidade_dados
+    perguntas:
+      - "os dados são confiáveis"
+      - "qualidade dos dados"
+      - "data trust score"
+    tools: [validate_data_quality]
+    resposta: "Informe o Data Trust Score (0-100) e os 3 maiores problemas. Recomende correção antes de decisões."
+
+  - id: financeiro
+    perguntas:
+      - "como estão as margens financeiras"
+      - "resultado do exercício"
+      - "liquidez e endividamento"
+      - "fluxo de caixa"
+    tools: [get_financial_statements]
+    resposta: "DRE (receita, lucro bruto, EBITDA, líquido e margens), Balanço (liquidez, endividamento) e DFC. Comente tendência."
+
+  - id: valuation
+    perguntas:
+      - "quanto vale a empresa"
+      - "valuation"
+      - "projeção de DRE e fluxo de caixa"
+      - "enterprise value"
+    tools: [run_valuation_scenario]
+    resposta: "Use SEMPRE a ferramenta. Apresente Enterprise Value e premissas (crescimento, WACC). Nunca calcule à mão."

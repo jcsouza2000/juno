@@ -10,7 +10,7 @@ import re
 import ollama
 from sqlalchemy.orm import Session
 
-from . import dashboards, data_quality, insights
+from . import ai_playbook, analytics, dashboards, data_quality, insights
 from . import demo as demo_module
 from . import financials as fin_module
 from .score_v2 import get_score_calculator
@@ -198,6 +198,48 @@ TOOLS = [
     {
         "type": "function",
         "function": {
+            "name": "get_customer_concentration",
+            "description": (
+                "Concentração de receita por cliente (curva ABC) e risco de dependência "
+                "comercial. Use para perguntas sobre maiores clientes, carteira concentrada, "
+                "quanto o maior cliente representa ou risco de perder um cliente."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "company_id": {
+                        "type": "integer",
+                        "description": "1=Minha Empresa (padrão), 2=base secundária (compat)",
+                    }
+                },
+                "required": ["company_id"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_product_abc",
+            "description": (
+                "Curva ABC de produtos por receita líquida (classes A/B/C). Use para "
+                "perguntas sobre mix de produtos, quais produtos concentram a receita, "
+                "priorização de portfólio ou itens classe A."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "company_id": {
+                        "type": "integer",
+                        "description": "1=Minha Empresa (padrão), 2=base secundária (compat)",
+                    }
+                },
+                "required": ["company_id"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "run_valuation_scenario",
             "description": (
                 "Motor auditável de valuation: projeta DRE e DFC por N anos a partir dos dados reais, "
@@ -242,6 +284,8 @@ TOOL_LABELS: dict[str, str] = {
     "validate_data_quality": "Validando qualidade dos dados...",
     "get_full_diagnostic": "Executando diagnóstico completo...",
     "get_financial_statements": "Consultando demonstrações financeiras...",
+    "get_customer_concentration": "Analisando concentração de clientes...",
+    "get_product_abc": "Calculando curva ABC de produtos...",
     "run_valuation_scenario": "Calculando valuation e projeções...",
 }
 
@@ -367,6 +411,14 @@ def _run_tool(name: str, args: dict, db: Session, user=None) -> str:
         if name == "get_financial_statements":
             return json.dumps(fin_module.get_financial_summary(cid, db), default=str)
 
+        if name == "get_customer_concentration":
+            return json.dumps(
+                analytics.get_customer_concentration(db, cid), default=str, ensure_ascii=False
+            )
+
+        if name == "get_product_abc":
+            return json.dumps(analytics.get_product_abc(db, cid), default=str, ensure_ascii=False)
+
         if name == "run_valuation_scenario":
             from .valuation_scenario import run_valuation_scenario
 
@@ -417,8 +469,12 @@ def coordinate(
     """
     extra_tools, extra_prompt = _get_ontology_extensions()
     full_system_prompt = SYSTEM_PROMPT
+    # Playbook (Fase 4): orienta a escolha de ferramentas por tipo de pergunta.
+    playbook_fragment = ai_playbook.build_prompt_fragment()
+    if playbook_fragment:
+        full_system_prompt = full_system_prompt + "\n\n" + playbook_fragment
     if extra_prompt:
-        full_system_prompt = SYSTEM_PROMPT + "\n\n" + extra_prompt
+        full_system_prompt = full_system_prompt + "\n\n" + extra_prompt
     full_tools = list(TOOLS) + list(extra_tools)
 
     messages: list[dict] = [{"role": "system", "content": full_system_prompt}]

@@ -5,6 +5,20 @@ Substitui os antigos `main_update_fase*.py` que foram removidos do código.
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/).
 
+## [Não publicado] — IA Operacional treinável (Fase 4) 2026-06-07
+
+### Adicionado
+- `app/analytics.py` — análises operacionais: `get_customer_concentration`
+  (curva ABC de clientes + risco de dependência) e `get_product_abc` (curva
+  ABC de produtos por receita). Somente leitura, escopadas por company_id.
+- Duas novas ferramentas no Coordinator (`get_customer_concentration`,
+  `get_product_abc`) com dispatch no caminho legado e labels de UI.
+- `app/ai_playbook.yaml` + `app/ai_playbook.py` — playbook declarativo
+  (pergunta → ferramenta → formato de resposta) injetado no SYSTEM_PROMPT.
+  "Treina" a IA a escolher a ferramenta certa sem fine-tuning.
+- `app/tests/test_analytics.py` (3 testes) e `app/tests/test_ai_playbook.py`
+  (4 testes, incl. eval que falha se o playbook citar tool inexistente).
+
 ## [Não publicado] — Multi-usuário por tenant (Fase 1) 2026-06-07
 
 ### Adicionado
