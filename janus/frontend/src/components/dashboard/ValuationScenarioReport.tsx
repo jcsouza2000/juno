@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { TrendingUp } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 export interface ValuationDreRow {
   ano: number;
@@ -79,25 +80,28 @@ function money(value: number | null | undefined) {
 }
 
 export default function ValuationScenarioReport({ data, companyName, compact = false }: Props) {
+  const { t } = useI18n();
   const [active, setActive] = useState<'dre' | 'dfc' | 'resumo'>('resumo');
   const anos = useMemo(() => data.dre_projetada.map(r => String(r.ano)), [data.dre_projetada]);
+  const typeLabel = (tipo: string) =>
+    tipo === 'realizado' ? t('valuation.typeRealized') : t('valuation.typeProjected');
 
   const dreLines = [
-    { label: 'Receita Líquida', key: 'receita_liquida' as const, destaque: false },
-    { label: 'Custos Operacionais', key: 'custos_operacionais' as const, destaque: false },
-    { label: 'EBITDA', key: 'ebitda' as const, destaque: true },
-    { label: 'Lucro Líquido', key: 'lucro_liquido' as const, destaque: true },
+    { label: t('valuation.line.receita_liquida'), key: 'receita_liquida' as const, destaque: false },
+    { label: t('valuation.line.custos_operacionais'), key: 'custos_operacionais' as const, destaque: false },
+    { label: t('valuation.line.ebitda'), key: 'ebitda' as const, destaque: true },
+    { label: t('valuation.line.lucro_liquido'), key: 'lucro_liquido' as const, destaque: true },
   ];
 
   const dfcLines = [
-    { label: 'EBITDA', key: 'ebitda' as const },
-    { label: 'Depreciação / Amortização', key: 'depreciacao' as const },
-    { label: 'Lucro antes IR/CS', key: 'lucro_antes_ir' as const },
-    { label: 'Imposto de Renda', key: 'imposto' as const },
-    { label: 'Lucro Líquido', key: 'lucro_liquido' as const },
-    { label: 'Capex (manutenção)', key: 'capex' as const },
-    { label: 'Fluxo de Caixa Livre (FCF)', key: 'fcf' as const, destaque: true },
-    { label: 'PV do FCF', key: 'pv_fcf' as const, destaque: true },
+    { label: t('valuation.line.ebitda'), key: 'ebitda' as const },
+    { label: t('valuation.line.depreciacao'), key: 'depreciacao' as const },
+    { label: t('valuation.line.lucro_antes_ir'), key: 'lucro_antes_ir' as const },
+    { label: t('valuation.line.imposto'), key: 'imposto' as const },
+    { label: t('valuation.line.lucro_liquido'), key: 'lucro_liquido' as const },
+    { label: t('valuation.line.capex'), key: 'capex' as const },
+    { label: t('valuation.line.fcf'), key: 'fcf' as const, destaque: true },
+    { label: t('valuation.line.pv_fcf'), key: 'pv_fcf' as const, destaque: true },
   ];
 
   return (
@@ -106,19 +110,19 @@ export default function ValuationScenarioReport({ data, companyName, compact = f
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#C9A959]">
-              Valuation · Cenário {data.cenario}
+              {t('valuation.eyebrow', { scenario: data.cenario })}
             </p>
-            <h2 className="mt-1 text-xl font-extrabold">DRE/DFC Projetados e Enterprise Value</h2>
+            <h2 className="mt-1 text-xl font-extrabold">{t('valuation.title')}</h2>
             {companyName && <p className="mt-1 text-sm text-white/70">{companyName}</p>}
           </div>
           <div className="rounded-2xl border border-[#C9A959]/40 bg-[#0A2342]/40 px-4 py-3 text-right">
-            <p className="text-[10px] uppercase tracking-widest text-white/60">Enterprise Value</p>
+            <p className="text-[10px] uppercase tracking-widest text-white/60">{t('valuation.enterpriseValue')}</p>
             <p className="text-2xl font-extrabold text-[#C9A959]">
               {money(data.valuation.enterprise_value)}
               <span className="ml-1 text-xs font-normal text-white/60">mi</span>
             </p>
             <p className="mt-1 text-[10px] text-white/50">
-              WACC {data.premissas.taxa_desconto_pct.toFixed(0)}% · PV FCF projetado
+              {t('valuation.waccNote', { wacc: data.premissas.taxa_desconto_pct.toFixed(0) })}
             </p>
           </div>
         </div>
@@ -127,10 +131,10 @@ export default function ValuationScenarioReport({ data, companyName, compact = f
       {!compact && (
         <div className="grid gap-3 border-b border-gray-100 bg-[#F8FAFC] px-5 py-4 sm:grid-cols-4">
           {[
-            ['Receita', `+${data.premissas.crescimento_receita_pct}% a.a.`],
-            ['Custos operacionais', `+${data.premissas.crescimento_custos_fixos_pct}% a.a.`],
-            ['Horizonte', `${data.premissas.anos} anos`],
-            ['Ano base', String(data.ano_base)],
+            [t('valuation.assumptionRevenue'), `+${data.premissas.crescimento_receita_pct}% ${t('valuation.perYear')}`],
+            [t('valuation.assumptionCosts'), `+${data.premissas.crescimento_custos_fixos_pct}% ${t('valuation.perYear')}`],
+            [t('valuation.assumptionHorizon'), t('valuation.yearsUnit', { n: data.premissas.anos })],
+            [t('valuation.assumptionBaseYear'), String(data.ano_base)],
           ].map(([k, v]) => (
             <div key={k} className="rounded-xl border border-gray-100 bg-white px-3 py-2">
               <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{k}</p>
@@ -152,12 +156,12 @@ export default function ValuationScenarioReport({ data, companyName, compact = f
                 : 'border border-gray-200 bg-white text-gray-600 hover:border-[#C9A959]/50'
             }`}
           >
-            {tab === 'resumo' ? 'Resumo' : tab.toUpperCase()}
+            {tab === 'resumo' ? t('valuation.tabSummary') : tab.toUpperCase()}
           </button>
         ))}
         <span className="ml-auto inline-flex items-center gap-1 text-[10px] text-gray-400">
           <TrendingUp size={12} className="text-[#C9A959]" />
-          {data.unidade} · motor auditável JUNO
+          {data.unidade} · {t('valuation.engine')}
         </span>
       </div>
 
@@ -174,10 +178,10 @@ export default function ValuationScenarioReport({ data, companyName, compact = f
               <table className="min-w-full text-sm">
                 <thead>
                   <tr style={{ backgroundColor: NAVY }} className="text-left text-white">
-                    <th className="px-4 py-2.5 font-bold">Ano</th>
+                    <th className="px-4 py-2.5 font-bold">{t('valuation.colYear')}</th>
                     <th className="px-4 py-2.5 text-right font-bold">FCF</th>
                     <th className="px-4 py-2.5 text-right font-bold">PV FCF</th>
-                    <th className="px-4 py-2.5 text-right font-bold">Tipo</th>
+                    <th className="px-4 py-2.5 text-right font-bold">{t('valuation.colType')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -192,7 +196,7 @@ export default function ValuationScenarioReport({ data, companyName, compact = f
                         {row.tipo === 'realizado' ? '—' : money(row.pv_fcf)}
                       </td>
                       <td className="px-4 py-2 text-right text-xs uppercase tracking-wide text-gray-500">
-                        {row.tipo}
+                        {typeLabel(row.tipo)}
                       </td>
                     </tr>
                   ))}
@@ -204,7 +208,7 @@ export default function ValuationScenarioReport({ data, companyName, compact = f
 
         {active === 'dre' && (
           <TableBlock
-            title="DRE Projetada"
+            title={t('valuation.dreTitle')}
             anos={anos}
             rows={data.dre_projetada}
             lines={dreLines}
@@ -214,7 +218,7 @@ export default function ValuationScenarioReport({ data, companyName, compact = f
 
         {active === 'dfc' && (
           <TableBlock
-            title="Demonstração do Fluxo de Caixa Projetado"
+            title={t('valuation.dfcTitle')}
             anos={anos}
             rows={data.dfc_projetado}
             lines={dfcLines}
@@ -239,6 +243,7 @@ function TableBlock<T extends Record<string, unknown>>({
   lines: { label: string; key: keyof T; destaque?: boolean }[];
   tipos: string[];
 }) {
+  const { t } = useI18n();
   return (
     <>
       <h3 className="mb-3 text-sm font-bold uppercase tracking-widest text-[#0A2342]">{title}</h3>
@@ -246,12 +251,12 @@ function TableBlock<T extends Record<string, unknown>>({
         <table className="min-w-full text-sm">
           <thead>
             <tr style={{ backgroundColor: NAVY }} className="text-left text-white">
-              <th className="min-w-[220px] px-4 py-2.5 font-bold">Conta</th>
+              <th className="min-w-[220px] px-4 py-2.5 font-bold">{t('valuation.colAccount')}</th>
               {anos.map((ano, i) => (
                 <th key={ano} className="px-4 py-2.5 text-right font-bold whitespace-nowrap">
                   {ano}
                   {tipos[i] === 'realizado' && (
-                    <span className="ml-1 text-[9px] font-normal text-[#C9A959]">base</span>
+                    <span className="ml-1 text-[9px] font-normal text-[#C9A959]">{t('valuation.baseSuffix')}</span>
                   )}
                 </th>
               ))}
