@@ -26,10 +26,16 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/).
   (`build_system_prompt`). O frontend `/ai` envia o `locale` ativo. Dados e
   ferramentas seguem em PT; só a resposta ao usuário muda de idioma.
 
+- `ValuationScenarioReport` (usado em `/executive` e nos cards do `/ai`)
+  traduzido nos 3 idiomas — namespace `valuation.*`.
+- Backend i18n de mensagens de API: `app/core/i18n.py` negocia `Accept-Language`
+  (pt/en/es) e traduz mensagens; aplicado aos handlers globais de erro 500 e
+  rate limit (429).
+
 ### Pendente (próximos incrementos da Fase 2)
-- Componentes de relatório do dashboard executivo (UnifiedExecutiveDashboard,
-  TemplateExecutiveReport, ValuationScenarioReport).
-- Mensagens de erro de API por `Accept-Language`.
+- Componentes `UnifiedExecutiveDashboard` e `TemplateExecutiveReport` (este
+  último puxa as tabelas do backend em PT — i18n pleno exige traduzir o payload
+  do relatório no backend).
 
 ## [Não publicado] — IA Operacional treinável (Fase 4) 2026-06-07
 

@@ -16,6 +16,7 @@ from slowapi.util import get_remote_address
 
 from app.auth import dev_auth_bypass_enabled
 from app.config import settings
+from app.core.i18n import translate
 from app.core.logger import get_logger, setup_logging
 from app.database import engine
 from app.models import Base as ModelsBase
@@ -78,7 +79,7 @@ async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
         status_code=429,
         content={
             "error": "rate_limit_exceeded",
-            "detail": "Muitas requisicoes. Tente novamente em instantes.",
+            "detail": translate("rate_limited", request.headers.get("accept-language")),
         },
     )
 
@@ -220,7 +221,11 @@ def root():
 @app.exception_handler(Exception)
 async def global_error(request: Request, exc: Exception):
     logger.exception(f"Erro nao-tratado em {request.method} {request.url.path}: {exc}")
-    detail = str(exc) if settings.is_development else "Erro interno do servidor"
+    detail = (
+        str(exc)
+        if settings.is_development
+        else translate("internal_error", request.headers.get("accept-language"))
+    )
     return JSONResponse(
         status_code=500,
         content={"error": "internal_error", "detail": detail},
