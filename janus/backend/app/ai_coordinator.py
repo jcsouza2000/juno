@@ -75,6 +75,36 @@ Regras:
 7. Para valuation, projeção DRE/DFC ou Enterprise Value, use SEMPRE run_valuation_scenario
    (nunca calcule projeções manualmente). Apresente o resultado com base nos números retornados pela ferramenta."""
 
+# Fase 2 — idioma da RESPOSTA ao usuario. Os dados/tools permanecem em PT; a
+# diretiva abaixo (quando nao vazia) sobrescreve a regra 5 e manda o modelo
+# responder no idioma escolhido na UI. PT e o padrao (sem diretiva extra).
+LANG_INSTRUCTION = {
+    "pt": "",
+    "en": (
+        "IMPORTANT — OUTPUT LANGUAGE: Write your entire reply to the user in English (US). "
+        "The tools, their names and their JSON results stay in Portuguese — translate the "
+        "meaning into English. Keep monetary values in R$ (Brazilian Real)."
+    ),
+    "es": (
+        "IMPORTANTE — IDIOMA DE SALIDA: Escribe toda tu respuesta al usuario en español. "
+        "Las herramientas, sus nombres y sus resultados JSON permanecen en portugués — traduce "
+        "el significado al español. Mantén los valores monetarios en R$ (real brasileño)."
+    ),
+}
+
+
+def build_system_prompt(lang: str | None = None) -> str:
+    """SYSTEM_PROMPT base + diretiva de idioma de saida (Fase 2 — trilingue).
+
+    lang aceita 'pt' | 'en' | 'es' (case-insensitive). Valor invalido ou None
+    cai em PT, sem diretiva extra.
+    """
+    instruction = LANG_INSTRUCTION.get((lang or "pt").lower(), "")
+    if instruction:
+        return SYSTEM_PROMPT + "\n\n" + instruction
+    return SYSTEM_PROMPT
+
+
 TOOLS = [
     {
         "type": "function",
@@ -452,6 +482,7 @@ def coordinate(
     history: list | None = None,
     user=None,
     company_id: int | None = None,
+    lang: str | None = None,
 ):
     """
     Generator — produz strings JSON (dados SSE):
@@ -468,7 +499,8 @@ def coordinate(
               (TenantScoped, markings). Se None, assume admin global (use so' em dev).
     """
     extra_tools, extra_prompt = _get_ontology_extensions()
-    full_system_prompt = SYSTEM_PROMPT
+    # Idioma da resposta (Fase 2): PT por padrao; en/es viram diretiva no prompt.
+    full_system_prompt = build_system_prompt(lang)
     # Playbook (Fase 4): orienta a escolha de ferramentas por tipo de pergunta.
     playbook_fragment = ai_playbook.build_prompt_fragment()
     if playbook_fragment:

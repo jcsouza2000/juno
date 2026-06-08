@@ -65,6 +65,8 @@ class CoordinatorRequest(BaseModel):
     question: str
     history: list[dict[str, Any]] = []
     company_id: int | None = None
+    # Idioma da resposta da IA: 'pt' (padrao) | 'en' | 'es'.
+    lang: str | None = None
 
 
 @router.post("/coordinator", summary="SSE stream do Coordinator")
@@ -84,6 +86,7 @@ def coordinator_endpoint(
                 history=payload.history,
                 user=user,
                 company_id=payload.company_id,
+                lang=payload.lang,
             ):
                 yield f"data: {chunk}\n\n"
         except Exception as e:  # noqa: BLE001

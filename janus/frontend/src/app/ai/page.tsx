@@ -307,7 +307,7 @@ export default function AIPage() {
           'Content-Type': 'application/json',
           ...(session?.accessToken ? { Authorization: `Bearer ${session.accessToken}` } : {}),
         },
-        body: JSON.stringify({ question, history: buildHistory(), company_id: companyId }),
+        body: JSON.stringify({ question, history: buildHistory(), company_id: companyId, lang: locale }),
       });
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);

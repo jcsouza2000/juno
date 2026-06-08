@@ -21,10 +21,15 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/).
   `/integrations`, `/ai` (títulos, estados, formulários, indicadores, perguntas
   rápidas da IA).
 
+- IA Operacional responde no idioma do usuário: o Coordinator recebe `lang`
+  (pt/en/es) e injeta uma diretiva de idioma no SYSTEM_PROMPT
+  (`build_system_prompt`). O frontend `/ai` envia o `locale` ativo. Dados e
+  ferramentas seguem em PT; só a resposta ao usuário muda de idioma.
+
 ### Pendente (próximos incrementos da Fase 2)
 - Componentes de relatório do dashboard executivo (UnifiedExecutiveDashboard,
   TemplateExecutiveReport, ValuationScenarioReport).
-- Backend: mensagens de API por `Accept-Language`; IA: SYSTEM_PROMPT por idioma.
+- Mensagens de erro de API por `Accept-Language`.
 
 ## [Não publicado] — IA Operacional treinável (Fase 4) 2026-06-07
 
