@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { api, getApiErrorMessage } from '@/lib/api';
 import { useActiveCompany } from '@/lib/tenant';
+import { useI18n } from '@/lib/i18n';
 import {
   Upload, CheckCircle, XCircle, AlertTriangle, Package, Users,
   ShoppingCart, Factory, BarChart3, DollarSign, Truck,
@@ -39,21 +40,22 @@ const PILOT_UPLOAD_FILES: Record<string, string> = {
 };
 
 const DATA_TYPES = [
-  { id: 'products',           label: 'Produtos',             icon: Package,     template: 'products_template.csv', supported: true },
-  { id: 'customers',          label: 'Clientes',             icon: Users,       template: 'customers_template.csv', supported: true },
-  { id: 'sales_orders',       label: 'Pedidos de Venda',     icon: ShoppingCart,template: 'sales_orders_template.csv', supported: true },
-  { id: 'production_orders',  label: 'Ordens de Produção',   icon: Factory,     template: 'production_orders_template.csv', supported: true },
-  { id: 'inventory',          label: 'Estoque',              icon: BarChart3,   template: null, supported: false },
-  { id: 'financials',         label: 'Financeiro',           icon: DollarSign,  template: null, supported: false },
-  { id: 'suppliers',          label: 'Fornecedores',         icon: Truck,       template: null, supported: false },
+  { id: 'products',           icon: Package,      template: 'products_template.csv', supported: true },
+  { id: 'customers',          icon: Users,        template: 'customers_template.csv', supported: true },
+  { id: 'sales_orders',       icon: ShoppingCart, template: 'sales_orders_template.csv', supported: true },
+  { id: 'production_orders',  icon: Factory,      template: 'production_orders_template.csv', supported: true },
+  { id: 'inventory',          icon: BarChart3,    template: null, supported: false },
+  { id: 'financials',         icon: DollarSign,   template: null, supported: false },
+  { id: 'suppliers',          icon: Truck,        template: null, supported: false },
 ];
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: string }) {
+  const { t } = useI18n();
   const map: Record<string, { color: string; icon: React.ReactNode; label: string }> = {
-    success: { color: 'bg-green-100 text-green-800 border-green-300', icon: <CheckCircle size={14} />, label: 'Sucesso' },
-    partial: { color: 'bg-yellow-100 text-yellow-800 border-yellow-300', icon: <AlertTriangle size={14} />, label: 'Parcial' },
-    error:   { color: 'bg-red-100 text-red-800 border-red-300',         icon: <XCircle size={14} />,      label: 'Erro' },
+    success: { color: 'bg-green-100 text-green-800 border-green-300', icon: <CheckCircle size={14} />, label: t('integrations.statusSuccess') },
+    partial: { color: 'bg-yellow-100 text-yellow-800 border-yellow-300', icon: <AlertTriangle size={14} />, label: t('integrations.statusPartial') },
+    error:   { color: 'bg-red-100 text-red-800 border-red-300',         icon: <XCircle size={14} />,      label: t('integrations.statusError') },
   };
   const s = map[status] ?? map.error;
   return (
@@ -66,6 +68,7 @@ function StatusBadge({ status }: { status: string }) {
 // ── Page ───────────────────────────────────────────────────────────────────
 export default function IntegrationsPage() {
   const { company, companyId } = useActiveCompany();
+  const { t } = useI18n();
   const [dataType, setDataType]   = useState('products');
   const [file, setFile]           = useState<File | null>(null);
   const [dragging, setDragging]   = useState(false);
@@ -160,18 +163,18 @@ export default function IntegrationsPage() {
     <div className="space-y-8 max-w-4xl">
       {/* Header */}
       <div className="border-b border-gray-200 pb-4">
-        <h1 className="text-2xl font-bold text-[#0A2342]">Integrações ERP</h1>
+        <h1 className="text-2xl font-bold text-[#0A2342]">{t('integrations.title')}</h1>
         <p className="text-gray-500 text-sm mt-1">
-          Importe dados exportados do seu ERP (CSV ou Excel) e recalcule diagnósticos automaticamente.
+          {t('integrations.subtitle')}
         </p>
       </div>
 
       {/* How-to steps */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { n: '1', title: 'Baixe o template', desc: 'Exporte seus dados no formato JUNO ou use o template como guia.' },
-          { n: '2', title: 'Preencha com dados reais', desc: 'Substitua os exemplos pelos dados exportados do seu ERP.' },
-          { n: '3', title: 'Importe para o JUNO', desc: 'Score, insights e diagnóstico são recalculados automaticamente.' },
+          { n: '1', title: t('integrations.step1Title'), desc: t('integrations.step1Desc') },
+          { n: '2', title: t('integrations.step2Title'), desc: t('integrations.step2Desc') },
+          { n: '3', title: t('integrations.step3Title'), desc: t('integrations.step3Desc') },
         ].map(s => (
           <div key={s.n} className="bg-[#F0F4F8] rounded-xl p-4 flex gap-3">
             <div className="w-8 h-8 rounded-full bg-[#0A2342] text-[#C9A959] flex items-center justify-center font-bold text-sm shrink-0">
@@ -191,50 +194,50 @@ export default function IntegrationsPage() {
         {/* Company selector */}
         <div>
           <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-            Empresa ativa
+            {t('common.activeCompany')}
           </label>
           <div className="inline-flex px-5 py-2.5 rounded-lg border-2 bg-[#0A2342] text-white border-[#0A2342] font-bold text-sm">
-            {company?.name ?? 'Tenant nao selecionado'}
+            {company?.name ?? '—'}
           </div>
         </div>
 
         {/* Data type selector */}
         <div>
           <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-            Tipo de Dado
+            {t('integrations.dataType')}
           </label>
           <div className="grid grid-cols-4 gap-2">
-            {DATA_TYPES.map(t => {
-              const Icon = t.icon;
+            {DATA_TYPES.map(dt => {
+              const Icon = dt.icon;
               return (
                 <button
-                  key={t.id}
+                  key={dt.id}
                   onClick={() => {
-                    if (!t.supported) return;
-                    setDataType(t.id);
+                    if (!dt.supported) return;
+                    setDataType(dt.id);
                     setFile(null);
                     setFileWarning('');
                     setResult(null);
                     setShowHistory(false);
                   }}
-                  disabled={!t.supported}
+                  disabled={!dt.supported}
                   className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 text-xs font-semibold transition-all ${
-                    dataType === t.id
+                    dataType === dt.id
                       ? 'bg-[#C9A959] text-[#0A2342] border-[#C9A959]'
-                      : t.supported
+                      : dt.supported
                       ? 'bg-white text-gray-600 border-gray-100 hover:border-[#C9A959]'
                       : 'bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed'
                   }`}
                 >
                   <Icon size={18} />
-                  {t.label}
-                  {!t.supported && <span className="text-[10px] font-medium">em preparo</span>}
+                  {t(`integrations.type.${dt.id}`)}
+                  {!dt.supported && <span className="text-[10px] font-medium">{t('integrations.inPrep')}</span>}
                 </button>
               );
             })}
           </div>
           <p className="text-xs text-gray-400 mt-2">
-            Financeiro deve ser carregado na aba Financeiro. Estoque e fornecedores serao liberados quando o importador dedicado estiver pronto.
+            {t('integrations.dataTypeNote')}
           </p>
         </div>
 
@@ -243,14 +246,14 @@ export default function IntegrationsPage() {
           <div className="flex items-center gap-3 bg-blue-50 border border-blue-100 rounded-lg px-4 py-3">
             <FileDown size={18} className="text-[#0A2342] shrink-0" />
             <span className="text-sm text-gray-700 flex-1">
-              Template para <strong>{selectedType.label}</strong> disponível.
+              {t('integrations.templateAvailable', { type: t(`integrations.type.${selectedType.id}`) })}
             </span>
             <a
               href={`/templates/${selectedType.template}`}
               download
               className="text-xs font-bold text-[#0A2342] underline hover:text-[#C9A959]"
             >
-              Baixar CSV
+              {t('integrations.downloadCsv')}
             </a>
           </div>
         )}
@@ -258,7 +261,7 @@ export default function IntegrationsPage() {
         {/* File drop zone */}
         <div>
           <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-            Arquivo (CSV ou Excel)
+            {t('integrations.fileLabel')}
           </label>
           <div
             onClick={() => fileRef.current?.click()}
@@ -284,13 +287,13 @@ export default function IntegrationsPage() {
               <div className="flex flex-col items-center gap-1">
                 <CheckCircle size={28} className="text-green-500" />
                 <p className="font-semibold text-green-700 text-sm">{file.name}</p>
-                <p className="text-xs text-gray-400">{(file.size / 1024).toFixed(1)} KB — clique para trocar</p>
+                <p className="text-xs text-gray-400">{(file.size / 1024).toFixed(1)} KB — {t('financials.clickToChange')}</p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2 text-gray-400">
                 <Upload size={28} />
-                <p className="text-sm">Arraste o arquivo aqui ou <span className="text-[#0A2342] font-semibold">clique para selecionar</span></p>
-                <p className="text-xs">Suporte: .csv · .xlsx · .xls</p>
+                <p className="text-sm">{t('financials.dropHint')} <span className="text-[#0A2342] font-semibold">{t('financials.dropClick')}</span></p>
+                <p className="text-xs">.csv · .xlsx · .xls</p>
               </div>
             )}
           </div>
@@ -309,8 +312,8 @@ export default function IntegrationsPage() {
           className="w-full flex items-center justify-center gap-2 bg-[#0A2342] text-white font-bold py-3 rounded-xl hover:bg-[#0d2d57] transition-colors shadow-md disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {importing
-            ? <><Loader2 className="animate-spin" size={20} /> Importando para o JUNO...</>
-            : <><Upload size={20} /> Importar para JUNO</>
+            ? <><Loader2 className="animate-spin" size={20} /> {t('integrations.importing')}</>
+            : <><Upload size={20} /> {t('integrations.importButton')}</>
           }
         </button>
       </div>
@@ -323,15 +326,15 @@ export default function IntegrationsPage() {
           'border-red-400 bg-red-50'
         }`}>
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-[#0A2342]">Resumo da Importação</h2>
+            <h2 className="text-lg font-bold text-[#0A2342]">{t('integrations.importSummary')}</h2>
             <StatusBadge status={result.status} />
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             {[
-              { label: 'Linhas recebidas', value: result.rows_received, color: 'text-gray-700' },
-              { label: 'Importadas',       value: result.rows_imported, color: 'text-green-700' },
-              { label: 'Rejeitadas',       value: result.rows_rejected, color: result.rows_rejected > 0 ? 'text-red-700' : 'text-gray-500' },
+              { label: t('integrations.rowsReceived'),   value: result.rows_received, color: 'text-gray-700' },
+              { label: t('integrations.rowsImportedCol'), value: result.rows_imported, color: 'text-green-700' },
+              { label: t('integrations.rowsRejected'),   value: result.rows_rejected, color: result.rows_rejected > 0 ? 'text-red-700' : 'text-gray-500' },
             ].map(s => (
               <div key={s.label} className="bg-white rounded-lg p-4 text-center shadow-sm">
                 <div className={`text-3xl font-extrabold ${s.color}`}>{s.value}</div>
@@ -342,13 +345,13 @@ export default function IntegrationsPage() {
 
           {result.status === 'success' && (
             <p className="text-sm text-green-700 font-medium">
-              Dados importados com sucesso. Dashboard e insights atualizados automaticamente.
+              {t('integrations.successMsg')}
             </p>
           )}
 
           {result.errors.length > 0 && (
             <div>
-              <p className="text-xs font-bold text-red-700 uppercase tracking-wider mb-2">Erros encontrados</p>
+              <p className="text-xs font-bold text-red-700 uppercase tracking-wider mb-2">{t('integrations.errorsFound')}</p>
               <ul className="space-y-1 max-h-40 overflow-y-auto">
                 {result.errors.map((e, i) => (
                   <li key={i} className="text-xs text-red-700 bg-white rounded px-3 py-1.5 border border-red-200">
@@ -369,7 +372,7 @@ export default function IntegrationsPage() {
         >
           <div className="flex items-center gap-2 text-[#0A2342] font-semibold text-sm">
             <Clock size={16} />
-            Histórico de Importações — {company?.name ?? 'Tenant ativo'}
+            {t('integrations.importHistory')} — {company?.name ?? '—'}
           </div>
           <ChevronDown size={16} className={`text-gray-400 transition-transform ${showHistory ? 'rotate-180' : ''}`} />
         </button>
@@ -381,19 +384,19 @@ export default function IntegrationsPage() {
                 <Loader2 className="animate-spin text-gray-400" size={20} />
               </div>
             ) : history.length === 0 ? (
-              <p className="text-sm text-gray-400 text-center py-6">Nenhuma importação registrada.</p>
+              <p className="text-sm text-gray-400 text-center py-6">{t('integrations.noImports')}</p>
             ) : (
               <div className="overflow-x-auto mt-3">
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="text-gray-400 uppercase tracking-wider border-b border-gray-100">
-                      <th className="text-left py-2 pr-4">Tipo</th>
-                      <th className="text-left py-2 pr-4">Arquivo</th>
-                      <th className="text-right py-2 pr-4">Recebidas</th>
-                      <th className="text-right py-2 pr-4">Importadas</th>
-                      <th className="text-right py-2 pr-4">Rejeitadas</th>
-                      <th className="text-center py-2 pr-4">Status</th>
-                      <th className="text-right py-2">Data</th>
+                      <th className="text-left py-2 pr-4">{t('integrations.colType')}</th>
+                      <th className="text-left py-2 pr-4">{t('financials.colFile')}</th>
+                      <th className="text-right py-2 pr-4">{t('integrations.rowsReceived')}</th>
+                      <th className="text-right py-2 pr-4">{t('integrations.rowsImportedCol')}</th>
+                      <th className="text-right py-2 pr-4">{t('integrations.rowsRejected')}</th>
+                      <th className="text-center py-2 pr-4">{t('integrations.statusLabel')}</th>
+                      <th className="text-right py-2">{t('common.date')}</th>
                     </tr>
                   </thead>
                   <tbody>

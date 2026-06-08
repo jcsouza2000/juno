@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useActiveCompany } from '@/lib/tenant';
+import { useI18n } from '@/lib/i18n';
 import UnifiedExecutiveDashboard, {
   type UnifiedDashboardPayload,
 } from '@/components/dashboard/UnifiedExecutiveDashboard';
@@ -16,6 +17,7 @@ import ValuationScenarioReport, {
 
 export default function ExecutiveDashboardsPage() {
   const { company, companyId, isLoading: companyLoading } = useActiveCompany();
+  const { t } = useI18n();
   const [data, setData] = useState<UnifiedDashboardPayload | null>(null);
   const [valuation, setValuation] = useState<ValuationScenarioPayload | null>(null);
   const [loading, setLoading] = useState(false);
@@ -48,7 +50,7 @@ export default function ExecutiveDashboardsPage() {
       } catch (err: unknown) {
         const detail =
           (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-          ?? 'Nao foi possivel carregar o dashboard unificado.';
+          ?? t('executive.loadError');
         if (mounted) setError(String(detail));
       } finally {
         if (mounted) setLoading(false);
@@ -59,13 +61,13 @@ export default function ExecutiveDashboardsPage() {
     return () => {
       mounted = false;
     };
-  }, [companyId, companyLoading]);
+  }, [companyId, companyLoading, t]);
 
   if (loading || companyLoading) {
     return (
       <div className="flex h-[70vh] items-center justify-center text-[#0A2342]">
         <Loader2 className="mr-2 animate-spin" size={22} />
-        Carregando dashboard UNO a partir de Templates...
+        {t('executive.loading')}
       </div>
     );
   }
@@ -73,8 +75,8 @@ export default function ExecutiveDashboardsPage() {
   if (!companyId) {
     return (
       <div className="mx-auto max-w-4xl rounded-2xl border border-yellow-100 bg-white p-8">
-        <h1 className="text-xl font-bold text-[#0A2342]">Nenhuma empresa vinculada</h1>
-        <p className="mt-2 text-sm text-gray-600">Vincule um tenant ao usuario para carregar os KPIs executivos.</p>
+        <h1 className="text-xl font-bold text-[#0A2342]">{t('executive.noCompanyTitle')}</h1>
+        <p className="mt-2 text-sm text-gray-600">{t('executive.noCompanyDesc')}</p>
       </div>
     );
   }
@@ -82,7 +84,7 @@ export default function ExecutiveDashboardsPage() {
   if (error || !data) {
     return (
       <div className="mx-auto max-w-4xl rounded-2xl border border-red-100 bg-white p-8">
-        <h1 className="text-xl font-bold text-red-700">Dashboard indisponivel</h1>
+        <h1 className="text-xl font-bold text-red-700">{t('executive.unavailableTitle')}</h1>
         <p className="mt-2 text-sm text-gray-600">{error}</p>
       </div>
     );
@@ -91,12 +93,12 @@ export default function ExecutiveDashboardsPage() {
   return (
     <div className="space-y-6 pb-8">
       <div className="px-1">
-        <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#C9A959]">Relatório Executivo</p>
+        <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#C9A959]">{t('executive.eyebrow')}</p>
         <h1 className="mt-2 text-2xl font-extrabold text-[#0A2342] md:text-3xl">
-          Demonstrações financeiras e painel UNO
+          {t('executive.title')}
         </h1>
         <p className="mt-2 max-w-3xl text-sm text-gray-500">
-          Tabelas alinhadas ao modelo em Templates, score industrial, síntese analítica e quadrantes operacionais.
+          {t('executive.subtitle')}
         </p>
       </div>
 

@@ -7,6 +7,8 @@ import {
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useActiveCompany } from '@/lib/tenant'
+import { useI18n } from '@/lib/i18n'
+import { dictionaries } from '@/locales'
 import { api } from '@/lib/api'
 
 import ValuationScenarioReport, {
@@ -65,16 +67,6 @@ interface SSEEvent {
 }
 
 // ── Quick questions ────────────────────────────────────────────────────────────
-const QUICK = [
-  'Faça um diagnóstico completo da minha empresa',
-  'Quais produtos estão sendo vendidos com prejuízo?',
-  'Os dados estão prontos para apresentar ao conselho?',
-  'Quais ordens estão mais atrasadas e qual o impacto financeiro?',
-  'Quanto estou perdendo por mês em margem negativa?',
-  'Gere um resumo executivo da operação',
-  'Faça um valuation de 5 anos com receita +10%, custos +5% e WACC 10%',
-];
-
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function ToolBadge({ label }: { label: string }) {
   return (
@@ -240,6 +232,8 @@ function TypingDots() {
 export default function AIPage() {
   const { data: session } = useSession();
   const { companyId } = useActiveCompany();
+  const { t, locale } = useI18n();
+  const quick = dictionaries[locale].ai.quick;
   const [messages, setMessages]   = useState<Message[]>([]);
   const [input, setInput]         = useState('');
   const [streaming, setStreaming] = useState(false);
@@ -385,22 +379,22 @@ export default function AIPage() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-4 shrink-0">
         <div>
-          <h1 className="text-2xl font-bold text-[#0A2342]">IA Operacional</h1>
+          <h1 className="text-2xl font-bold text-[#0A2342]">{t('ai.title')}</h1>
           <p className="text-gray-500 text-sm mt-0.5">
-            Coordinator local · qwen3:8b · dados reais em tempo real
+            {t('ai.subtitle')}
           </p>
         </div>
         <div className="flex items-center gap-3">
           {ollamaStatus === 'checking' && (
             <span className="flex items-center gap-1.5 text-xs text-gray-600 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-full font-semibold">
               <Loader2 size={12} className="animate-spin" />
-              Verificando Ollama...
+              {t('ai.checking')}
             </span>
           )}
           {ollamaStatus === 'online' && (
             <span className="flex items-center gap-1.5 text-xs text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full font-semibold">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-              Ollama online · qwen3:8b
+              {t('ai.online')}
             </span>
           )}
           {ollamaStatus === 'offline' && (
@@ -410,12 +404,12 @@ export default function AIPage() {
               className="flex items-center gap-1.5 text-xs text-red-700 bg-red-50 border border-red-200 px-3 py-1.5 rounded-full font-semibold hover:bg-red-100"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
-              Ollama offline — recarregar
+              {t('ai.offlineReload')}
             </button>
           )}
           {ollamaStatus === 'model_missing' && (
             <span className="flex items-center gap-1.5 text-xs text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-full font-semibold">
-              Modelo qwen3:8b ausente
+              {t('ai.modelMissing')}
             </span>
           )}
           {messages.length > 0 && (
@@ -423,7 +417,7 @@ export default function AIPage() {
               onClick={() => { setMessages([]); setError(''); }}
               className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#0A2342] border border-gray-200 hover:border-[#0A2342] px-3 py-1.5 rounded-full transition-colors"
             >
-              <RotateCcw size={12} /> Nova conversa
+              <RotateCcw size={12} /> {t('ai.newChat')}
             </button>
           )}
         </div>
@@ -439,13 +433,13 @@ export default function AIPage() {
               <div className="w-16 h-16 rounded-full bg-[#0A2342] flex items-center justify-center mx-auto mb-4">
                 <Bot size={32} className="text-[#C9A959]" />
               </div>
-              <h2 className="text-lg font-bold text-[#0A2342]">JUNO Coordinator</h2>
+              <h2 className="text-lg font-bold text-[#0A2342]">{t('ai.coordinatorTitle')}</h2>
               <p className="text-gray-500 text-sm mt-1 max-w-sm">
-                IA local com acesso direto aos dados da sua empresa. Pergunte sobre margens, atrasos, diagnósticos e relatórios.
+                {t('ai.emptyHint')}
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-2xl">
-              {QUICK.map((q, i) => (
+              {quick.map((q, i) => (
                 <button
                   key={i}
                   onClick={() => handleSubmit(q)}
@@ -517,7 +511,7 @@ export default function AIPage() {
                       <Loader2 size={14} className="animate-spin" />
                       {liveTools.length > 0
                         ? liveTools[liveTools.length - 1].label
-                        : 'Analisando...'}
+                        : t('ai.analyzing')}
                     </span>
                 }
               </div>
@@ -530,7 +524,7 @@ export default function AIPage() {
           <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-900">
             <AlertCircle size={16} className="shrink-0 mt-0.5" />
             <div>
-              <p className="font-semibold">IA local indisponivel</p>
+              <p className="font-semibold">{t('ai.unavailable')}</p>
               <p className="mt-1">{ollamaHint}</p>
             </div>
           </div>
@@ -551,7 +545,7 @@ export default function AIPage() {
       <div className="pt-4 border-t border-gray-200 mt-4 shrink-0">
         {messages.length > 0 && !streaming && (
           <div className="flex flex-wrap gap-2 mb-3">
-            {QUICK.slice(0, 3).map((q, i) => (
+            {quick.slice(0, 3).map((q, i) => (
               <button
                 key={i}
                 onClick={() => handleSubmit(q)}
@@ -569,7 +563,7 @@ export default function AIPage() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSubmit(input)}
-            placeholder="Pergunte sobre margens, atrasos, diagnóstico..."
+            placeholder={t('ai.placeholder')}
             disabled={streaming}
             className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#0A2342] focus:border-transparent text-sm disabled:opacity-50 bg-white shadow-sm"
           />
@@ -585,7 +579,7 @@ export default function AIPage() {
           </button>
         </div>
         <p className="text-xs text-gray-400 mt-2 text-center">
-          Modelo local qwen3:8b · sem dados enviados para nuvem · 100% privado
+          {t('ai.footer')}
         </p>
       </div>
     </div>

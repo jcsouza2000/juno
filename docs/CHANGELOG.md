@@ -17,8 +17,13 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/).
 - Telas traduzidas nos 3 idiomas: navegação (Sidebar), Header, "Meus Dados"
   (`/data`) e administração de usuários (`/admin/users`).
 
+- Telas principais traduzidas nos 3 idiomas: `/executive`, `/financials`,
+  `/integrations`, `/ai` (títulos, estados, formulários, indicadores, perguntas
+  rápidas da IA).
+
 ### Pendente (próximos incrementos da Fase 2)
-- Traduzir `/executive`, `/financials`, `/integrations`, `/ai`.
+- Componentes de relatório do dashboard executivo (UnifiedExecutiveDashboard,
+  TemplateExecutiveReport, ValuationScenarioReport).
 - Backend: mensagens de API por `Accept-Language`; IA: SYSTEM_PROMPT por idioma.
 
 ## [Não publicado] — IA Operacional treinável (Fase 4) 2026-06-07

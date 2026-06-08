@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, getApiErrorMessage } from '@/lib/api';
 import { useActiveCompany } from '@/lib/tenant';
+import { useI18n } from '@/lib/i18n';
 import {
   Upload, CheckCircle, FileDown, Loader2, Clock,
   ChevronDown, TrendingUp, TrendingDown, BarChart3,
@@ -98,6 +99,7 @@ function KpiCard({ label, value, sub, accent }: { label: string; value: React.Re
 // ── Page ───────────────────────────────────────────────────────────────────
 export default function FinancialsPage() {
   const { company, companyId, isLoading: companyLoading } = useActiveCompany();
+  const { t } = useI18n();
   const [file, setFile]             = useState<File | null>(null);
   const [dragging, setDragging]     = useState(false);
   const [uploading, setUploading]   = useState(false);
@@ -207,19 +209,18 @@ export default function FinancialsPage() {
     <div className="space-y-8 max-w-4xl">
       {/* Header */}
       <div className="border-b border-gray-200 pb-4">
-        <h1 className="text-2xl font-bold text-[#0A2342]">Demonstrações Financeiras</h1>
+        <h1 className="text-2xl font-bold text-[#0A2342]">{t('financials.title')}</h1>
         <p className="text-gray-500 text-sm mt-1">
-          Carregue DRE, Balanço Patrimonial e DFC para análise global e histórica.
-          A IA incorpora automaticamente esses dados ao diagnóstico.
+          {t('financials.subtitle')}
         </p>
       </div>
 
       {/* Steps */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { n: '1', title: 'Baixe o template', desc: 'Excel com abas DRE, Balanco e DFC. Preencha com seus dados reais.' },
-          { n: '2', title: 'Preencha as abas', desc: 'Colunas: conta, periodo (AAAA-MM), valor. Negativo para saídas.' },
-          { n: '3', title: 'Carregue no JUNO', desc: 'Indicadores e ratios calculados automaticamente após upload.' },
+          { n: '1', title: t('financials.step1Title'), desc: t('financials.step1Desc') },
+          { n: '2', title: t('financials.step2Title'), desc: t('financials.step2Desc') },
+          { n: '3', title: t('financials.step3Title'), desc: t('financials.step3Desc') },
         ].map(s => (
           <div key={s.n} className="bg-[#F0F4F8] rounded-xl p-4 flex gap-3">
             <div className="w-8 h-8 rounded-full bg-[#0A2342] text-[#C9A959] flex items-center justify-center font-bold text-sm shrink-0">
@@ -235,13 +236,13 @@ export default function FinancialsPage() {
 
       {companyLoading && (
         <div className="bg-white border border-gray-100 rounded-xl p-6 text-sm text-gray-500">
-          Carregando tenant ativo...
+          {t('common.loadingTenant')}
         </div>
       )}
 
       {!companyLoading && !companyId && (
         <div className="bg-yellow-50 border border-yellow-100 rounded-xl p-6 text-sm text-yellow-800">
-          Nenhuma empresa vinculada ao usuario. Vincule um tenant para carregar demonstracoes financeiras.
+          {t('common.noCompany')}
         </div>
       )}
 
@@ -251,10 +252,10 @@ export default function FinancialsPage() {
         {/* Company selector */}
         <div>
           <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-            Empresa ativa
+            {t('common.activeCompany')}
           </label>
           <div className="inline-flex px-5 py-2.5 rounded-lg border-2 bg-[#0A2342] text-white border-[#0A2342] font-bold text-sm">
-            {company?.name ?? 'Tenant nao selecionado'}
+            {company?.name ?? '—'}
           </div>
         </div>
 
@@ -262,21 +263,21 @@ export default function FinancialsPage() {
         <div className="flex items-center gap-3 bg-blue-50 border border-blue-100 rounded-lg px-4 py-3">
           <FileDown size={18} className="text-[#0A2342] shrink-0" />
           <span className="text-sm text-gray-700 flex-1">
-            Template Excel com abas <strong>DRE</strong>, <strong>Balanco</strong> e <strong>DFC</strong>.
+            {t('financials.templateInfo')}
           </span>
           <a
             href="/templates/template_demonstracoes.xlsx"
             download
             className="text-xs font-bold text-[#0A2342] underline hover:text-[#C9A959]"
           >
-            Baixar template
+            {t('financials.downloadTemplate')}
           </a>
         </div>
 
         {/* Drop zone */}
         <div>
           <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-            Arquivo (.xlsx ou .csv)
+            {t('financials.fileLabel')}
           </label>
           <div
             onClick={() => fileRef.current?.click()}
@@ -302,16 +303,16 @@ export default function FinancialsPage() {
               <div className="flex flex-col items-center gap-1">
                 <CheckCircle size={28} className="text-green-500" />
                 <p className="font-semibold text-green-700 text-sm">{file.name}</p>
-                <p className="text-xs text-gray-400">{(file.size / 1024).toFixed(1)} KB — clique para trocar</p>
+                <p className="text-xs text-gray-400">{(file.size / 1024).toFixed(1)} KB — {t('financials.clickToChange')}</p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2 text-gray-400">
                 <Upload size={28} />
                 <p className="text-sm">
-                  Arraste o arquivo aqui ou{' '}
-                  <span className="text-[#0A2342] font-semibold">clique para selecionar</span>
+                  {t('financials.dropHint')}{' '}
+                  <span className="text-[#0A2342] font-semibold">{t('financials.dropClick')}</span>
                 </p>
-                <p className="text-xs">Suporte: .xlsx com abas DRE / Balanco / DFC</p>
+                <p className="text-xs">{t('financials.dropSupport')}</p>
               </div>
             )}
           </div>
@@ -324,8 +325,8 @@ export default function FinancialsPage() {
           className="w-full flex items-center justify-center gap-2 bg-[#C9A959] text-[#0A2342] font-bold py-3 rounded-xl hover:bg-[#b8943f] transition-colors shadow-md disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {uploading
-            ? <><Loader2 className="animate-spin" size={20} /> Processando demonstrações...</>
-            : <><Upload size={20} /> Carregar Demonstrações Financeiras</>
+            ? <><Loader2 className="animate-spin" size={20} /> {t('financials.processing')}</>
+            : <><Upload size={20} /> {t('financials.uploadButton')}</>
           }
         </button>
       </div>
@@ -340,7 +341,7 @@ export default function FinancialsPage() {
               <div className="flex items-center gap-2">
                 <CheckCircle size={20} className="text-green-600" />
                 <span className="font-bold text-green-800">
-                  {result.rows_imported} linhas importadas com sucesso
+                  {t('financials.rowsImported', { count: result.rows_imported })}
                 </span>
               </div>
               <div className="flex flex-wrap gap-2 mt-2">
@@ -356,7 +357,7 @@ export default function FinancialsPage() {
             <div className="flex items-start gap-2">
               <AlertCircle size={20} className="text-red-600 shrink-0 mt-0.5" />
               <div>
-                <p className="font-bold text-red-800">Erro ao importar</p>
+                <p className="font-bold text-red-800">{t('financials.importError')}</p>
                 <p className="text-sm text-red-700 mt-1">{result.message}</p>
               </div>
             </div>
@@ -367,7 +368,7 @@ export default function FinancialsPage() {
       {/* Financial summary */}
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-[#0A2342]">
-          Indicadores — {company?.name ?? 'Tenant ativo'}
+          {t('financials.indicators')} — {company?.name ?? '—'}
         </h2>
 
         {loadingSummary ? (
@@ -377,8 +378,8 @@ export default function FinancialsPage() {
         ) : !summary?.available ? (
           <div className="bg-white rounded-xl border border-dashed border-gray-200 p-10 text-center">
             <BarChart3 size={36} className="text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500 text-sm font-medium">Nenhuma demonstração carregada.</p>
-            <p className="text-gray-400 text-xs mt-1">Faça upload do Excel para visualizar os indicadores.</p>
+            <p className="text-gray-500 text-sm font-medium">{t('financials.noStatements')}</p>
+            <p className="text-gray-400 text-xs mt-1">{t('financials.noStatementsHint')}</p>
           </div>
         ) : (
           <div className="space-y-6">
@@ -389,32 +390,32 @@ export default function FinancialsPage() {
                 <div className="flex items-center gap-2 mb-3">
                   <DollarSign size={16} className="text-[#C9A959]" />
                   <h3 className="text-sm font-bold text-[#0A2342] uppercase tracking-wider">
-                    DRE — Período {summary.dre.periodo}
+                    {t('financials.drePeriod', { period: summary.dre.periodo })}
                   </h3>
                   {summary.dre.todos_periodos.length > 1 && (
                     <span className="text-xs text-gray-400 ml-1">
-                      ({summary.dre.todos_periodos.length} períodos disponíveis)
+                      {t('financials.periodsAvailable', { count: summary.dre.todos_periodos.length })}
                     </span>
                   )}
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                  <KpiCard label="Receita Líquida" value={fmt(summary.dre.receita_liquida)} accent />
-                  <KpiCard label="Lucro Bruto" value={fmt(summary.dre.lucro_bruto)} sub={`Margem: ${fmtPct(summary.dre.margem_bruta_pct)}`} />
-                  <KpiCard label="EBITDA" value={summary.dre.ebitda ? fmt(summary.dre.ebitda) : '—'} sub={summary.dre.margem_ebitda_pct != null ? `Margem: ${fmtPct(summary.dre.margem_ebitda_pct)}` : undefined} />
-                  <KpiCard label="Lucro Líquido" value={fmt(summary.dre.lucro_liquido)} sub={`Margem: ${fmtPct(summary.dre.margem_liquida_pct)}`} />
+                  <KpiCard label={t('financials.netRevenue')} value={fmt(summary.dre.receita_liquida)} accent />
+                  <KpiCard label={t('financials.grossProfit')} value={fmt(summary.dre.lucro_bruto)} sub={t('financials.margin', { value: fmtPct(summary.dre.margem_bruta_pct) })} />
+                  <KpiCard label={t('financials.ebitda')} value={summary.dre.ebitda ? fmt(summary.dre.ebitda) : '—'} sub={summary.dre.margem_ebitda_pct != null ? t('financials.margin', { value: fmtPct(summary.dre.margem_ebitda_pct) }) : undefined} />
+                  <KpiCard label={t('financials.netProfit')} value={fmt(summary.dre.lucro_liquido)} sub={t('financials.margin', { value: fmtPct(summary.dre.margem_liquida_pct) })} />
                   <div className="rounded-xl border border-gray-100 bg-white p-4">
-                    <p className="text-xs uppercase tracking-widest font-semibold text-gray-400">Margens</p>
+                    <p className="text-xs uppercase tracking-widest font-semibold text-gray-400">{t('financials.margins')}</p>
                     <div className="mt-2 space-y-1.5">
                       <div className="flex justify-between text-xs">
-                        <span className="text-gray-500">Bruta</span>
+                        <span className="text-gray-500">{t('financials.marginGross')}</span>
                         <PctBadge value={summary.dre.margem_bruta_pct} />
                       </div>
                       <div className="flex justify-between text-xs">
-                        <span className="text-gray-500">EBITDA</span>
+                        <span className="text-gray-500">{t('financials.ebitda')}</span>
                         <PctBadge value={summary.dre.margem_ebitda_pct} />
                       </div>
                       <div className="flex justify-between text-xs">
-                        <span className="text-gray-500">Líquida</span>
+                        <span className="text-gray-500">{t('financials.marginNet')}</span>
                         <PctBadge value={summary.dre.margem_liquida_pct} />
                       </div>
                     </div>
@@ -429,25 +430,25 @@ export default function FinancialsPage() {
                 <div className="flex items-center gap-2 mb-3">
                   <Percent size={16} className="text-[#C9A959]" />
                   <h3 className="text-sm font-bold text-[#0A2342] uppercase tracking-wider">
-                    Balanço — Período {summary.balanco.periodo}
+                    {t('financials.balancePeriod', { period: summary.balanco.periodo })}
                   </h3>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <KpiCard label="Ativo Circulante" value={fmt(summary.balanco.ativo_circulante)} />
-                  <KpiCard label="Passivo Circulante" value={fmt(summary.balanco.passivo_circulante)} />
+                  <KpiCard label={t('financials.currentAssets')} value={fmt(summary.balanco.ativo_circulante)} />
+                  <KpiCard label={t('financials.currentLiabilities')} value={fmt(summary.balanco.passivo_circulante)} />
                   <KpiCard
-                    label="Liquidez Corrente"
+                    label={t('financials.currentLiquidity')}
                     value={summary.balanco.liquidez_corrente != null ? summary.balanco.liquidez_corrente.toFixed(2) : '—'}
                     sub={summary.balanco.liquidez_corrente != null
-                      ? summary.balanco.liquidez_corrente >= 1.5 ? 'Saudável' : summary.balanco.liquidez_corrente >= 1 ? 'Atenção' : 'Crítico'
+                      ? summary.balanco.liquidez_corrente >= 1.5 ? t('financials.healthy') : summary.balanco.liquidez_corrente >= 1 ? t('financials.attention') : t('financials.critical')
                       : undefined}
                     accent={!!summary.balanco.liquidez_corrente && summary.balanco.liquidez_corrente < 1}
                   />
                   <KpiCard
-                    label="Endividamento"
+                    label={t('financials.debt')}
                     value={summary.balanco.endividamento_pct != null ? `${summary.balanco.endividamento_pct.toFixed(1)}%` : '—'}
                     sub={summary.balanco.endividamento_pct != null
-                      ? summary.balanco.endividamento_pct < 40 ? 'Baixo' : summary.balanco.endividamento_pct < 70 ? 'Moderado' : 'Alto'
+                      ? summary.balanco.endividamento_pct < 40 ? t('financials.low') : summary.balanco.endividamento_pct < 70 ? t('financials.moderate') : t('financials.high')
                       : undefined}
                   />
                 </div>
@@ -460,14 +461,14 @@ export default function FinancialsPage() {
                 <div className="flex items-center gap-2 mb-3">
                   <TrendingUp size={16} className="text-[#C9A959]" />
                   <h3 className="text-sm font-bold text-[#0A2342] uppercase tracking-wider">
-                    Fluxo de Caixa — Período {summary.dfc.periodo}
+                    {t('financials.cashflowPeriod', { period: summary.dfc.periodo })}
                   </h3>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <KpiCard label="Operacional" value={fmt(summary.dfc.caixa_operacional)} sub={summary.dfc.caixa_operacional >= 0 ? 'Geração' : 'Consumo'} />
-                  <KpiCard label="Investimentos" value={fmt(summary.dfc.caixa_investimento)} />
-                  <KpiCard label="Financiamentos" value={fmt(summary.dfc.caixa_financiamento)} />
-                  <KpiCard label="Caixa Final" value={fmt(summary.dfc.caixa_final)} sub={`Variação: ${fmt(summary.dfc.variacao_caixa)}`} accent />
+                  <KpiCard label={t('financials.operating')} value={fmt(summary.dfc.caixa_operacional)} sub={summary.dfc.caixa_operacional >= 0 ? t('financials.generation') : t('financials.consumption')} />
+                  <KpiCard label={t('financials.investing')} value={fmt(summary.dfc.caixa_investimento)} />
+                  <KpiCard label={t('financials.financing')} value={fmt(summary.dfc.caixa_financiamento)} />
+                  <KpiCard label={t('financials.finalCash')} value={fmt(summary.dfc.caixa_final)} sub={t('financials.variation', { value: fmt(summary.dfc.variacao_caixa) })} accent />
                 </div>
               </div>
             )}
@@ -483,7 +484,7 @@ export default function FinancialsPage() {
         >
           <div className="flex items-center gap-2 text-[#0A2342] font-semibold text-sm">
             <Clock size={16} />
-            Histórico de Uploads — {company?.name ?? 'Tenant ativo'}
+            {t('financials.uploadHistory')} — {company?.name ?? '—'}
           </div>
           <ChevronDown size={16} className={`text-gray-400 transition-transform ${showHistory ? 'rotate-180' : ''}`} />
         </button>
@@ -495,16 +496,16 @@ export default function FinancialsPage() {
                 <Loader2 className="animate-spin text-gray-400" size={20} />
               </div>
             ) : history.length === 0 ? (
-              <p className="text-sm text-gray-400 text-center py-6">Nenhum upload registrado.</p>
+              <p className="text-sm text-gray-400 text-center py-6">{t('financials.noUploads')}</p>
             ) : (
               <div className="overflow-x-auto mt-3">
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="text-gray-400 uppercase tracking-wider border-b border-gray-100">
-                      <th className="text-left py-2 pr-4">Arquivo</th>
-                      <th className="text-left py-2 pr-4">Períodos</th>
-                      <th className="text-right py-2 pr-4">Linhas</th>
-                      <th className="text-right py-2">Data</th>
+                      <th className="text-left py-2 pr-4">{t('financials.colFile')}</th>
+                      <th className="text-left py-2 pr-4">{t('financials.colPeriods')}</th>
+                      <th className="text-right py-2 pr-4">{t('financials.colRows')}</th>
+                      <th className="text-right py-2">{t('common.date')}</th>
                     </tr>
                   </thead>
                   <tbody>
