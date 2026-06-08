@@ -11,6 +11,7 @@ import pytest
 
 from app.auth import get_password_hash, get_user_company_ids
 from app.models import Company, User, UserCompany
+from app.schemas.tenant import TenantMemberOut
 from app.services import tenant_members as svc
 from app.services.tenant_members import TenantMemberError
 
@@ -86,6 +87,23 @@ def test_add_member_role_invalido_falha(tenant_a):
     db, cid = tenant_a
     with pytest.raises(TenantMemberError):
         svc.add_member(db, cid, email="x@empresa.com", role_in_tenant="superuser")
+
+
+def test_member_out_aceita_email_interno_local():
+    """Regressao: emails internos (.local) devem serializar no schema de saida.
+
+    O dev-user usa dev@juno.local; EmailStr rejeitaria o TLD reservado e
+    quebraria GET /tenants/{id}/members com 500.
+    """
+    out = TenantMemberOut(
+        user_id=1,
+        email="dev@juno.local",
+        full_name="JUNO Dev",
+        role_in_tenant="owner",
+        is_primary=True,
+        global_role="admin",
+    )
+    assert out.email == "dev@juno.local"
 
 
 def test_email_normalizado_para_minusculas(tenant_a):

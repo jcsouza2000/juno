@@ -19,7 +19,10 @@ class TenantMemberOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     user_id: int
-    email: EmailStr
+    # str (nao EmailStr): schema de saida nao deve re-validar emails ja
+    # armazenados — enderecos internos como dev@juno.local sao rejeitados
+    # pelo validador de EmailStr (TLD .local reservado) e quebrariam a listagem.
+    email: str
     full_name: str | None = None
     role_in_tenant: str
     is_primary: bool = False
