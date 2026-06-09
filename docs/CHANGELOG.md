@@ -5,6 +5,20 @@ Substitui os antigos `main_update_fase*.py` que foram removidos do código.
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/).
 
+## [Não publicado] — Retenção / fechamento mensal (Fase 5) 2026-06-09
+
+### Adicionado
+- Modelo `MonthlyClose` (`monthly_closes`) — fechamento mensal imutável por
+  tenant, único por (company_id, year, month), com snapshot JSON.
+- `app/services/retention.py` — congela snapshot de KPIs/demonstrações (reusa
+  `get_financial_summary` + Score JUNO); criar (409 se já existe), listar e
+  recuperar fechamentos; tudo escopado por company_id.
+- `app/routers/retention.py` — `/retention/{company_id}/monthly-close`
+  (POST cria — admin do tenant; GET lista; GET `/{year}/{month}` recupera).
+- Migration Alembic `monthly_closes_table` (idempotente).
+- `app/tests/test_retention.py` — 7 testes (snapshot, duplicidade 409, período
+  inválido, ordenação, get/404, isolamento entre tenants).
+
 ## [Não publicado] — Trilíngue PT/EN/ES (Fase 2, fundação) 2026-06-07
 
 ### Adicionado (frontend)

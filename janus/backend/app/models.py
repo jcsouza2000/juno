@@ -23,6 +23,7 @@ from sqlalchemy import (
     String,
     Table,
     Text,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import Mapped, relationship
 
@@ -499,6 +500,26 @@ class ScoreHistory(Base):
     data_quality_score = Column(Float, default=0)
     details = Column(Text)
     created_at = Column(DateTime, default=utcnow_naive)
+
+
+class MonthlyClose(Base):
+    """Fechamento mensal imutavel (Fase 5 — retencao).
+
+    Congela um snapshot de KPIs/demonstracoes do tenant para um (ano, mes).
+    Unico por (company_id, year, month). Apos criado, e' tratado como imutavel.
+    """
+
+    __tablename__ = "monthly_closes"
+    __table_args__ = (UniqueConstraint("company_id", "year", "month", name="uq_monthly_close"),)
+
+    id = Column(Integer, primary_key=True, index=True)
+    company_id = Column(Integer, ForeignKey("companies.id"), nullable=False, index=True)
+    year = Column(Integer, nullable=False)
+    month = Column(Integer, nullable=False)
+    snapshot = Column(Text, nullable=False)  # JSON: financeiro + score + meta
+    status = Column(String(20), default="closed")
+    closed_at = Column(DateTime, default=utcnow_naive)
+    closed_by = Column(Integer, ForeignKey("users.id"), nullable=True)
 
 
 # =====================================================================
