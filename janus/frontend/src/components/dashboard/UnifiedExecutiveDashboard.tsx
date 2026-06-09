@@ -29,6 +29,7 @@ import {
   Users,
   Wifi,
 } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 export interface UnifiedSeriesPoint {
   periodo: string;
@@ -236,10 +237,18 @@ function StatusPill({ label, status }: { label: string; status: string }) {
 }
 
 function ScoreRing({ score }: { score: number }) {
+  const { t } = useI18n();
   const radius = 88;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (circumference * Math.min(score, 100)) / 100;
-  const label = score >= 85 ? 'Excelente' : score >= 70 ? 'Monitoramento' : score >= 50 ? 'Atencao' : 'Critico';
+  const label =
+    score >= 85
+      ? t('dashboard.scoreLabel.excellent')
+      : score >= 70
+        ? t('dashboard.scoreLabel.monitor')
+        : score >= 50
+          ? t('dashboard.scoreLabel.attention')
+          : t('dashboard.scoreLabel.critical');
 
   return (
     <div className="relative flex flex-col items-center">
@@ -313,9 +322,10 @@ function ChartCard({ title, subtitle, children }: { title: string; subtitle?: st
 }
 
 function PendingBadge() {
+  const { t } = useI18n();
   return (
     <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-semibold text-white/50">
-      Integracao pendente
+      {t('dashboard.integrationPending')}
     </span>
   );
 }
@@ -331,6 +341,7 @@ const tooltipStyle = {
 };
 
 export default function UnifiedExecutiveDashboard({ data, companyName }: Props) {
+  const { t } = useI18n();
   const [showPnl, setShowPnl] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchAnswer, setSearchAnswer] = useState<string | null>(null);
@@ -343,11 +354,11 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
 
   const marginBars = useMemo(
     () => [
-      { name: 'Bruta', value: fin?.cards?.margem_bruta_pct ?? 0, fill: GOLD },
-      { name: 'Liquida', value: fin?.cards?.margem_liquida_pct ?? 0, fill: CYAN },
+      { name: t('dashboard.fin.marginGross'), value: fin?.cards?.margem_bruta_pct ?? 0, fill: GOLD },
+      { name: t('dashboard.fin.marginNet'), value: fin?.cards?.margem_liquida_pct ?? 0, fill: CYAN },
       { name: 'EBITDA', value: fin?.cards?.ebitda_ajustado_pct ?? 0, fill: VIOLET },
     ],
-    [fin?.cards],
+    [fin?.cards, t],
   );
 
   const marginTrend = fin?.tendencia_margens ?? [];
@@ -356,7 +367,7 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
   const resumo = data.resumo_demonstracoes;
   const busca = data.busca_inteligente;
   const searchPlaceholder =
-    busca?.placeholder ?? gov?.busca_inteligente_placeholder ?? 'Pergunte ao UNO sobre a operacao...';
+    busca?.placeholder ?? gov?.busca_inteligente_placeholder ?? t('dashboard.searchPlaceholder');
 
   function handleSearchSubmit(event?: React.FormEvent) {
     event?.preventDefault();
@@ -364,11 +375,11 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
   }
 
   const resumoLabels = {
-    dre: 'DRE',
-    balanco: 'Balanco',
-    dfc: 'Fluxo de Caixa',
-    kpis: 'KPIs',
-  } as const;
+    dre: t('dashboard.tab.dre'),
+    balanco: t('dashboard.tab.balanco'),
+    dfc: t('dashboard.tab.dfc'),
+    kpis: t('dashboard.tab.kpis'),
+  };
 
   return (
     <div className="relative min-h-full overflow-hidden rounded-3xl border border-white/10 bg-[#071526] text-white shadow-2xl">
@@ -377,11 +388,11 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
       <div className="relative border-b border-white/10 bg-[#0A2342]/80 px-6 py-4 backdrop-blur-xl">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-wrap items-center gap-3">
-            <StatusPill label={gov?.erp_conexao?.label ?? 'Conexao ERP'} status={gov?.erp_conexao?.status ?? 'pendente'} />
-            <StatusPill label={gov?.auditoria_lgpd?.label ?? 'Auditoria LGPD'} status={gov?.auditoria_lgpd?.status ?? 'revisar'} />
+            <StatusPill label={gov?.erp_conexao?.label ?? t('dashboard.erpConnection')} status={gov?.erp_conexao?.status ?? 'pendente'} />
+            <StatusPill label={gov?.auditoria_lgpd?.label ?? t('dashboard.lgpdAudit')} status={gov?.auditoria_lgpd?.status ?? 'revisar'} />
             <span className="hidden items-center gap-2 text-xs text-white/40 md:inline-flex">
               <Wifi size={14} />
-              {companyName ?? 'Tenant ativo'}
+              {companyName ?? '—'}
             </span>
           </div>
 
@@ -397,13 +408,13 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
               type="submit"
               className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-[#C9A959] px-4 py-1.5 text-xs font-bold text-[#0A2342] hover:bg-[#d9bc6a]"
             >
-              Perguntar
+              {t('dashboard.ask')}
             </button>
           </form>
 
           <div className="text-right text-xs text-white/45">
-            <p className="font-bold uppercase tracking-widest text-[#C9A959]">Dashboard UNO</p>
-            <p>Competencia {data.meta?.periodo_competencia ?? '—'}</p>
+            <p className="font-bold uppercase tracking-widest text-[#C9A959]">{t('dashboard.unoTitle')}</p>
+            <p>{t('dashboard.competency', { period: data.meta?.periodo_competencia ?? '—' })}</p>
           </div>
         </div>
 
@@ -438,7 +449,7 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
         <div className="relative border-b border-white/10 px-6 py-5">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-[#C9A959]">Resumo Templates</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#C9A959]">{t('dashboard.templatesSummary')}</p>
               <p className="mt-1 text-sm text-white/50">
                 {resumo.fonte} · {resumo.unidade} · DRE/DFC {resumo.competencia} · Balanco {resumo.patrimonial}
               </p>
@@ -464,25 +475,25 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             {activeResumo === 'dre' && resumo.dre && (
               <>
-                <MetricTile label="Receita Bruta" value={`R$ ${fmtCurrency(resumo.dre.receita_bruta)} mi`} />
-                <MetricTile label="Receita Liquida" value={`R$ ${fmtCurrency(resumo.dre.receita_liquida)} mi`} accent={CYAN} />
-                <MetricTile label="CPV" value={`R$ ${fmtCurrency(resumo.dre.cpv)} mi`} accent={VIOLET} />
-                <MetricTile label="Lucro Bruto" value={`R$ ${fmtCurrency(resumo.dre.lucro_bruto)} mi`} />
+                <MetricTile label={t('dashboard.metric.receita_bruta')} value={`R$ ${fmtCurrency(resumo.dre.receita_bruta)} mi`} />
+                <MetricTile label={t('dashboard.metric.receita_liquida')} value={`R$ ${fmtCurrency(resumo.dre.receita_liquida)} mi`} accent={CYAN} />
+                <MetricTile label={t('dashboard.metric.cpv')} value={`R$ ${fmtCurrency(resumo.dre.cpv)} mi`} accent={VIOLET} />
+                <MetricTile label={t('dashboard.metric.lucro_bruto')} value={`R$ ${fmtCurrency(resumo.dre.lucro_bruto)} mi`} />
               </>
             )}
             {activeResumo === 'balanco' && resumo.balanco && (
               <>
-                <MetricTile label="Caixa e Equivalentes" value={`R$ ${fmtCurrency(resumo.balanco.caixa_equivalentes)} mi`} />
-                <MetricTile label="Contas a Receber" value={`R$ ${fmtCurrency(resumo.balanco.contas_receber)} mi`} accent={CYAN} />
-                <MetricTile label="Estoques" value={`R$ ${fmtCurrency(resumo.balanco.estoques)} mi`} accent={VIOLET} />
-                <MetricTile label="Ativo Circulante" value={`R$ ${fmtCurrency(resumo.balanco.ativo_circulante)} mi`} />
+                <MetricTile label={t('dashboard.metric.caixa')} value={`R$ ${fmtCurrency(resumo.balanco.caixa_equivalentes)} mi`} />
+                <MetricTile label={t('dashboard.metric.contas_receber')} value={`R$ ${fmtCurrency(resumo.balanco.contas_receber)} mi`} accent={CYAN} />
+                <MetricTile label={t('dashboard.metric.estoques')} value={`R$ ${fmtCurrency(resumo.balanco.estoques)} mi`} accent={VIOLET} />
+                <MetricTile label={t('dashboard.metric.ativo_circulante')} value={`R$ ${fmtCurrency(resumo.balanco.ativo_circulante)} mi`} />
               </>
             )}
             {activeResumo === 'dfc' && resumo.dfc && (
               <>
-                <MetricTile label="Lucro Antes dos Tributos" value={`R$ ${fmtCurrency(resumo.dfc.lucro_antes_tributos)} mi`} />
+                <MetricTile label={t('dashboard.metric.lucro_antes_trib')} value={`R$ ${fmtCurrency(resumo.dfc.lucro_antes_tributos)} mi`} />
                 <MetricTile
-                  label="Depreciacao e Amortizacao"
+                  label={t('dashboard.metric.depreciacao')}
                   value={`R$ ${fmtCurrency(resumo.dfc.depreciacao_amortizacao)} mi`}
                   accent={CYAN}
                 />
@@ -490,10 +501,10 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
             )}
             {activeResumo === 'kpis' && resumo.kpis && (
               <>
-                <MetricTile label="Margem Bruta" value={fmtPct(resumo.kpis.margem_bruta_pct)} />
-                <MetricTile label="Margem EBITDA" value={fmtPct(resumo.kpis.margem_ebitda_pct)} accent={CYAN} />
-                <MetricTile label="Margem Liquida" value={fmtPct(resumo.kpis.margem_liquida_pct)} accent={VIOLET} />
-                <MetricTile label="Giro de Estoque" value={fmtRatio(resumo.kpis.giro_estoque)} />
+                <MetricTile label={t('dashboard.metric.margem_bruta')} value={fmtPct(resumo.kpis.margem_bruta_pct)} />
+                <MetricTile label={t('dashboard.metric.margem_ebitda')} value={fmtPct(resumo.kpis.margem_ebitda_pct)} accent={CYAN} />
+                <MetricTile label={t('dashboard.metric.margem_liquida')} value={fmtPct(resumo.kpis.margem_liquida_pct)} accent={VIOLET} />
+                <MetricTile label={t('dashboard.metric.giro_estoque')} value={fmtRatio(resumo.kpis.giro_estoque)} />
               </>
             )}
           </div>
@@ -528,30 +539,30 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
         <section className="space-y-4">
           <div className="flex items-center gap-2">
             <Factory size={16} className="text-[#C9A959]" />
-            <h2 className="text-sm font-bold uppercase tracking-widest">{ops?.titulo ?? 'Operacoes'}</h2>
+            <h2 className="text-sm font-bold uppercase tracking-widest">{ops?.titulo ?? t('dashboard.section.operations')}</h2>
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <MetricTile
               label="OEE"
               value={ops?.series?.oee?.valor != null ? fmtPct(ops.series.oee.valor) : '—'}
-              hint={ops?.series?.oee?.valor == null ? 'Producao' : `Meta ${ops?.series?.oee?.meta_wcm}%`}
+              hint={ops?.series?.oee?.valor == null ? t('dashboard.ops.production') : t('dashboard.goal', { n: ops?.series?.oee?.meta_wcm ?? '' })}
             />
             <MetricTile
               label="FTT / FPY"
               value={ops?.series?.ftt_fpy?.valor != null ? fmtPct(ops.series.ftt_fpy.valor) : '—'}
-              hint={ops?.series?.ftt_fpy?.valor == null ? 'Qualidade' : `Meta ${ops?.series?.ftt_fpy?.meta_wcm}%`}
+              hint={ops?.series?.ftt_fpy?.valor == null ? t('dashboard.ops.quality') : t('dashboard.goal', { n: ops?.series?.ftt_fpy?.meta_wcm ?? '' })}
               accent={CYAN}
             />
             <MetricTile
-              label="Giro estoque"
+              label={t('dashboard.ops.inventoryTurn')}
               value={fmtRatio(ops?.series?.giro_estoque?.valor)}
-              hint="CPV / estoque"
+              hint={t('dashboard.ops.cpvOverStock')}
               accent={VIOLET}
             />
           </div>
 
-          <ChartCard title="Tendencia de giro" subtitle="Serie trimestral / mensal">
+          <ChartCard title={t('dashboard.ops.turnTrend')} subtitle={t('dashboard.ops.quarterlyMonthly')}>
             {giroTrend.length > 0 ? (
               <div className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
@@ -559,13 +570,13 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
                     <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
                     <XAxis dataKey="periodo" tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} width={32} />
-                    <Tooltip {...tooltipStyle} formatter={(v) => [`${Number(v).toFixed(2)}x`, 'Giro']} />
+                    <Tooltip {...tooltipStyle} formatter={(v) => [`${Number(v).toFixed(2)}x`, t('dashboard.ops.turnTooltip')]} />
                     <Line type="monotone" dataKey="valor" stroke={CYAN} strokeWidth={2.5} dot={{ r: 4, fill: CYAN }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="flex h-48 items-center justify-center text-sm text-white/40">Sem serie historica</div>
+              <div className="flex h-48 items-center justify-center text-sm text-white/40">{t('dashboard.noHistory')}</div>
             )}
           </ChartCard>
         </section>
@@ -573,23 +584,23 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
         <section className="space-y-4">
           <div className="flex items-center gap-2">
             <Landmark size={16} className="text-[#C9A959]" />
-            <h2 className="text-sm font-bold uppercase tracking-widest">{fin?.titulo ?? 'Financeiro'}</h2>
+            <h2 className="text-sm font-bold uppercase tracking-widest">{fin?.titulo ?? t('dashboard.section.financial')}</h2>
           </div>
 
           <MetricTile
-            label="Faturamento (Receita Liquida)"
+            label={t('dashboard.fin.revenueNet')}
             value={`R$ ${fmtCurrency(fin?.cards?.faturamento)}`}
-            hint={data.meta?.unidade ? `Unidade: ${data.meta.unidade}` : undefined}
+            hint={data.meta?.unidade ? t('dashboard.unitHint', { unit: data.meta.unidade }) : undefined}
           />
 
-          <ChartCard title="Margens consolidadas" subtitle="Indicadores percentuais">
+          <ChartCard title={t('dashboard.fin.consolidatedMargins')} subtitle={t('dashboard.fin.percentIndicators')}>
             <div className="h-44">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={marginBars} barSize={36}>
                   <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
                   <XAxis dataKey="name" tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} unit="%" width={36} />
-                  <Tooltip {...tooltipStyle} formatter={(v) => [`${Number(v).toFixed(1)}%`, 'Margem']} />
+                  <Tooltip {...tooltipStyle} formatter={(v) => [`${Number(v).toFixed(1)}%`, t('dashboard.fin.marginTooltip')]} />
                   <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                     {marginBars.map(entry => (
                       <Cell key={entry.name} fill={entry.fill} />
@@ -600,7 +611,7 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
             </div>
           </ChartCard>
 
-          <ChartCard title="Faturamento em tendencia" subtitle="Evolucao por periodo">
+          <ChartCard title={t('dashboard.fin.revenueTrend')} subtitle={t('dashboard.fin.evolutionByPeriod')}>
             {revenueTrend.length > 0 ? (
               <div className="h-40">
                 <ResponsiveContainer width="100%" height="100%">
@@ -614,13 +625,13 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
                     <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
                     <XAxis dataKey="periodo" tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} width={48} />
-                    <Tooltip {...tooltipStyle} formatter={(v) => [`R$ ${fmtCurrency(Number(v))}`, 'Receita']} />
+                    <Tooltip {...tooltipStyle} formatter={(v) => [`R$ ${fmtCurrency(Number(v))}`, t('dashboard.fin.revenueTooltip')]} />
                     <Area type="monotone" dataKey="valor" stroke={GOLD} fill="url(#revenueFill)" strokeWidth={2} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="flex h-40 items-center justify-center text-sm text-white/40">Sem serie historica</div>
+              <div className="flex h-40 items-center justify-center text-sm text-white/40">{t('dashboard.noHistory')}</div>
             )}
           </ChartCard>
         </section>
@@ -628,20 +639,20 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
         <section className="space-y-4">
           <div className="flex items-center gap-2">
             <Users size={16} className="text-[#C9A959]" />
-            <h2 className="text-sm font-bold uppercase tracking-widest">{risk?.titulo ?? 'Risco e Pessoas'}</h2>
+            <h2 className="text-sm font-bold uppercase tracking-widest">{risk?.titulo ?? t('dashboard.section.risk')}</h2>
           </div>
 
           <div className="grid gap-3">
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
               <div className="flex items-center justify-between">
-                <p className="text-[11px] font-bold uppercase tracking-widest text-white/45">TFA — Seguranca</p>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-white/45">{t('dashboard.risk.tfaSafety')}</p>
                 {risk?.indicadores?.tfa?.valor == null && <PendingBadge />}
               </div>
               <p className="mt-2 text-2xl font-extrabold">{risk?.indicadores?.tfa?.valor ?? '—'}</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
               <div className="flex items-center justify-between">
-                <p className="text-[11px] font-bold uppercase tracking-widest text-white/45">Turnover</p>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-white/45">{t('dashboard.risk.turnover')}</p>
                 {risk?.indicadores?.turnover?.valor == null && <PendingBadge />}
               </div>
               <p className="mt-2 text-2xl font-extrabold">
@@ -649,22 +660,22 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
               </p>
             </div>
             <MetricTile
-              label="Racio administrativo"
+              label={t('dashboard.risk.adminRatio')}
               value={fmtPct(risk?.indicadores?.racio_administrativo_pct)}
-              hint="Despesas admin / receita bruta"
+              hint={t('dashboard.risk.adminRatioHint')}
             />
             {risk?.contas_receber != null && (
               <MetricTile
-                label="Contas a receber"
+                label={t('dashboard.risk.accountsRec')}
                 value={`R$ ${fmtCurrency(risk.contas_receber)}`}
-                hint="Posicao patrimonial"
+                hint={t('dashboard.risk.patrimonialPos')}
                 accent={CYAN}
               />
             )}
           </div>
 
           {marginTrend.length > 0 && (
-            <ChartCard title="Margens em tendencia" subtitle="Bruta, liquida e EBITDA">
+            <ChartCard title={t('dashboard.risk.marginsTrend')} subtitle={t('dashboard.risk.grossNetEbitda')}>
               <div className="h-44">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={marginTrend}>
@@ -672,8 +683,8 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
                     <XAxis dataKey="periodo" tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} unit="%" width={36} />
                     <Tooltip {...tooltipStyle} />
-                    <Line type="monotone" dataKey="margem_bruta" name="Bruta" stroke={GOLD} strokeWidth={2} dot={false} />
-                    <Line type="monotone" dataKey="margem_liquida" name="Liquida" stroke={CYAN} strokeWidth={2} dot={false} />
+                    <Line type="monotone" dataKey="margem_bruta" name={t('dashboard.fin.marginGross')} stroke={GOLD} strokeWidth={2} dot={false} />
+                    <Line type="monotone" dataKey="margem_liquida" name={t('dashboard.fin.marginNet')} stroke={CYAN} strokeWidth={2} dot={false} />
                     <Line type="monotone" dataKey="margem_ebitda" name="EBITDA" stroke={VIOLET} strokeWidth={2} dot={false} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -692,7 +703,7 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
           >
             <span className="flex items-center gap-2">
               <Activity size={16} className="text-[#C9A959]" />
-              Detalhes analiticos e fontes
+              {t('dashboard.analyticsAndSources')}
             </span>
             {showPnl ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </button>
@@ -707,7 +718,7 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
                       <div>
                         <p className="text-sm font-semibold">{source.source}</p>
                         <p className="text-xs text-white/45">
-                          {source.loaded ? 'Carregado' : 'Pendente'}
+                          {source.loaded ? t('dashboard.loaded') : t('dashboard.pending')}
                           {source.records != null ? ` · ${source.records}` : ''}
                         </p>
                       </div>
@@ -721,8 +732,8 @@ export default function UnifiedExecutiveDashboard({ data, companyName }: Props) 
                   <table className="w-full min-w-[640px] text-sm">
                     <thead>
                       <tr className="bg-white/[0.04] text-left text-white/70">
-                        <th className="px-4 py-3 font-bold">Indicador</th>
-                        <th className="px-4 py-3 text-right font-bold">Total</th>
+                        <th className="px-4 py-3 font-bold">{t('dashboard.colIndicator')}</th>
+                        <th className="px-4 py-3 text-right font-bold">{t('dashboard.colTotal')}</th>
                         <th className="px-4 py-3 text-right font-bold">%</th>
                         {data.pnl_table.periods.map(period => (
                           <th key={period} className="px-4 py-3 text-right font-bold">
