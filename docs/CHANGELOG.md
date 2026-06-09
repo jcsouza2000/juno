@@ -5,6 +5,13 @@ Substitui os antigos `main_update_fase*.py` que foram removidos do código.
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/).
 
+## [Não publicado] — Capacidade e escala (Fase 6) 2026-06-09
+
+### Documentação
+- `docs/CAPACITY.md` — limites de volume por tenant (faixas de 500 MB a 10 TB),
+  gargalos conhecidos + mitigação, caminho de evolução (particionamento, filas,
+  object storage, OLAP) e checklist de onboarding de tenant grande.
+
 ## [Não publicado] — Retenção / fechamento mensal (Fase 5) 2026-06-09
 
 ### Adicionado
