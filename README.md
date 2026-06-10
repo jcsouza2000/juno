@@ -1,5 +1,9 @@
 # JANUS_AI / JUNO
 
+[![CI](https://github.com/jcsouza2000/juno/actions/workflows/ci.yml/badge.svg)](https://github.com/jcsouza2000/juno/actions/workflows/ci.yml)
+
+Repositorio: **https://github.com/jcsouza2000/juno**
+
 Plataforma de diagnostico industrial B2B com IA local, ontology engine, conectores ERP, dashboards executivos, auditoria e controles de seguranca.
 
 ## Estado validado em 2026-05-25

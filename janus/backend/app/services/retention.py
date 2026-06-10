@@ -11,7 +11,6 @@ pelo router em HTTPException — mantem o service testavel sem subir o app.
 from __future__ import annotations
 
 import json
-
 from datetime import date
 
 from sqlalchemy.orm import Session

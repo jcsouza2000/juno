@@ -48,6 +48,9 @@ build/
 !**/.env.example
 !**/.env*.example
 
+# --- Assets locais (nao versionar) ---
+slide-*.jpg
+
 # --- IDEs ---
 .claude/
 .vscode/
