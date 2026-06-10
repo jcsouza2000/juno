@@ -16,6 +16,7 @@ from __future__ import annotations
 from sqlalchemy import (
     Boolean,
     Column,
+    Date,
     DateTime,
     Float,
     ForeignKey,
@@ -520,6 +521,26 @@ class MonthlyClose(Base):
     status = Column(String(20), default="closed")
     closed_at = Column(DateTime, default=utcnow_naive)
     closed_by = Column(Integer, ForeignKey("users.id"), nullable=True)
+
+
+class DailySnapshot(Base):
+    """Snapshot diario automatico (Fase 5 — retencao).
+
+    Um registro por (company_id, snapshot_date). Idempotente: reexecutar o job
+    no mesmo dia nao duplica — atualiza o snapshot existente.
+    """
+
+    __tablename__ = "daily_snapshots"
+    __table_args__ = (
+        UniqueConstraint("company_id", "snapshot_date", name="uq_daily_snapshot"),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    company_id = Column(Integer, ForeignKey("companies.id"), nullable=False, index=True)
+    snapshot_date = Column(Date, nullable=False, index=True)
+    snapshot = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=utcnow_naive)
+    updated_at = Column(DateTime, default=utcnow_naive, onupdate=utcnow_naive)
 
 
 # =====================================================================

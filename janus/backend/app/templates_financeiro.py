@@ -571,30 +571,51 @@ def build_resumo_demonstracoes(
     }
 
 
-DRE_REPORT_LINES: tuple[tuple[str, str, str], ...] = (
-    ("dre", "Receita Bruta", "Receita Bruta"),
-    ("dre", "Receita Líquida", "Receita Líquida"),
-    ("dre", "Custo dos Produtos Vendidos", "Custo dos Produtos Vendidos (CPV)"),
-    ("dre", "Lucro Bruto", "Lucro Bruto"),
-    ("dre", "Gerais & Administrativas", "Gerais & Administrativas"),
-    ("ebitda", "Lucro (prejuízo) Líquido", "Lucro (Prejuízo) Líquido"),
-    ("ebitda", "EBITDA Ajustado", "EBITDA Ajustado"),
+DRE_REPORT_LINES: tuple[tuple[str, str, str, str], ...] = (
+    ("dre", "Receita Bruta", "Receita Bruta", "receita_bruta"),
+    ("dre", "Receita Líquida", "Receita Líquida", "receita_liquida"),
+    (
+        "dre",
+        "Custo dos Produtos Vendidos",
+        "Custo dos Produtos Vendidos (CPV)",
+        "cpv",
+    ),
+    ("dre", "Lucro Bruto", "Lucro Bruto", "lucro_bruto"),
+    ("dre", "Gerais & Administrativas", "Gerais & Administrativas", "despesas_admin"),
+    ("ebitda", "Lucro (prejuízo) Líquido", "Lucro (Prejuízo) Líquido", "lucro_liquido"),
+    ("ebitda", "EBITDA Ajustado", "EBITDA Ajustado", "ebitda"),
 )
 
-BALANCO_REPORT_LINES: tuple[tuple[str, bool], ...] = (
-    ("Caixa e equivalente de caixa", False),
-    ("Contas a Receber", False),
-    ("Estoques", False),
-    ("Ativo Circulante", True),
-    ("Ativo Total", True),
-    ("Passivo Circulante", True),
-    ("Patrim.Líquido - atribuido aos controladores", True),
-    ("Patrimônio Líquido - Não Controladores", False),
+BALANCO_REPORT_LINES: tuple[tuple[str, bool, str], ...] = (
+    ("Caixa e equivalente de caixa", False, "caixa"),
+    ("Contas a Receber", False, "contas_receber"),
+    ("Estoques", False, "estoques"),
+    ("Ativo Circulante", True, "ativo_circulante"),
+    ("Ativo Total", True, "ativo_total"),
+    ("Passivo Circulante", True, "passivo_circulante"),
+    ("Patrim.Líquido - atribuido aos controladores", True, "pl_controladores"),
+    ("Patrimônio Líquido - Não Controladores", False, "pl_nao_controladores"),
 )
 
-DFC_REPORT_LINES: tuple[tuple[str, str, str], ...] = (
-    ("dre", "Lucro antes I.R. Cont. Social", "Lucro antes dos tributos sobre o lucro"),
-    ("dre", "Depreciação/Amortização/Exaustão", "Depreciação e amortização"),
+DFC_REPORT_LINES: tuple[tuple[str, str, str, str], ...] = (
+    (
+        "dre",
+        "Lucro antes I.R. Cont. Social",
+        "Lucro antes dos tributos sobre o lucro",
+        "lucro_antes_ir",
+    ),
+    (
+        "dre",
+        "Depreciação/Amortização/Exaustão",
+        "Depreciação e amortização",
+        "depreciacao",
+    ),
+)
+
+COMPARATIVO_METRICS: tuple[tuple[str, str, str], ...] = (
+    ("dre", "Receita Líquida", "receita_liquida"),
+    ("ebitda", "EBITDA Ajustado", "ebitda"),
+    ("ebitda", "Lucro (prejuízo) Líquido", "lucro_liquido"),
 )
 
 KPI_REPORT_LINES: tuple[tuple[str, str, str], ...] = (
@@ -615,6 +636,60 @@ def _row_values_for_periods(
 ) -> list[float | None]:
     df = sheets[sheet_key]
     return [extract_value_safe(df, account, period) for period in periods]
+
+
+def _pct_change(current: float | None, previous: float | None) -> float | None:
+    if current is None or previous is None or previous == 0:
+        return None
+    return round((current - previous) / abs(previous) * 100, 2)
+
+
+def build_comparativos_section(
+    sheets: dict[str, pd.DataFrame],
+    trimestres: tuple[str, ...] = DEFAULT_TRIMESTRES,
+    competencia: str = DEFAULT_COMPETENCIA,
+) -> dict[str, Any]:
+    """Comparativos sequenciais (QoQ) e anuais (YoY) a partir dos periodos do Templates."""
+    dre_periods = [*trimestres, competencia]
+    linhas: list[dict[str, Any]] = []
+
+    for sheet_key, account, conta_key in COMPARATIVO_METRICS:
+        valores = _row_values_for_periods(sheets, sheet_key, account, dre_periods)
+        for idx in range(1, len(dre_periods)):
+            linhas.append(
+                {
+                    "indicador_key": conta_key,
+                    "periodo_de": dre_periods[idx - 1],
+                    "periodo_para": dre_periods[idx],
+                    "valor_de": valores[idx - 1],
+                    "valor_para": valores[idx],
+                    "variacao_pct": _pct_change(valores[idx], valores[idx - 1]),
+                    "tipo": "QoQ",
+                }
+            )
+
+        if len(dre_periods) >= 2:
+            ultimo_tri = dre_periods[-2]
+            anual = dre_periods[-1]
+            linhas.append(
+                {
+                    "indicador_key": conta_key,
+                    "periodo_de": ultimo_tri,
+                    "periodo_para": anual,
+                    "valor_de": valores[-2],
+                    "valor_para": valores[-1],
+                    "variacao_pct": _pct_change(valores[-1], valores[-2]),
+                    "tipo": "YoY",
+                }
+            )
+
+    return {
+        "id": "comparativos",
+        "titulo": "Comparativos Históricos",
+        "periodos": dre_periods,
+        "linhas": linhas,
+        "nota": "Variações percentuais entre trimestres (QoQ) e último trimestre vs ano (YoY).",
+    }
 
 
 def build_demonstracoes_relatorio(
@@ -641,40 +716,54 @@ def build_demonstracoes_relatorio(
 
     dre_periods = [*trimestres, competencia]
     dre_linhas = []
-    for sheet_key, account, label in DRE_REPORT_LINES:
+    for sheet_key, account, label, conta_key in DRE_REPORT_LINES:
         valores = _row_values_for_periods(sheets, sheet_key, account, dre_periods)
         dre_linhas.append(
             {
                 "conta": label,
+                "conta_key": conta_key,
                 "valores": valores,
-                "destaque": label in {"Lucro Bruto", "Lucro (Prejuízo) Líquido", "EBITDA Ajustado"},
+                "destaque": conta_key in {"lucro_bruto", "lucro_liquido", "ebitda"},
             }
         )
 
     bal_periods = [patrimonial]
     bal_linhas = []
-    for account, destaque in BALANCO_REPORT_LINES:
+    for account, destaque, conta_key in BALANCO_REPORT_LINES:
         valores = _row_values_for_periods(sheets, "balanco", account, bal_periods)
-        bal_linhas.append({"conta": account, "valores": valores, "destaque": destaque})
+        bal_linhas.append(
+            {"conta": account, "conta_key": conta_key, "valores": valores, "destaque": destaque}
+        )
 
     dfc_periods = [competencia]
     dfc_linhas = []
-    for sheet_key, account, label in DFC_REPORT_LINES:
+    for sheet_key, account, label, conta_key in DFC_REPORT_LINES:
         valores = _row_values_for_periods(sheets, sheet_key, account, dfc_periods)
         dfc_linhas.append(
             {
                 "conta": label,
+                "conta_key": conta_key,
                 "valores": valores,
-                "destaque": label == "Lucro antes dos tributos sobre o lucro",
+                "destaque": conta_key == "lucro_antes_ir",
             }
         )
+
+    comparativos = build_comparativos_section(sheets, trimestres, competencia)
 
     kpis = build_resumo_demonstracoes(competencia, patrimonial)
     kpi_data = (kpis or {}).get("kpis", {})
     kpi_linhas = []
     for key, label, unit in KPI_REPORT_LINES:
         value = kpi_data.get(key)
-        kpi_linhas.append({"conta": label, "valores": [value], "unit": unit, "destaque": key == "score_industrial"})
+        kpi_linhas.append(
+            {
+                "conta": label,
+                "conta_key": key,
+                "valores": [value],
+                "unit": unit,
+                "destaque": key == "score_industrial",
+            }
+        )
 
     return {
         "titulo": "Resumo das Demonstrações Financeiras",
@@ -712,6 +801,7 @@ def build_demonstracoes_relatorio(
                 "linhas": kpi_linhas,
                 "nota": "Percentuais, múltiplos e score UNO conforme Templates/KPIs_Templates.md.",
             },
+            comparativos,
         ],
     }
 

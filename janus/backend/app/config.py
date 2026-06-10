@@ -98,6 +98,21 @@ class Settings(BaseSettings):
             if env == "production":
                 raise ValueError("DATABASE_URL e obrigatoria em producao.")
             return "sqlite:///./juno_dev.db"
+        if env == "production" and v.startswith("sqlite"):
+            raise ValueError(
+                "DATABASE_URL em producao deve usar PostgreSQL, nao SQLite."
+            )
+        return v
+
+    @field_validator("JUNO_DEV_AUTH_BYPASS")
+    @classmethod
+    def _validate_dev_auth_bypass(cls, v, info):
+        env = (info.data.get("JUNO_ENV") or "development").lower()
+        if env == "production" and v:
+            raise ValueError(
+                "JUNO_DEV_AUTH_BYPASS deve ser false em producao. "
+                "Use login real com PostgreSQL e JWT."
+            )
         return v
 
     @field_validator("ENCRYPTION_KEY")

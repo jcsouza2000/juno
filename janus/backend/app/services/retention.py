@@ -12,10 +12,12 @@ from __future__ import annotations
 
 import json
 
+from datetime import date
+
 from sqlalchemy.orm import Session
 
 from app.core.datetime_utils import utcnow_naive
-from app.models import MonthlyClose
+from app.models import Company, DailySnapshot, MonthlyClose
 
 
 class RetentionError(Exception):
@@ -143,3 +145,115 @@ def get_monthly_close(db: Session, company_id: int, year: int, month: int) -> di
     if close is None:
         raise RetentionError("Fechamento nao encontrado.", status_code=404)
     return _to_dict(close)
+
+
+def _daily_to_dict(row: DailySnapshot, *, include_snapshot: bool = True) -> dict:
+    payload = {
+        "id": row.id,
+        "company_id": row.company_id,
+        "snapshot_date": row.snapshot_date.isoformat(),
+        "created_at": row.created_at.isoformat() if row.created_at else None,
+        "updated_at": row.updated_at.isoformat() if row.updated_at else None,
+    }
+    if include_snapshot:
+        payload["snapshot"] = json.loads(row.snapshot) if row.snapshot else None
+    return payload
+
+
+def create_daily_snapshot(
+    db: Session,
+    company_id: int,
+    snapshot_date: date | None = None,
+) -> dict:
+    """Cria ou atualiza o snapshot diario do tenant (idempotente por data)."""
+    target = snapshot_date or utcnow_naive().date()
+    snapshot = build_snapshot(db, company_id)
+    snapshot["snapshot_date"] = target.isoformat()
+
+    existing = (
+        db.query(DailySnapshot)
+        .filter(
+            DailySnapshot.company_id == company_id,
+            DailySnapshot.snapshot_date == target,
+        )
+        .first()
+    )
+    encoded = json.dumps(snapshot, default=str, ensure_ascii=False)
+    if existing is not None:
+        existing.snapshot = encoded
+        existing.updated_at = utcnow_naive()
+        db.commit()
+        db.refresh(existing)
+        return _daily_to_dict(existing)
+
+    row = DailySnapshot(
+        company_id=company_id,
+        snapshot_date=target,
+        snapshot=encoded,
+        created_at=utcnow_naive(),
+        updated_at=utcnow_naive(),
+    )
+    db.add(row)
+    db.commit()
+    db.refresh(row)
+    return _daily_to_dict(row)
+
+
+def list_daily_snapshots(db: Session, company_id: int, limit: int = 30) -> list[dict]:
+    rows = (
+        db.query(DailySnapshot)
+        .filter(DailySnapshot.company_id == company_id)
+        .order_by(DailySnapshot.snapshot_date.desc())
+        .limit(limit)
+        .all()
+    )
+    return [_daily_to_dict(r, include_snapshot=False) for r in rows]
+
+
+def get_daily_snapshot(db: Session, company_id: int, snapshot_date: date) -> dict:
+    row = (
+        db.query(DailySnapshot)
+        .filter(
+            DailySnapshot.company_id == company_id,
+            DailySnapshot.snapshot_date == snapshot_date,
+        )
+        .first()
+    )
+    if row is None:
+        raise RetentionError("Snapshot diario nao encontrado.", status_code=404)
+    return _daily_to_dict(row)
+
+
+def run_daily_snapshots_all_tenants(db: Session) -> dict:
+    """Job noturno: snapshot diario para todas as empresas ativas."""
+    company_ids = [row.id for row in db.query(Company.id).all()]
+    created = 0
+    updated = 0
+    errors: list[dict] = []
+    target = utcnow_naive().date()
+
+    for company_id in company_ids:
+        try:
+            before = (
+                db.query(DailySnapshot)
+                .filter(
+                    DailySnapshot.company_id == company_id,
+                    DailySnapshot.snapshot_date == target,
+                )
+                .first()
+            )
+            create_daily_snapshot(db, company_id, snapshot_date=target)
+            if before is None:
+                created += 1
+            else:
+                updated += 1
+        except Exception as exc:  # noqa: BLE001
+            errors.append({"company_id": company_id, "error": str(exc)})
+
+    return {
+        "snapshot_date": target.isoformat(),
+        "tenants": len(company_ids),
+        "created": created,
+        "updated": updated,
+        "errors": errors,
+    }
