@@ -1,6 +1,7 @@
 # Resultado da Validação E2E — JUNO Piloto
 
-**Última atualização:** 2026-06-11  
+**Última atualização:** 2026-06-11 17:28 -04:00  
+**Commit validado:** `9d59b54` — `feat(piloto): templates orcamento/budget, checklist E2E e hardening producao`  
 **Ambiente:** piloto local — SQLite `smart_juno.db`, empresa dev **ID 4** (Agora SA)
 
 ## Stack em execução
@@ -39,6 +40,29 @@ powershell -NoProfile -File C:\Souza\juno\scripts\pilot_e2e_smoke.ps1
 
 **Resultado esperado:** 10/10 OK.
 
+### Última execução — 2026-06-11 17:27 -04:00
+
+Comando:
+
+```powershell
+powershell -NoProfile -File C:\Souza\juno\scripts\pilot_e2e_smoke.ps1
+```
+
+| # | Passo | Status |
+|---|-------|--------|
+| 1 | health/ready | OK |
+| 2 | ollama health | OK |
+| 3 | kpis unified | OK |
+| 4 | valuation scenario | OK |
+| 5 | data inventory | OK |
+| 6 | daily snapshot create | OK |
+| 7 | financial summary | OK |
+| 8 | comparativos cenario | OK |
+| 9 | data versions metadata | OK |
+| 10 | X-Request-ID header | OK |
+
+**Resultado:** **10/10 OK** (exit 0, ~21 s)
+
 ---
 
 ## Fases entregues
@@ -48,7 +72,7 @@ powershell -NoProfile -File C:\Souza\juno\scripts\pilot_e2e_smoke.ps1
 | **A** | Smoke, snapshot diário, stack piloto | `e01cd9f` |
 | **B** | Versionamento v1/v2, `/data`, ativar versão | `01d8d54` |
 | **C** | Comparativos por cenário, aba Cenários | `e135b6c` |
-| **C+** | Templates Orçamento/Budget, colunas no workbook canônico | pendente commit |
+| **C+** | Templates Orçamento/Budget, colunas no workbook canônico | `9d59b54` |
 
 ---
 
@@ -84,7 +108,7 @@ Arquivo: `docs/PILOT_E2E_CHECKLIST.md`
 
 | Área | Status | Notas |
 |------|--------|-------|
-| Smoke API 10/10 | OK | Automatizado |
+| Smoke API 10/10 | OK | 2026-06-11 17:27 — 10/10 automatizado |
 | `/executive` aba Cenários | OK UI | Budget 21.350 mi validado |
 | `/data` versionamento | OK UI | v1–v4, Ativar |
 | Templates Orçamento/Budget | OK | Links em `/financials` |
@@ -118,6 +142,26 @@ $env:PYTHONPATH='.'
   app/tests/test_comparativos_cenario.py `
   app/tests/test_config.py
 ```
+
+### Última execução — 2026-06-11 17:28 -04:00
+
+Comando (escopo `test_config.py` do commit `9d59b54`):
+
+```powershell
+cd C:\Souza\juno\janus\backend
+.\.venv\Scripts\python.exe -m pytest app\tests\test_config.py -q
+```
+
+| Teste | Status |
+|-------|--------|
+| `test_secret_key_required_in_production` | passed |
+| `test_database_url_required_in_production` | passed |
+| `test_dev_defaults_are_sane` | passed |
+| `test_dev_auth_bypass_forbidden_in_production` | passed |
+| `test_sqlite_forbidden_in_production` | passed |
+| `test_cors_origins_parses_csv` | passed |
+
+**Resultado:** **6 passed** (exit 0, ~5 s). 14 warnings matplotlib/pyparsing (sem falha).
 
 ---
 
