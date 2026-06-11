@@ -1861,7 +1861,9 @@ Finalidade:
 Comparar quatro leituras financeiras lado a lado, de forma auditavel:
 
 - REALIZADO — demonstracoes ativas (upload ou template).
-- ORCAMENTO — coluna Orçamento/Budget do template, ou meta sintetica documentada.
+- ORCAMENTO — coluna Orçamento/Budget do template executivo
+  (Templates/Demonstrações Financeiras_Templates.xlsx) ou upload via
+  template_demonstracoes_orcamento.xlsx / template_demonstracoes_budget.xlsx.
 - PROJECAO — ano +1 do motor de valuation (premissas padrao do piloto).
 - VALUATION — ultimo ano projetado + Enterprise Value (EV).
 
@@ -1879,7 +1881,10 @@ API dedicada:
 Boas praticas:
 
 - Carregue Demonstracoes antes de interpretar REALIZADO.
-- Para ORCAMENTO real, inclua coluna "Orçamento" ou "Budget" no template Excel.
+- Para ORCAMENTO real, use os templates dedicados em Demonstracoes:
+  - Template Orçamento 2025 (PT)
+  - Budget template 2025 (EN)
+  Ou preencha a coluna Orçamento no workbook Templates/.
 - Ajuste premissas de valuation em /executive (bloco Valuation abaixo).
 
 ======================================================================

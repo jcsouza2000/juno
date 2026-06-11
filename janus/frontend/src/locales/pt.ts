@@ -225,6 +225,8 @@ const pt = {
     step3Desc: 'Indicadores e ratios calculados automaticamente após upload.',
     templateInfo: 'Template Excel com abas DRE, Balanco e DFC.',
     downloadTemplate: 'Baixar template',
+    downloadBudgetPt: 'Template Orçamento 2025 (.xlsx)',
+    downloadBudgetEn: 'Budget template 2025 (.xlsx)',
     fileLabel: 'Arquivo (.xlsx ou .csv)',
     dropHint: 'Arraste o arquivo aqui ou',
     dropClick: 'clique para selecionar',

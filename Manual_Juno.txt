@@ -337,14 +337,21 @@ Fase C — concluida no piloto local:
 - Endpoint: GET /financials/{id}/comparativos/cenario
 - Aba "Cenarios" no relatorio executivo (TemplateExecutiveReport)
 - Matriz: REALIZADO | ORCAMENTO | PROJECAO | VALUATION + variacao vs realizado
-- ORCAMENTO: coluna Orçamento/Budget do template ou meta sintetica (97%)
-- PROJECAO/VALUATION: motor run_valuation_scenario (ano +1 e EV)
+- ORCAMENTO: colunas Orçamento/Budget no template executivo (Templates/)
+  ou templates de upload template_demonstracoes_orcamento/budget.xlsx
 
-Comandos:
+Templates orçamento:
 
-  pytest app/tests/test_comparativos_cenario.py -q
+- script: scripts/build_budget_templates.py
+- docs: Templates/BUDGET_TEMPLATES.md
 
-Proximo passo sugerido: checklist E2E manual UI ou hardening producao.
+Hardening producao:
+
+- docs/PROD_HARDENING_CHECKLIST.md
+- scripts/prod_hardening_check.ps1
+- Smoke piloto ampliado: 10 passos (Fase A–C)
+
+Proximo passo sugerido: checklist E2E manual UI 100% + deploy staging com .env.prod real.
 
 ======================================================================
 11. Checklist final antes de autorizacao para proxima etapa
@@ -355,8 +362,10 @@ Proximo passo sugerido: checklist E2E manual UI ou hardening producao.
 [x] Rodar docker compose up.
 [x] Validar http://localhost:8000/health dentro da stack.
 [x] Validar frontend em http://localhost:4000.
-[ ] Testar login e fluxo /ai.
-[ ] Revisar .env.prod sem expor segredos.
+[x] Fases A, B, C piloto (smoke 10/10, versionamento, cenarios, orcamento).
+[ ] Testar login e fluxo /ai (ambiente com bypass desligado).
+[ ] Revisar .env.prod sem expor segredos (prod_hardening_check.ps1).
+[ ] Checklist manual UI docs/PILOT_E2E_CHECKLIST.md 100%.
 [ ] Remover qualquer .db temporario.
 [ ] Rodar backend e frontend validation completa.
 [ ] Publicar apenas depois de todos os itens acima.

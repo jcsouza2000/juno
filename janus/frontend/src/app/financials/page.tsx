@@ -260,18 +260,37 @@ export default function FinancialsPage() {
         </div>
 
         {/* Template download */}
-        <div className="flex items-center gap-3 bg-blue-50 border border-blue-100 rounded-lg px-4 py-3">
-          <FileDown size={18} className="text-[#0A2342] shrink-0" />
-          <span className="text-sm text-gray-700 flex-1">
-            {t('financials.templateInfo')}
-          </span>
-          <a
-            href="/templates/template_demonstracoes.xlsx"
-            download
-            className="text-xs font-bold text-[#0A2342] underline hover:text-[#C9A959]"
-          >
-            {t('financials.downloadTemplate')}
-          </a>
+        <div className="flex flex-col gap-2 bg-blue-50 border border-blue-100 rounded-lg px-4 py-3">
+          <div className="flex items-center gap-3">
+            <FileDown size={18} className="text-[#0A2342] shrink-0" />
+            <span className="text-sm text-gray-700 flex-1">
+              {t('financials.templateInfo')}
+            </span>
+            <a
+              href="/templates/template_demonstracoes.xlsx"
+              download
+              className="text-xs font-bold text-[#0A2342] underline hover:text-[#C9A959] whitespace-nowrap"
+            >
+              {t('financials.downloadTemplate')}
+            </a>
+          </div>
+          <div className="flex flex-wrap gap-3 pl-7 text-xs">
+            <a
+              href="/templates/template_demonstracoes_orcamento.xlsx"
+              download
+              className="font-bold text-[#0A2342] underline hover:text-[#C9A959]"
+            >
+              {t('financials.downloadBudgetPt')}
+            </a>
+            <span className="text-gray-300">|</span>
+            <a
+              href="/templates/template_demonstracoes_budget.xlsx"
+              download
+              className="font-bold text-[#0A2342] underline hover:text-[#C9A959]"
+            >
+              {t('financials.downloadBudgetEn')}
+            </a>
+          </div>
         </div>
 
         {/* Drop zone */}

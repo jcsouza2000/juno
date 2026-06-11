@@ -225,6 +225,8 @@ const es: Dictionary = {
     step3Desc: 'Indicadores y ratios calculados automáticamente tras la carga.',
     templateInfo: 'Plantilla Excel con hojas ER, Balance y Flujo de Caja.',
     downloadTemplate: 'Descargar plantilla',
+    downloadBudgetPt: 'Plantilla Orçamento 2025 (.xlsx)',
+    downloadBudgetEn: 'Plantilla Budget 2025 (.xlsx)',
     fileLabel: 'Archivo (.xlsx o .csv)',
     dropHint: 'Arrastre el archivo aquí o',
     dropClick: 'haga clic para seleccionar',

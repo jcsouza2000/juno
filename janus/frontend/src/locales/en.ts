@@ -224,6 +224,8 @@ const en: Dictionary = {
     step3Desc: 'Indicators and ratios computed automatically after upload.',
     templateInfo: 'Excel template with P&L, Balance and Cash Flow tabs.',
     downloadTemplate: 'Download template',
+    downloadBudgetPt: 'Orçamento 2025 template (.xlsx)',
+    downloadBudgetEn: 'Budget 2025 template (.xlsx)',
     fileLabel: 'File (.xlsx or .csv)',
     dropHint: 'Drag the file here or',
     dropClick: 'click to select',

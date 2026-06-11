@@ -1,52 +1,71 @@
 # JUNO Pilot E2E Checklist
 
-Checklist minimo para provar confianca antes de demo com cliente ou piloto pago.
+Checklist mínimo para provar confiança antes de demo com cliente ou piloto pago.
 
-## Escopo minimo
+**Evidências automatizadas:** `scripts/pilot_e2e_smoke.ps1` (10 passos API)  
+**Registro de execução:** `docs/E2E_VALIDATION_RESULT.md`  
+**Produção:** `docs/PROD_HARDENING_CHECKLIST.md`
 
-Execute este fluxo sempre que houver mudanca em autenticacao, tenant, importacao, IA, PDF ou deploy.
+## Escopo mínimo
 
-## Preparacao
+Execute este fluxo sempre que houver mudança em autenticação, tenant, importação, IA, PDF, versionamento, comparativos ou deploy.
 
-- Backend rodando e `/api/v1/health/ready` retornando `ready=true`.
-- Frontend rodando em `http://localhost:4000`.
-- Usuario admin de tenant criado.
-- Usuario comum criado no mesmo tenant.
-- Se houver dois tenants, usuario comum nao deve ter acesso ao segundo.
+## Preparação
 
-## Fluxo principal
+- [ ] Backend rodando e `/api/v1/health/ready` retornando `ready=true`
+- [ ] Frontend rodando em `http://localhost:4000`
+- [ ] Ollama em `http://127.0.0.1:11434` (se testar IA)
+- [ ] Smoke API: `powershell -File scripts\pilot_e2e_smoke.ps1` → **10/10 OK**
+- [ ] Usuário admin de tenant criado (ou login real em staging/prod)
+- [ ] Usuário comum criado no mesmo tenant
+- [ ] Se houver dois tenants, usuário comum não deve ter acesso ao segundo
 
-1. Login como admin.
-2. Abrir `/trust` e confirmar que a postura de confianca carrega.
-3. Abrir `/romi` e confirmar que o nome do tenant aparece no header.
-4. Abrir `/executive` e validar KPIs carregando para o tenant ativo.
-5. Fazer upload de arquivo financeiro/ERP em `/integrations` ou `/financials`.
-6. Gerar diagnostico e PDF em `/romi`.
-7. Abrir `/ai`, fazer pergunta executiva e confirmar que a resposta nao executa acao sem confirmacao.
-8. Abrir `/audit` e confirmar eventos recentes.
-9. Fazer logout.
+## Fluxo principal (UI)
 
-## Fluxo negativo de confianca
+Marque após validar no browser:
 
-1. Login como usuario comum.
-2. Confirmar que `/trust` mostra restricao para postura em tempo real.
-3. Confirmar que menu de admin/autoteste nao aparece.
-4. Tentar acessar dados de outro tenant via URL/API e esperar `403`.
-5. Confirmar que chamadas sem token retornam `401`.
+- [ ] **1. Login** como admin
+- [ ] **2. `/trust`** — postura de confiança carrega
+- [ ] **3. `/romi`** — nome do tenant no header
+- [ ] **4. `/executive`** — KPIs + relatório Templates
+- [ ] **5. `/executive` → aba Cenários** — matriz Actual/Budget/Projection/Valuation; Budget com metas reais (ex.: receita ~21.350 mi)
+- [ ] **6. Upload** financeiro em `/financials` (2º upload gera v2)
+- [ ] **7. `/data` (Meus Dados)** — coluna Versão, selo Ativa, botão Ativar em versões antigas
+- [ ] **8. Ativar versão** anterior e confirmar KPIs refletem o lote escolhido
+- [ ] **9. PDF** em `/romi` — download OK
+- [ ] **10. `/ai`** — pergunta executiva; resposta não executa ação sem confirmação; card valuation se aplicável
+- [ ] **11. `/audit`** — eventos recentes visíveis
+- [ ] **12. Logout**
 
-## Criterio de aprovacao
+## Templates Orçamento / Budget
 
-- Nenhum erro 500.
-- Dados de um tenant nao aparecem em outro.
-- PDF baixa corretamente.
-- IA nao executa acao sensivel sem confirmacao.
-- Logs possuem `X-Request-ID` para as chamadas testadas.
+- [ ] **Demonstrações** — links visíveis: template realizado, Orçamento 2025, Budget 2025
+- [ ] Download `template_demonstracoes_orcamento.xlsx` abre sem erro
+- [ ] Coluna **Orçamento** presente no workbook `Templates/Demonstrações Financeiras_Templates.xlsx`
+
+## Fluxo negativo de confiança
+
+- [ ] Login como usuário comum
+- [ ] `/trust` mostra restrição para postura em tempo real
+- [ ] Menu admin/autoteste não aparece
+- [ ] Tentar acessar dados de outro tenant via URL/API → **403**
+- [ ] Chamadas sem token → **401** (com bypass desligado)
+
+## Critério de aprovação
+
+- [ ] Nenhum erro 500 nas rotas testadas
+- [ ] Dados de um tenant não aparecem em outro
+- [ ] PDF baixa corretamente
+- [ ] IA não executa ação sensível sem confirmação
+- [ ] Logs possuem `X-Request-ID` nas chamadas testadas
+- [ ] Versionamento: upload não apaga silenciosamente versão anterior
+- [ ] Comparativos por cenário auditáveis (nota de rodapé na aba Cenários)
 
 ## Quando automatizar
 
-Automatize este checklist com Playwright quando:
+Automatize com Playwright quando:
 
-- houver primeiro piloto com dados reais;
+- houver primeiro piloto com dados reais em produção;
 - o login/tenant mudar de novo;
-- o projeto ganhar deploy continuo;
-- houver cliente exigindo evidencia recorrente.
+- o projeto ganhar deploy contínuo;
+- houver cliente exigindo evidência recorrente.

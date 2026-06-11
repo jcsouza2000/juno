@@ -56,13 +56,26 @@ Try-Step 'financial summary' {
     if (-not $r.available) { throw 'financials unavailable' }
 }
 
+Try-Step 'comparativos cenario' {
+    $r = Invoke-RestMethod "$Base/financials/$CompanyId/comparativos/cenario" -TimeoutSec 60
+    if ($r.cenarios.Count -lt 4) { throw 'cenarios incompletos' }
+    $rec = $r.linhas | Where-Object { $_.indicador_key -eq 'receita_liquida' } | Select-Object -First 1
+    if (-not $rec.valores.ORCAMENTO) { throw 'ORCAMENTO ausente' }
+}
+
+Try-Step 'data versions metadata' {
+    $r = Invoke-RestMethod "$Base/data/$CompanyId/inventory" -TimeoutSec 30
+    $fin = @($r.uploads | Where-Object { $_.source -eq 'financial' })
+    if ($fin.Count -gt 0 -and -not $fin[0].version_label) { throw 'version_label ausente (Fase B)' }
+}
+
 Try-Step 'X-Request-ID header' {
     $resp = Invoke-WebRequest "$Base/api/v1/health/" -UseBasicParsing -TimeoutSec 10
     if (-not $resp.Headers['X-Request-ID']) { throw 'header ausente' }
 }
 
 Write-Host ''
-Write-Host '=== Resumo Fase A smoke ==='
+Write-Host '=== Resumo smoke piloto (Fase A–C) ==='
 $results | Format-Table -AutoSize
 $fail = @($results | Where-Object { $_.Status -eq 'FAIL' }).Count
 if ($fail -gt 0) { exit 1 }
