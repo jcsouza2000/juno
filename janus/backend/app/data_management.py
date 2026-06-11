@@ -24,6 +24,7 @@ from __future__ import annotations
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from .data_versioning import get_active_batch_id, list_versions
 from .models import (
     Customer,
     ErpFinancial,
@@ -121,6 +122,14 @@ def get_company_data_inventory(db: Session, company_id: int) -> dict:
         "groups": groups_out,
         "periods": _available_periods(db, company_id),
         "uploads": _recent_deposits(db, company_id),
+        "active_versions": {
+            "financial_batch_id": get_active_batch_id(db, company_id, "financial"),
+            "erp_batch_id": get_active_batch_id(db, company_id, "erp"),
+        },
+        "versions": {
+            "financial": list_versions(db, company_id, "financial"),
+            "erp": list_versions(db, company_id, "erp"),
+        },
     }
 
 
@@ -158,6 +167,9 @@ def _recent_deposits(db: Session, company_id: int, limit: int = 20) -> list[dict
                 "periods": b.periods,
                 "rows": b.rows_imported,
                 "status": b.status,
+                "version_number": getattr(b, "version_number", 1),
+                "version_label": f"v{getattr(b, 'version_number', 1)}",
+                "is_active": bool(getattr(b, "is_active", True)),
                 "created_at": b.created_at.isoformat() if b.created_at else None,
             }
         )
@@ -178,6 +190,9 @@ def _recent_deposits(db: Session, company_id: int, limit: int = 20) -> list[dict
                 "data_type": b.data_type,
                 "rows": b.rows_imported,
                 "status": b.status,
+                "version_number": getattr(b, "version_number", 1),
+                "version_label": f"v{getattr(b, 'version_number', 1)}",
+                "is_active": bool(getattr(b, "is_active", True)),
                 "created_at": b.created_at.isoformat() if b.created_at else None,
             }
         )

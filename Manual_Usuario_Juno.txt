@@ -140,6 +140,10 @@ Roteiro de demonstracao para apresentacoes comerciais ou executivas.
 Piloto:
 Checklist de implantacao, data request e plano de piloto.
 
+Meus Dados:
+Inventario do que esta depositado no tenant, historico de uploads com
+versionamento (v1, v2, v3...) e exclusao controlada por administrador.
+
 ======================================================================
 5. Aba: Visao Geral
 ======================================================================
@@ -1780,7 +1784,74 @@ Problema: PDF nao baixa.
 10. Revisar politicas LGPD/GDPR antes de producao.
 
 ======================================================================
-18. Encerramento
+18. Aba: Meus Dados e versionamento (Fase B)
+======================================================================
+
+Rota: http://localhost:4000/data
+
+Finalidade:
+
+A aba Meus Dados mostra tudo que o JUNO ja recebeu para a empresa ativa:
+contagens por grupo (financeiro, ERP, KPIs derivados), periodos financeiros,
+historico de depositos e ferramentas de governanca.
+
+Versionamento (Fase B):
+
+- Cada upload financeiro ou importacao ERP gera uma nova versao: v1, v2, v3...
+- Versoes anteriores NAO sao apagadas automaticamente.
+- O dashboard e as demonstracoes consultam apenas a versao ATIVA (financeiro).
+- Para ERP, a versao ativa registra qual lote foi promovido (metadados);
+  os dados operacionais refletem o ultimo import completo.
+
+Passo a passo:
+
+1. Abra Meus Dados no menu lateral.
+2. Confirme a empresa ativa no seletor de tenant.
+3. Revise o total de registros e os grupos financeiro / ERP / derivados.
+4. Na tabela de historico, identifique a coluna Versao e o selo "Ativa".
+5. Para voltar a uma planilha anterior (ex.: v1 apos um v2 incorreto):
+   - Clique em "Ativar" na linha desejada (apenas administrador do tenant).
+   - Aguarde a confirmacao e atualize KPIs / Demonstracoes se necessario.
+6. Para apagar dados de negocio (nao usuarios nem conexoes ERP), use a
+   Zona de exclusao com o token PURGE-{company_id}.
+
+APIs relacionadas:
+
+- GET  /data/{company_id}/inventory
+- GET  /data/{company_id}/versions?source=financial|erp
+- POST /data/{company_id}/versions/{batch_id}/activate?source=financial|erp
+- POST /data/{company_id}/purge
+
+Boas praticas:
+
+- Nomeie arquivos com data e versao (ex.: dre_2026-05_v2.xlsx).
+- Ative a versao correta antes de reunioes executivas ou exportacao de PDF.
+- Use purge apenas apos backup externo; a acao e irreversivel.
+
+======================================================================
+19. Piloto — validacao automatica (Fase A)
+======================================================================
+
+Scripts na raiz C:\Souza\juno\scripts:
+
+- pilot_e2e_smoke.ps1 — smoke HTTP (health, Ollama, KPIs, valuation, snapshot).
+- run_daily_snapshot.bat — job diario de snapshot KPI.
+- schedule_daily_snapshot.ps1 — agenda o job (requer PowerShell como Admin).
+
+Documentacao:
+
+- docs/E2E_VALIDATION_RESULT.md — ultimo resultado do smoke.
+- docs/PILOT_E2E_CHECKLIST.md — checklist manual de UI (login, upload, PDF).
+
+Execucao tipica (backend :8001, frontend :4000):
+
+  cd C:\Souza\juno
+  powershell -ExecutionPolicy Bypass -File scripts\pilot_e2e_smoke.ps1
+
+Antes do smoke, suba o piloto (Smart_Juno.bat) e confirme Ollama em :11434.
+
+======================================================================
+20. Encerramento
 ======================================================================
 
 O uso correto do JUNO segue a sequencia:

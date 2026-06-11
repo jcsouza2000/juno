@@ -21,6 +21,9 @@ interface Deposit {
   data_type?: string | null;
   rows: number;
   status: string;
+  version_number?: number;
+  version_label?: string;
+  is_active?: boolean;
   created_at: string | null;
 }
 interface Inventory {
@@ -54,7 +57,8 @@ export default function DataPage() {
   const { data: session } = useSession();
   const { t } = useI18n();
   const role = session?.user?.role;
-  const isAdmin = role === 'admin' || role === 'platform_admin';
+  const isDevPilot = process.env.NODE_ENV !== 'production' && !role;
+  const isAdmin = role === 'admin' || role === 'platform_admin' || isDevPilot;
 
   const [inventory, setInventory] = useState<Inventory | null>(null);
   const [loading, setLoading] = useState(false);
@@ -66,6 +70,10 @@ export default function DataPage() {
   const [purging, setPurging] = useState(false);
   const [purgeResult, setPurgeResult] = useState<PurgeResult | null>(null);
   const [purgeError, setPurgeError] = useState<string | null>(null);
+
+  const [activatingKey, setActivatingKey] = useState<string | null>(null);
+  const [activateMsg, setActivateMsg] = useState<string | null>(null);
+  const [activateError, setActivateError] = useState<string | null>(null);
 
   const expectedToken = companyId != null ? `PURGE-${companyId}` : '';
 
@@ -94,6 +102,27 @@ export default function DataPage() {
     const id = window.setTimeout(() => { void loadInventory(); }, 0);
     return () => window.clearTimeout(id);
   }, [loadInventory]);
+
+  const handleActivate = async (d: Deposit) => {
+    if (!companyId || d.is_active) return;
+    const key = `${d.source}-${d.id}`;
+    if (!window.confirm(
+      t('data.versions.activate') + ` ${d.version_label ?? ''}?`,
+    )) return;
+
+    setActivatingKey(key);
+    setActivateMsg(null);
+    setActivateError(null);
+    try {
+      await api.post(`/data/${companyId}/versions/${d.id}/activate?source=${d.source}`);
+      setActivateMsg(t('data.versions.activated', { version: d.version_label ?? '' }));
+      await loadInventory();
+    } catch (err: unknown) {
+      setActivateError(getApiErrorMessage(err));
+    } finally {
+      setActivatingKey(null);
+    }
+  };
 
   const handlePurge = async () => {
     if (!companyId || confirmation !== expectedToken) return;
@@ -204,12 +233,23 @@ export default function DataPage() {
             </div>
           )}
 
-          {/* Deposits history */}
+          {/* Deposits history + versioning */}
           <div className="bg-white rounded-xl border border-gray-100 p-5">
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-1">
               <FileStack size={16} className="text-[#C9A959]" />
               <h2 className="text-sm font-bold text-[#0A2342] uppercase tracking-wider">{t('data.depositHistory')}</h2>
             </div>
+            <p className="text-xs text-gray-500 mb-3">{t('data.versions.subtitle')}</p>
+            {activateMsg && (
+              <div className="mb-3 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs text-green-800 flex items-center gap-2">
+                <CheckCircle size={14} /> {activateMsg}
+              </div>
+            )}
+            {activateError && (
+              <div className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700 flex items-center gap-2">
+                <AlertCircle size={14} /> {activateError}
+              </div>
+            )}
             {loading ? (
               <div className="flex justify-center py-6"><Loader2 className="animate-spin text-gray-400" size={20} /></div>
             ) : (inventory?.uploads.length ?? 0) === 0 ? (
@@ -220,10 +260,12 @@ export default function DataPage() {
                   <thead>
                     <tr className="text-gray-400 uppercase tracking-wider border-b border-gray-100">
                       <th className="text-left py-2 pr-4">{t('data.origin')}</th>
+                      <th className="text-left py-2 pr-4">{t('data.versions.column')}</th>
                       <th className="text-left py-2 pr-4">{t('data.fileOrType')}</th>
                       <th className="text-left py-2 pr-4">{t('data.periodsColumn')}</th>
                       <th className="text-right py-2 pr-4">{t('common.rows')}</th>
-                      <th className="text-right py-2">{t('common.date')}</th>
+                      <th className="text-right py-2 pr-4">{t('common.date')}</th>
+                      <th className="text-right py-2">{t('common.actions')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -236,19 +278,47 @@ export default function DataPage() {
                             {t(`data.source.${d.source}`)}
                           </span>
                         </td>
+                        <td className="py-2 pr-4">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            d.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
+                          }`}>
+                            {d.version_label ?? 'v1'}
+                            {d.is_active ? ` · ${t('data.versions.active')}` : ''}
+                          </span>
+                        </td>
                         <td className="py-2 pr-4 font-medium max-w-[200px] truncate">
                           {d.file_name || d.data_type || '—'}
                         </td>
                         <td className="py-2 pr-4 text-gray-500 max-w-[160px] truncate">{d.periods || '—'}</td>
                         <td className="py-2 pr-4 text-right text-green-700 font-semibold">{d.rows.toLocaleString('pt-BR')}</td>
-                        <td className="py-2 text-right text-gray-400">
+                        <td className="py-2 pr-4 text-right text-gray-400">
                           {d.created_at ? new Date(d.created_at).toLocaleDateString('pt-BR') : '—'}
+                        </td>
+                        <td className="py-2 text-right">
+                          {isAdmin && !d.is_active ? (
+                            <button
+                              type="button"
+                              onClick={() => void handleActivate(d)}
+                              disabled={activatingKey === `${d.source}-${d.id}`}
+                              className="text-[10px] font-bold uppercase tracking-wider text-[#0A2342] border border-gray-200 rounded px-2 py-1 hover:bg-gray-50 disabled:opacity-40"
+                            >
+                              {activatingKey === `${d.source}-${d.id}`
+                                ? t('data.versions.activating')
+                                : t('data.versions.activate')}
+                            </button>
+                          ) : (
+                            <span className="text-[10px] text-gray-300">—</span>
+                          )}
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+            )}
+            <p className="text-[11px] text-gray-400 mt-3">{t('data.versions.erpNote')}</p>
+            {!isAdmin && (
+              <p className="text-[11px] text-gray-400 mt-1">{t('data.versions.adminOnly')}</p>
             )}
           </div>
 

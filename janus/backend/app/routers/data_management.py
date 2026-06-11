@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy.orm import Session
 
@@ -22,6 +22,8 @@ from app.data_management import (
     get_company_data_inventory,
     purge_company_data,
 )
+from app.data_versioning import VersioningError, activate_version, list_versions
+from app.services.tenant_members import is_tenant_admin
 from app.database import get_db
 from app.models import User
 
@@ -97,3 +99,49 @@ def purge_data(
         "total_rows_deleted": total,
         "deleted": deleted,
     }
+
+
+@router.get("/{company_id}/versions", summary="Historico de versoes de deposito")
+def data_versions(
+    company_id: int,
+    source: Literal["financial", "erp"] | None = Query(default=None),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
+    if not check_company_access(current_user, company_id):
+        raise HTTPException(status_code=403, detail="Acesso negado")
+    if source:
+        return {"company_id": company_id, "source": source, "versions": list_versions(db, company_id, source)}
+    return {
+        "company_id": company_id,
+        "financial": list_versions(db, company_id, "financial"),
+        "erp": list_versions(db, company_id, "erp"),
+    }
+
+
+@router.post(
+    "/{company_id}/versions/{batch_id}/activate",
+    summary="Ativa uma versao de deposito (financeiro ou ERP)",
+)
+def activate_data_version(
+    company_id: int,
+    batch_id: int,
+    source: Literal["financial", "erp"] = Query(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
+    if not is_tenant_admin(db, current_user, company_id):
+        raise HTTPException(status_code=403, detail="Acesso restrito a administradores do tenant")
+    try:
+        result = activate_version(db, company_id, source, batch_id)
+    except VersioningError as exc:
+        raise HTTPException(status_code=exc.status_code, detail=exc.message) from exc
+
+    logger.info(
+        "Versao ativada: company_id=%s source=%s batch_id=%s user_id=%s",
+        company_id,
+        source,
+        batch_id,
+        current_user.id,
+    )
+    return result

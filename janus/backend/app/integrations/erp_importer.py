@@ -321,17 +321,18 @@ def _get_or_create_customer(db: Session, company_id: int, name: str) -> Customer
 def _save_batch(
     db: Session, company_id, data_type, file_name, received, imported, rejected, status, error_msg
 ):
-    db.add(
-        ErpImportBatch(
-            company_id=company_id,
-            data_type=data_type,
-            file_name=file_name,
-            rows_received=received,
-            rows_imported=imported,
-            rows_rejected=rejected,
-            status=status,
-            error_message=error_msg,
-        )
+    from app.data_versioning import register_erp_import_batch
+
+    register_erp_import_batch(
+        db,
+        company_id,
+        data_type=data_type,
+        file_name=file_name,
+        rows_received=received,
+        rows_imported=imported,
+        rows_rejected=rejected,
+        status=status,
+        error_message=error_msg,
     )
 
 

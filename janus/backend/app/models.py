@@ -237,6 +237,7 @@ class FinancialStatement(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     company_id = Column(Integer, ForeignKey("companies.id"), nullable=False, index=True)
+    upload_batch_id = Column(Integer, ForeignKey("financial_upload_batches.id"), nullable=True, index=True)
     statement_type = Column(String(50), nullable=False)
     period = Column(String(50))
     line_item = Column(String(255), nullable=False)
@@ -253,6 +254,8 @@ class FinancialUploadBatch(Base):
     periods = Column(Text)
     rows_imported = Column(Integer, default=0)
     status = Column(String(50), default="success")
+    version_number = Column(Integer, default=1, nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
     created_at = Column(DateTime, default=utcnow_naive)
 
 
@@ -290,6 +293,8 @@ class ERPImportBatch(Base):
     rows_rejected = Column(Integer, default=0)
     status = Column(String(50), default="processing")
     error_message = Column(Text)
+    version_number = Column(Integer, default=1, nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
     created_at = Column(DateTime, default=utcnow_naive)
 
 

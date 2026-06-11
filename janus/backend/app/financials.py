@@ -19,6 +19,7 @@ import pandas as pd
 from sqlalchemy.orm import Session
 
 from . import templates_financeiro
+from .data_versioning import get_active_financial_batch_id, register_financial_upload_batch
 from .models import FinancialStatement, FinancialUploadBatch
 
 # ── Normalização ──────────────────────────────────────────────────────────────
@@ -358,20 +359,20 @@ def save_financial_statements(
     if not rows:
         return {"status": "error", "rows_imported": 0, "message": "Nenhum dado válido encontrado."}
 
-    # Remove dados anteriores do mesmo company/período para evitar duplicatas
     periods = list({r["period"] for r in rows})
-    for stmt_type in {r["statement_type"] for r in rows}:
-        (
-            db.query(FinancialStatement)
-            .filter_by(company_id=company_id, statement_type=stmt_type)
-            .filter(FinancialStatement.period.in_(periods))
-            .delete(synchronize_session=False)
-        )
+    batch = register_financial_upload_batch(
+        db,
+        company_id,
+        file_name=file_name,
+        periods=",".join(sorted(set(periods))),
+        rows_imported=len(rows),
+    )
 
     for r in rows:
         db.add(
             FinancialStatement(
                 company_id=company_id,
+                upload_batch_id=batch.id,
                 statement_type=r["statement_type"],
                 period=r["period"],
                 line_item=r["line_item"],
@@ -379,15 +380,6 @@ def save_financial_statements(
             )
         )
 
-    db.add(
-        FinancialUploadBatch(
-            company_id=company_id,
-            file_name=file_name,
-            periods=",".join(sorted(set(periods))),
-            rows_imported=len(rows),
-            status="success",
-        )
-    )
     db.commit()
 
     return {
@@ -395,6 +387,10 @@ def save_financial_statements(
         "rows_imported": len(rows),
         "periods": sorted(set(periods)),
         "statement_types": sorted({r["statement_type"] for r in rows}),
+        "batch_id": batch.id,
+        "version_number": batch.version_number,
+        "version_label": f"v{batch.version_number}",
+        "is_active": True,
     }
 
 
@@ -402,17 +398,16 @@ def save_financial_statements(
 
 
 def get_statements(company_id: int, db: Session) -> dict:
-    """Retorna todas as demonstrações agrupadas por tipo e período."""
-    records = (
-        db.query(FinancialStatement)
-        .filter_by(company_id=company_id)
-        .order_by(
-            FinancialStatement.statement_type,
-            FinancialStatement.period,
-            FinancialStatement.line_item,
-        )
-        .all()
-    )
+    """Retorna demonstrações da versão financeira ativa (Fase B)."""
+    active_batch_id = get_active_financial_batch_id(db, company_id)
+    query = db.query(FinancialStatement).filter_by(company_id=company_id)
+    if active_batch_id is not None:
+        query = query.filter(FinancialStatement.upload_batch_id == active_batch_id)
+    records = query.order_by(
+        FinancialStatement.statement_type,
+        FinancialStatement.period,
+        FinancialStatement.line_item,
+    ).all()
 
     result: dict = {}
     for r in records:

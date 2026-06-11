@@ -49,6 +49,7 @@ const en: Dictionary = {
     empty: 'empty',
     date: 'Date',
     rows: 'Rows',
+    actions: 'Actions',
   },
   data: {
     title: 'My Data',
@@ -87,6 +88,20 @@ const en: Dictionary = {
     deletedCount: '{count} records deleted (scope: {scope})',
     confirmDialog: 'Confirm "{scope}" deletion for tenant {company}? This action is irreversible.',
     adminOnly: 'Data deletion is restricted to tenant administrators.',
+    versions: {
+      title: 'Deposit versioning',
+      subtitle:
+        'Each upload creates a version (v1, v2, v3…). The dashboard uses only the active version.',
+      column: 'Version',
+      active: 'Active',
+      inactive: 'Inactive',
+      activate: 'Activate',
+      activating: 'Activating…',
+      activated: 'Version {version} activated.',
+      erpNote:
+        'ERP: switching records which batch was promoted; operational data reflects the latest full import.',
+      adminOnly: 'Version activation is restricted to tenant administrators.',
+    },
   },
   users: {
     title: 'Tenant Users',

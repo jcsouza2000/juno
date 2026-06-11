@@ -300,7 +300,39 @@ A stack Docker real ja foi validada. Antes de publicacao externa, resta revisar
 os segredos definitivos do .env.prod e testar login/fluxo /ai no ambiente alvo.
 
 ======================================================================
-10. Checklist final antes de autorizacao para proxima etapa
+10. Piloto — Fase A (stack confiavel) e Fase B (versionamento)
+======================================================================
+
+Fase A — concluida no piloto local:
+
+- Stack: backend :8001, frontend :4000, Ollama :11434.
+- Migration daily_snapshots_table aplicada.
+- Smoke: scripts/pilot_e2e_smoke.ps1 (8 checks HTTP).
+- Job diario: scripts/daily_snapshot_job.py + run_daily_snapshot.bat.
+- Evidencias: docs/E2E_VALIDATION_RESULT.md, docs/PILOT_E2E_CHECKLIST.md.
+
+Fase B — versionamento de depositos:
+
+- Modulo: janus/backend/app/data_versioning.py
+- Migration: alembic/versions/data_versioning_fase_b.py
+- Colunas: version_number, is_active em financial_upload_batches e
+  erp_import_batches; upload_batch_id em financial_statements.
+- Upload financeiro nao sobrescreve silenciosamente: cada arquivo vira vN.
+- GET statements / KPIs usam apenas o batch financeiro ativo.
+- UI: /data — coluna Versao + botao Ativar (admin do tenant).
+- APIs: GET /data/{id}/versions, POST /data/{id}/versions/{batch}/activate.
+
+Comandos operacionais:
+
+  cd C:\Souza\juno\janus\backend
+  alembic upgrade head
+  pytest app/tests/test_data_versioning.py -q
+
+Proxima fase sugerida (C): comparativos por cenario (REALIZADO, ORCAMENTO,
+PROJECAO, VALUATION) no relatorio executivo.
+
+======================================================================
+11. Checklist final antes de autorizacao para proxima etapa
 ======================================================================
 
 [x] Ligar Docker Desktop.

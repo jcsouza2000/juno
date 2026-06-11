@@ -48,6 +48,7 @@ const pt = {
     empty: 'vazio',
     date: 'Data',
     rows: 'Linhas',
+    actions: 'Ações',
   },
   data: {
     title: 'Meus Dados',
@@ -87,6 +88,20 @@ const pt = {
     confirmDialog:
       'Confirma a exclusão "{scope}" do tenant {company}? Esta ação é irreversível.',
     adminOnly: 'A exclusão de dados é restrita a administradores do tenant.',
+    versions: {
+      title: 'Versionamento de depósitos',
+      subtitle:
+        'Cada upload gera uma versão (v1, v2, v3…). O dashboard usa apenas a versão ativa.',
+      column: 'Versão',
+      active: 'Ativa',
+      inactive: 'Inativa',
+      activate: 'Ativar',
+      activating: 'Ativando…',
+      activated: 'Versão {version} ativada.',
+      erpNote:
+        'ERP: a troca registra qual lote foi promovido; os dados operacionais refletem o último import completo.',
+      adminOnly: 'Ativação de versão restrita a administradores do tenant.',
+    },
   },
   users: {
     title: 'Usuários do Tenant',

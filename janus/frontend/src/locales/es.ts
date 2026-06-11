@@ -49,6 +49,7 @@ const es: Dictionary = {
     empty: 'vacío',
     date: 'Fecha',
     rows: 'Filas',
+    actions: 'Acciones',
   },
   data: {
     title: 'Mis Datos',
@@ -88,6 +89,20 @@ const es: Dictionary = {
     confirmDialog:
       '¿Confirma la eliminación "{scope}" del tenant {company}? Esta acción es irreversible.',
     adminOnly: 'La eliminación de datos está restringida a administradores del tenant.',
+    versions: {
+      title: 'Versionado de depósitos',
+      subtitle:
+        'Cada carga genera una versión (v1, v2, v3…). El panel usa solo la versión activa.',
+      column: 'Versión',
+      active: 'Activa',
+      inactive: 'Inactiva',
+      activate: 'Activar',
+      activating: 'Activando…',
+      activated: 'Versión {version} activada.',
+      erpNote:
+        'ERP: el cambio registra qué lote fue promovido; los datos operacionales reflejan la última importación completa.',
+      adminOnly: 'La activación de versión está restringida a administradores del tenant.',
+    },
   },
   users: {
     title: 'Usuarios del Tenant',
