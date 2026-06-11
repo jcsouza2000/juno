@@ -1851,7 +1851,39 @@ Execucao tipica (backend :8001, frontend :4000):
 Antes do smoke, suba o piloto (Smart_Juno.bat) e confirme Ollama em :11434.
 
 ======================================================================
-20. Encerramento
+20. Comparativos por Cenario — Relatorio Executivo (Fase C)
+======================================================================
+
+Rota: http://localhost:4000/executive
+
+Finalidade:
+
+Comparar quatro leituras financeiras lado a lado, de forma auditavel:
+
+- REALIZADO — demonstracoes ativas (upload ou template).
+- ORCAMENTO — coluna Orçamento/Budget do template, ou meta sintetica documentada.
+- PROJECAO — ano +1 do motor de valuation (premissas padrao do piloto).
+- VALUATION — ultimo ano projetado + Enterprise Value (EV).
+
+Onde ver:
+
+1. Abra KPIs Executivos (/executive).
+2. No bloco "Resumo das Demonstracoes Financeiras", clique na aba **Cenarios**.
+3. A tabela mostra receita, EBITDA, lucro liquido e EV por cenario.
+4. A coluna "Var. vs Realizado" resume o desvio percentual.
+
+API dedicada:
+
+  GET /financials/{company_id}/comparativos/cenario
+
+Boas praticas:
+
+- Carregue Demonstracoes antes de interpretar REALIZADO.
+- Para ORCAMENTO real, inclua coluna "Orçamento" ou "Budget" no template Excel.
+- Ajuste premissas de valuation em /executive (bloco Valuation abaixo).
+
+======================================================================
+21. Encerramento
 ======================================================================
 
 O uso correto do JUNO segue a sequencia:

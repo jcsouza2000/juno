@@ -19,6 +19,7 @@ from app.financials import (
 )
 from app.models import User
 from app.valuation_scenario import run_valuation_scenario
+from app.comparativos_cenario import build_comparativos_cenario
 
 router = APIRouter(prefix="/financials", tags=["Financials"])
 
@@ -111,5 +112,19 @@ def valuation_scenario(
             crescimento_custos_fixos=crescimento_custos_fixos_pct / 100.0,
             taxa_desconto=taxa_desconto_pct / 100.0,
         )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.get("/{company_id}/comparativos/cenario")
+def comparativos_cenario(
+    company_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
+    if not check_company_access(current_user, company_id):
+        raise HTTPException(status_code=403, detail="Acesso negado")
+    try:
+        return build_comparativos_cenario(company_id, db)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

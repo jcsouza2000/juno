@@ -331,6 +331,21 @@ Comandos operacionais:
 Proxima fase sugerida (C): comparativos por cenario (REALIZADO, ORCAMENTO,
 PROJECAO, VALUATION) no relatorio executivo.
 
+Fase C — concluida no piloto local:
+
+- Modulo: janus/backend/app/comparativos_cenario.py
+- Endpoint: GET /financials/{id}/comparativos/cenario
+- Aba "Cenarios" no relatorio executivo (TemplateExecutiveReport)
+- Matriz: REALIZADO | ORCAMENTO | PROJECAO | VALUATION + variacao vs realizado
+- ORCAMENTO: coluna Orçamento/Budget do template ou meta sintetica (97%)
+- PROJECAO/VALUATION: motor run_valuation_scenario (ano +1 e EV)
+
+Comandos:
+
+  pytest app/tests/test_comparativos_cenario.py -q
+
+Proximo passo sugerido: checklist E2E manual UI ou hardening producao.
+
 ======================================================================
 11. Checklist final antes de autorizacao para proxima etapa
 ======================================================================

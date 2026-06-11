@@ -153,13 +153,14 @@ const es: Dictionary = {
     source: 'Fuente',
     colAccount: 'Cuenta',
     headerPeriods: 'ER/FC {competencia} · Balance {patrimonial}',
-    tab: { comparativos: 'Comparativos' },
+    tab: { comparativos: 'Comparativos', comparativosCenario: 'Escenarios' },
     section: {
       dre: 'Estado de Resultados (ER)',
       balanco: 'Balance General',
       dfc: 'Estado de Flujo de Caja',
       kpis: 'Indicadores Clave de Desempeño (KPIs)',
       comparativos: 'Comparativos Históricos',
+      comparativos_cenario: 'Comparativos por Escenario',
     },
     note: {
       dre: 'Valores en {unidade} — trimestres y año fiscal según Templates.',
@@ -167,6 +168,7 @@ const es: Dictionary = {
       dfc: 'Valores en {unidade} — competencia {competencia} (ajustes ER/EBITDA).',
       kpis: 'Porcentajes, múltiplos y score UNO según Templates/KPIs_Templates.md.',
       comparativos: 'Variaciones porcentuales entre trimestres (QoQ) y último trimestre vs año (YoY).',
+      comparativos_cenario: 'Matriz REALIZADO vs PRESUPUESTO, PROYECCIÓN y VALUATION (auditable).',
     },
     account: {
       receita_bruta: 'Ingresos Brutos',
@@ -192,6 +194,7 @@ const es: Dictionary = {
       racio_admin_pct: 'Peso Administrativo (G&A / Ing. Bruto)',
       giro_estoque: 'Rotación de Inventario',
       score_industrial: 'Score Industrial UNO',
+      enterprise_value: 'Enterprise Value (EV)',
     },
     comparativos: {
       indicator: 'Indicador',
@@ -199,6 +202,15 @@ const es: Dictionary = {
       from: 'De',
       to: 'A',
       change: 'Variación %',
+    },
+    comparativosCenario: {
+      vsRealizado: 'Var. vs Realizado',
+    },
+    cenario: {
+      realizado: 'Realizado',
+      orcamento: 'Presupuesto',
+      projecao: 'Proyección',
+      valuation: 'Valuation',
     },
   },
   financials: {

@@ -22,12 +22,20 @@ export interface ComparativoLine {
   tipo: 'QoQ' | 'YoY' | string;
 }
 
+export interface CenarioLine {
+  indicador_key: string;
+  valores: Record<string, number | null>;
+  variacao_vs_realizado_pct: Record<string, number | null>;
+}
+
 export interface TemplateReportSection {
   id: string;
   titulo: string;
   periodos: string[];
-  linhas: TemplateReportLine[] | ComparativoLine[];
+  linhas: TemplateReportLine[] | ComparativoLine[] | CenarioLine[];
   nota?: string;
+  cenarios?: string[];
+  periodo_referencia?: string;
 }
 
 export interface TemplateReportPayload {
@@ -71,6 +79,10 @@ function isComparativoSection(section: TemplateReportSection): section is Templa
   return section.id === 'comparativos';
 }
 
+function isCenarioSection(section: TemplateReportSection): section is TemplateReportSection & { linhas: CenarioLine[]; cenarios: string[] } {
+  return section.id === 'comparativos_cenario';
+}
+
 export default function TemplateExecutiveReport({ report, companyName }: Props) {
   const { t } = useI18n();
   const [active, setActive] = useState(report.secoes[0]?.id ?? 'dre');
@@ -102,7 +114,14 @@ export default function TemplateExecutiveReport({ report, companyName }: Props) 
 
   const tabLabel = (id: string) => {
     if (id === 'comparativos') return t('templateReport.tab.comparativos');
+    if (id === 'comparativos_cenario') return t('templateReport.tab.comparativosCenario');
     return t(`dashboard.tab.${id}`);
+  };
+
+  const cenarioLabel = (c: string) => {
+    const key = `templateReport.cenario.${c.toLowerCase()}`;
+    const translated = t(key);
+    return translated !== key ? translated : c;
   };
 
   const sectionNote = (sec: TemplateReportSection) => {
@@ -127,6 +146,8 @@ export default function TemplateExecutiveReport({ report, companyName }: Props) 
 
   const isCurrency = section.id === 'dre' || section.id === 'balanco' || section.id === 'dfc';
   const isComparativos = isComparativoSection(section);
+  const isCenarios = isCenarioSection(section);
+  const cenarios = isCenarios ? section.cenarios : [];
 
   return (
     <section className="overflow-hidden rounded-3xl border border-[#C9A959]/30 bg-white shadow-xl">
@@ -209,6 +230,52 @@ export default function TemplateExecutiveReport({ report, companyName }: Props) 
                     </td>
                   </tr>
                 ))}
+              </tbody>
+            </table>
+          </div>
+        ) : isCenarios ? (
+          <div className="overflow-x-auto rounded-xl border border-gray-100">
+            <table className="min-w-full text-sm">
+              <thead>
+                <tr style={{ backgroundColor: NAVY }} className="text-left text-white">
+                  <th className="px-4 py-3 font-bold">{t('templateReport.comparativos.indicator')}</th>
+                  {cenarios.map(c => (
+                    <th key={c} className="px-4 py-3 text-right font-bold whitespace-nowrap">
+                      {cenarioLabel(c)}
+                    </th>
+                  ))}
+                  <th className="px-4 py-3 text-right font-bold">{t('templateReport.comparativosCenario.vsRealizado')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(section.linhas as CenarioLine[]).map((row, rowIdx) => {
+                  const isEv = row.indicador_key === 'enterprise_value';
+                  return (
+                    <tr
+                      key={row.indicador_key}
+                      className={`border-t border-gray-100 ${
+                        rowIdx % 2 === 0 ? 'bg-white text-gray-700' : 'bg-[#F8FAFC] text-gray-700'
+                      }`}
+                    >
+                      <td className="px-4 py-2.5 font-medium">{labelMetric(row.indicador_key)}</td>
+                      {cenarios.map(c => (
+                        <td key={c} className="px-4 py-2.5 text-right tabular-nums whitespace-nowrap">
+                          {fmtCell(row.valores[c], isEv ? undefined : undefined, !isEv)}
+                        </td>
+                      ))}
+                      <td className="px-4 py-2.5 text-right tabular-nums text-xs text-gray-500">
+                        {(['ORCAMENTO', 'PROJECAO', 'VALUATION'] as const)
+                          .map(c => {
+                            const v = row.variacao_vs_realizado_pct[c];
+                            if (v == null) return null;
+                            return `${cenarioLabel(c)}: ${v >= 0 ? '+' : ''}${v.toFixed(1)}%`;
+                          })
+                          .filter(Boolean)
+                          .join(' · ') || '—'}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

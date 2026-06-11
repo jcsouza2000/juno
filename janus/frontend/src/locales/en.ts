@@ -152,13 +152,14 @@ const en: Dictionary = {
     source: 'Source',
     colAccount: 'Account',
     headerPeriods: 'P&L/CF {competencia} · Balance {patrimonial}',
-    tab: { comparativos: 'Comparatives' },
+    tab: { comparativos: 'Comparatives', comparativosCenario: 'Scenarios' },
     section: {
       dre: 'Income Statement (P&L)',
       balanco: 'Balance Sheet',
       dfc: 'Cash Flow Statement',
       kpis: 'Key Performance Indicators (KPIs)',
       comparativos: 'Historical Comparatives',
+      comparativos_cenario: 'Scenario Comparatives',
     },
     note: {
       dre: 'Values in {unidade} — quarters and fiscal year per Templates.',
@@ -166,6 +167,7 @@ const en: Dictionary = {
       dfc: 'Values in {unidade} — period {competencia} (P&L/EBITDA adjustments).',
       kpis: 'Percentages, ratios and UNO score per Templates/KPIs_Templates.md.',
       comparativos: 'Percentage changes between quarters (QoQ) and last quarter vs year (YoY).',
+      comparativos_cenario: 'REALIZED vs BUDGET, PROJECTION and VALUATION matrix (auditable).',
     },
     account: {
       receita_bruta: 'Gross Revenue',
@@ -191,6 +193,7 @@ const en: Dictionary = {
       racio_admin_pct: 'Administrative Weight (G&A / Gross Rev.)',
       giro_estoque: 'Inventory Turnover',
       score_industrial: 'UNO Industrial Score',
+      enterprise_value: 'Enterprise Value (EV)',
     },
     comparativos: {
       indicator: 'Indicator',
@@ -198,6 +201,15 @@ const en: Dictionary = {
       from: 'From',
       to: 'To',
       change: 'Change %',
+    },
+    comparativosCenario: {
+      vsRealizado: 'Var. vs Actual',
+    },
+    cenario: {
+      realizado: 'Actual',
+      orcamento: 'Budget',
+      projecao: 'Projection',
+      valuation: 'Valuation',
     },
   },
   financials: {

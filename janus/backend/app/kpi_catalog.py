@@ -20,6 +20,7 @@ from sqlalchemy import case, func
 from sqlalchemy.orm import Session
 
 from app import data_quality, templates_financeiro
+from app.comparativos_cenario import build_comparativos_cenario
 from app.financials import get_financial_summary, get_statements
 from app.models import (
     Customer,
@@ -721,11 +722,16 @@ def _apply_unified_overlay(payload: dict[str, Any], ctx: dict[str, Any]) -> None
         }
 
 
-def _inject_template_relatorio(payload: dict[str, Any]) -> None:
+def _inject_template_relatorio(payload: dict[str, Any], db: Session, company_id: int) -> None:
     if not templates_financeiro.use_templates_as_canonical():
         return
     relatorio = templates_financeiro.build_demonstracoes_relatorio()
     if relatorio:
+        try:
+            cenario = build_comparativos_cenario(company_id, db)
+            relatorio["secoes"].append(cenario)
+        except ValueError:
+            pass
         payload["relatorio_templates"] = relatorio
 
 
@@ -740,7 +746,7 @@ def build_unified_dashboard(db: Session, company_id: int) -> dict[str, Any]:
         payload["meta"]["generated_at"] = datetime.utcnow().isoformat()
         _apply_unified_overlay(payload, ctx)
         payload["source_status"] = ctx.get("source_status", [])
-        _inject_template_relatorio(payload)
+        _inject_template_relatorio(payload, db, company_id)
         return payload
 
     template_payload = templates_financeiro.build_unified_payload()
@@ -752,7 +758,7 @@ def build_unified_dashboard(db: Session, company_id: int) -> dict[str, Any]:
         _apply_unified_overlay(payload, ctx)
         payload["pnl_table"] = None
         payload["source_status"] = ctx.get("source_status", [])
-        _inject_template_relatorio(payload)
+        _inject_template_relatorio(payload, db, company_id)
         return payload
 
     ctx = _build_context(db, company_id)

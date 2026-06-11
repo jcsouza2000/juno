@@ -153,13 +153,14 @@ const pt = {
     source: 'Fonte',
     colAccount: 'Conta',
     headerPeriods: 'DRE/DFC {competencia} · Balanço {patrimonial}',
-    tab: { comparativos: 'Comparativos' },
+    tab: { comparativos: 'Comparativos', comparativosCenario: 'Cenários' },
     section: {
       dre: 'Demonstração do Resultado do Exercício (DRE)',
       balanco: 'Balanço Patrimonial',
       dfc: 'Demonstração de Fluxo de Caixa (DFC)',
       kpis: 'Indicadores-Chave de Performance (KPIs)',
       comparativos: 'Comparativos Históricos',
+      comparativos_cenario: 'Comparativos por Cenário',
     },
     note: {
       dre: 'Valores em {unidade} — trimestres e ano fiscal conforme Templates.',
@@ -167,6 +168,7 @@ const pt = {
       dfc: 'Valores em {unidade} — competência {competencia} (ajustes DRE/EBITDA).',
       kpis: 'Percentuais, múltiplos e score UNO conforme Templates/KPIs_Templates.md.',
       comparativos: 'Variações percentuais entre trimestres (QoQ) e último trimestre vs ano (YoY).',
+      comparativos_cenario: 'Matriz REALIZADO vs ORÇAMENTO, PROJEÇÃO e VALUATION (auditável).',
     },
     account: {
       receita_bruta: 'Receita Bruta',
@@ -192,6 +194,7 @@ const pt = {
       racio_admin_pct: 'Peso Estrutura Administrativa (G&A / Rec. Bruta)',
       giro_estoque: 'Giro de Estoque Financeiro',
       score_industrial: 'Score Industrial UNO',
+      enterprise_value: 'Enterprise Value (EV)',
     },
     comparativos: {
       indicator: 'Indicador',
@@ -199,6 +202,15 @@ const pt = {
       from: 'De',
       to: 'Para',
       change: 'Variação %',
+    },
+    comparativosCenario: {
+      vsRealizado: 'Var. vs Realizado',
+    },
+    cenario: {
+      realizado: 'Realizado',
+      orcamento: 'Orçamento',
+      projecao: 'Projeção',
+      valuation: 'Valuation',
     },
   },
   financials: {
