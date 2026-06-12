@@ -1,8 +1,9 @@
 # Resultado da Validação E2E — JUNO Piloto
 
-**Última atualização:** 2026-06-11 17:28 -04:00  
-**Commit validado:** `9d59b54` — `feat(piloto): templates orcamento/budget, checklist E2E e hardening producao`  
-**Ambiente:** piloto local — SQLite `smart_juno.db`, empresa dev **ID 4** (Agora SA)
+**Última atualização:** 2026-06-12 10:31 -04:00  
+**Commit validado:** `6711391` + hardening Docker prod local  
+**Ambiente dev:** SQLite `smart_juno.db`, empresa **ID 4** (Agora SA) — `:8001` / `:4000`  
+**Ambiente prod local:** PostgreSQL Docker — `:8002` / `:4002`, admin `admin@juno.local`
 
 ## Stack em execução
 
@@ -11,9 +12,18 @@
 | Backend | http://127.0.0.1:8001 | OK (`ready=true`) |
 | Frontend | http://localhost:4000 | OK (Next.js 16.2.6) |
 | Ollama | http://127.0.0.1:11434 | OK (`qwen3:8b`) |
-| Alembic | `data_versioning_fase_b` | OK (head) |
+| Alembic | `companies_created_at` | OK (head) |
 
-**Subir stack:** `Smart_Juno.bat clean` (recomendado após mudanças) ou backend `:8001` + frontend `:4000`.
+**Subir piloto dev:** `Smart_Juno.bat clean` → backend `:8001` + frontend `:4000`.
+
+**Subir prod local (Docker):**
+
+```powershell
+python scripts/generate_env_prod.py
+powershell -File scripts/run_prod_docker_local.ps1
+```
+
+URLs: backend `http://localhost:8002`, frontend `http://localhost:4002`, admin `admin@juno.local` / `Admin123!`
 
 ---
 
@@ -65,6 +75,39 @@ powershell -NoProfile -File C:\Souza\juno\scripts\pilot_e2e_smoke.ps1
 
 ---
 
+## Checklist API (complemento browser) — 2026-06-12
+
+Script: `scripts/pilot_checklist_api.ps1`
+
+```powershell
+powershell -NoProfile -File C:\Souza\juno\scripts\pilot_checklist_api.ps1
+```
+
+**Resultado:** **10/10 OK** — health, auth/me, PDF, audit, comparativos Budget, version_label, templates, X-Request-ID.
+
+---
+
+## Smoke Docker prod (auth real) — 2026-06-12
+
+Script: `scripts/pilot_prod_smoke.ps1`
+
+```powershell
+powershell -NoProfile -File C:\Souza\juno\scripts\pilot_prod_smoke.ps1
+```
+
+| Passo | Status |
+|-------|--------|
+| health/ready | OK |
+| auth/me sem token → 401 | OK |
+| auth/login admin | OK |
+| auth/me com token | OK |
+| data inventory autenticado | OK |
+| X-Request-ID | OK |
+
+**Resultado:** **6/6 OK** — PostgreSQL, `JUNO_DEV_AUTH_BYPASS=false`, login `admin@juno.local`.
+
+---
+
 ## Fases entregues
 
 | Fase | Entrega | Commit |
@@ -108,14 +151,16 @@ Arquivo: `docs/PILOT_E2E_CHECKLIST.md`
 
 | Área | Status | Notas |
 |------|--------|-------|
-| Smoke API 10/10 | OK | 2026-06-11 17:27 — 10/10 automatizado |
+| Smoke API 10/10 | OK | 2026-06-12 — piloto dev |
+| Checklist API 10/10 | OK | PDF, audit, templates, cenários |
+| Docker prod smoke 6/6 | OK | auth real, PostgreSQL `:8002` |
 | `/executive` aba Cenários | OK UI | Budget 21.350 mi validado |
 | `/data` versionamento | OK UI | v1–v4, Ativar |
 | Templates Orçamento/Budget | OK | Links em `/financials` |
-| Login admin real | Pendente | Dev bypass ativo em local |
-| PDF `/romi` | Pendente UI | |
-| `/audit` eventos | Pendente UI | |
-| Fluxo negativo 401/403 | Parcial | pytest + staging prod |
+| Login admin real | OK prod Docker | `admin@juno.local`; dev ainda usa bypass |
+| PDF `/romi` | OK API | download `/reports/pdf/4` validado |
+| `/audit` eventos | OK API | `/audit/logs` validado |
+| Fluxo negativo 401/403 | Parcial | 401 sem token OK em prod Docker |
 
 ---
 
@@ -124,9 +169,10 @@ Arquivo: `docs/PILOT_E2E_CHECKLIST.md`
 Checklist: `docs/PROD_HARDENING_CHECKLIST.md`
 
 ```powershell
-# Validar .env.prod antes do deploy
-powershell -File scripts\prod_hardening_check.ps1 -EnvFile .env.prod.example
+powershell -NoProfile -File C:\Souza\juno\scripts\prod_hardening_check.ps1 -EnvFile C:\Souza\juno\.env.prod
 ```
+
+**Prod local testado:** `run_prod_docker_local.ps1` + smoke `pilot_prod_smoke.ps1` (2026-06-12).
 
 Requisitos críticos: `JUNO_ENV=production`, `JUNO_DEV_AUTH_BYPASS=false`, PostgreSQL, segredos ≥ 32 chars.
 
@@ -171,6 +217,7 @@ cd C:\Souza\juno\janus\backend
 - [x] Templates Orçamento/Budget
 - [x] Smoke 10/10 (API)
 - [x] Hardening checklist + script de validação
-- [ ] Checklist manual UI 100% (demo cliente)
-- [ ] `.env.prod` real + Docker prod testado
+- [ ] Checklist manual UI 100% (demo cliente) — fluxo browser 1–12 pendente
+- [x] `.env.prod` + Docker prod testado localmente (`:8002` / `:4002`)
 - [ ] Playwright E2E (fase futura)
+- [ ] Go-live externo HTTPS — ver `docs/GO_LIVE.md`

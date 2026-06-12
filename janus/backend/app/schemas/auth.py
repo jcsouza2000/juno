@@ -2,7 +2,7 @@
 Schemas Pydantic para autenticação.
 """
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class CompanyOut(BaseModel):
@@ -20,7 +20,7 @@ class UserOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    email: EmailStr
+    email: str
     full_name: str | None = None
     role: str
     companies: list[CompanyOut] = Field(default_factory=list)

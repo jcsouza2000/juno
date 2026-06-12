@@ -145,10 +145,10 @@ def get_or_create_dev_user(db: Session) -> User:
         db.add(company)
         db.flush()
 
-    user = db.query(User).filter(User.email == "dev@juno.local").first()
+    user = db.query(User).filter(User.email == "dev@example.com").first()
     if user is None:
         user = User(
-            email="dev@juno.local",
+            email="dev@example.com",
             full_name="JUNO Dev",
             hashed_password=get_password_hash("dev-only"),
             role="admin",

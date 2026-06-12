@@ -35,6 +35,7 @@
         condition: service_healthy
     environment:
       JUNO_ENV: production
+      JUNO_DEV_AUTH_BYPASS: "false"
       SECRET_KEY: ${SECRET_KEY}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       DATABASE_URL: postgresql://juno:${POSTGRES_PASSWORD}@juno-postgres:5432/juno_db

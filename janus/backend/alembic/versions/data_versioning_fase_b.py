@@ -32,7 +32,7 @@ def upgrade() -> None:
     if not _has_column("financial_upload_batches", "is_active"):
         op.add_column(
             "financial_upload_batches",
-            sa.Column("is_active", sa.Boolean(), server_default=sa.text("1"), nullable=False),
+            sa.Column("is_active", sa.Boolean(), server_default=sa.true(), nullable=False),
         )
 
     if not _has_column("erp_import_batches", "version_number"):
@@ -43,7 +43,7 @@ def upgrade() -> None:
     if not _has_column("erp_import_batches", "is_active"):
         op.add_column(
             "erp_import_batches",
-            sa.Column("is_active", sa.Boolean(), server_default=sa.text("1"), nullable=False),
+            sa.Column("is_active", sa.Boolean(), server_default=sa.true(), nullable=False),
         )
 
     if not _has_column("financial_statements", "upload_batch_id"):
@@ -63,11 +63,11 @@ def upgrade() -> None:
 
     bind = op.get_bind()
     for table in ("financial_upload_batches", "erp_import_batches"):
-        bind.execute(sa.text(f"UPDATE {table} SET is_active = 0"))
+        bind.execute(sa.text(f"UPDATE {table} SET is_active = false"))
         bind.execute(
             sa.text(
                 f"""
-                UPDATE {table} SET is_active = 1
+                UPDATE {table} SET is_active = true
                 WHERE id IN (
                     SELECT MAX(id) FROM {table} GROUP BY company_id
                 )

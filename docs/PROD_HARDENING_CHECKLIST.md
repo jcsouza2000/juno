@@ -2,7 +2,7 @@
 
 Use antes de expor o JUNO a clientes externos ou internet pública.
 
-## 1. Variáveis de ambiente
+**Go-live com domínio HTTPS:** `docs/GO_LIVE.md`
 
 Copie `.env.prod.example` → `.env.prod` e preencha **valores exclusivos** (nunca reutilize chaves de dev).
 
@@ -22,8 +22,18 @@ Copie `.env.prod.example` → `.env.prod` e preencha **valores exclusivos** (nun
 Validação automatizada:
 
 ```powershell
+python C:\Souza\juno\scripts\generate_env_prod.py
 powershell -NoProfile -File C:\Souza\juno\scripts\prod_hardening_check.ps1 -EnvFile C:\Souza\juno\.env.prod
 ```
+
+**Teste local (sem conflito com Smart_Juno):**
+
+```powershell
+powershell -NoProfile -File C:\Souza\juno\scripts\run_prod_docker_local.ps1
+powershell -NoProfile -File C:\Souza\juno\scripts\pilot_prod_smoke.ps1
+```
+
+Portas: backend `:8002`, frontend `:4002`. Admin bootstrap: `admin@juno.local` / `Admin123!`.
 
 ## 2. Infraestrutura
 

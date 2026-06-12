@@ -29,7 +29,7 @@ router = APIRouter(prefix="/auth", tags=["Autenticacao"])
 
 def _serialize_user(user) -> UserOut:
     """Converte o model SQLAlchemy para o schema seguro."""
-    companies = {c.id: c for c in (user.companies or [])}
+    companies: dict[int, object] = {}
     for membership in user.tenant_memberships or []:
         if membership.company:
             companies[membership.company.id] = membership.company
