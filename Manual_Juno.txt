@@ -1,9 +1,10 @@
 JUNO Industrial Diagnostic - Manual Operacional Atualizado
 Versao funcional: 0.3.2
-Data da revisao: 2026-05-25
+Data da revisao: 2026-06-12
 Base de referencia: "JUNO Industrial Diagnostic v0.3.2 - Manual v1.0 - Maio 2026"
 Diretorio operacional: C:\Souza\juno
 Diretorio original auditado: C:\Souza\Flutter\JANUS_AI
+Ultimo commit piloto: c9baad3 (main) — feat(piloto): Docker prod local, smoke auth real e go-live
 
 ======================================================================
 1. Conclusao executiva
@@ -17,7 +18,10 @@ O JUNO esta operacionalmente completo para a etapa atual de desenvolvimento:
 - testes backend passam;
 - auditoria, seguranca, ERP, relatorios, ML base e ontology estao integrados;
 - documentos legados da raiz original foram preservados em _archive/docs_legacy;
-- compose de producao foi consolidado em docker-compose.prod.yml.
+- compose de producao foi consolidado em docker-compose.prod.yml;
+- piloto local Fases A, B, C e C+ validadas (smoke 10/10, versionamento, cenarios, orcamento);
+- Docker prod local validado (PostgreSQL, auth real, smoke 6/6) em :8002/:4002;
+- documentacao E2E, hardening e go-live publicadas em docs/.
 
 Ponto critico de leitura: C:\Souza\juno nao e um espelho byte a byte da raiz
 original C:\Souza\Flutter\JANUS_AI. A copia foi transformada em workspace
@@ -29,8 +33,10 @@ foram arquivados. Portanto, a conclusao correta e:
 - espelho literal da raiz antiga: nao, por decisao de limpeza e consolidacao.
 
 ======================================================================
-2. Evidencias de validacao em 2026-05-25
+2. Evidencias de validacao
 ======================================================================
+
+Rodada base (2026-05-25):
 
 Backend:
 
@@ -61,6 +67,38 @@ Integridade documental:
   C:\Souza\juno\_archive\docs_legacy
 - Hashes SHA256 dos documentos principais conferem com a origem.
 
+Rodada piloto (2026-06-12):
+
+Piloto dev (Smart_Juno, empresa ID 4 — Agora SA):
+
+- Backend: http://127.0.0.1:8001 — ready=true
+- Frontend: http://localhost:4000
+- Ollama: http://127.0.0.1:11434 (qwen3:8b)
+- Smoke: scripts/pilot_e2e_smoke.ps1 — 10/10 OK
+- Checklist API: scripts/pilot_checklist_api.ps1 — 10/10 OK
+- pytest test_config.py — 6/6 passed (hardening prod)
+- Alembic head: companies_created_at
+
+Docker prod local (auth real, bypass desligado):
+
+- Backend: http://localhost:8002
+- Frontend: http://localhost:4002
+- Admin bootstrap: admin@juno.local / Admin123! (company_id=1)
+- Smoke: scripts/pilot_prod_smoke.ps1 — 6/6 OK (401 sem token, login JWT, inventory)
+- Compose: docker-compose.prod.yml + docker-compose.prod.local.yml
+- Script subida: scripts/run_prod_docker_local.ps1
+
+Registro completo: docs/E2E_VALIDATION_RESULT.md
+
+Commits GitHub (main):
+
+- e01cd9f — Fase A (smoke, snapshot diario)
+- 01d8d54 — Fase B (versionamento v1/v2, /data)
+- e135b6c — Fase C (comparativos por cenario)
+- 9d59b54 — Templates Orcamento/Budget, hardening, smoke 10 passos
+- 6711391 — Registro smoke 10/10 e pytest
+- c9baad3 — Docker prod local, smoke auth real, GO_LIVE.md
+
 ======================================================================
 3. Arquitetura atual
 ======================================================================
@@ -81,6 +119,9 @@ Frontend:
   - /workshop
   - /workshop/[type]
   - /financials
+  - /executive
+  - /data
+  - /trust
   - /integrations
   - /audit
   - /ai
@@ -96,7 +137,8 @@ Backend:
 - Banco dev: SQLite
 - Banco producao: PostgreSQL 16 via docker-compose.prod.yml
 - Cache/fila: Redis 7 via docker-compose.prod.yml
-- Porta: 8000
+- Porta dev piloto: 8001 (Smart_Juno.bat) ou 8000 (uvicorn manual)
+- Porta Docker prod: 8000 interno, 8002 publicado (compose local)
 
 IA:
 
@@ -154,7 +196,19 @@ O manual de referencia ainda descrevia partes antigas do sistema, incluindo:
 5. Como iniciar em desenvolvimento
 ======================================================================
 
-Backend:
+Piloto recomendado (stack completa):
+
+  cd C:\Souza\juno
+  Smart_Juno.bat clean
+
+Acessos piloto:
+
+- Backend: http://127.0.0.1:8001
+- Frontend: http://localhost:4000
+- Ollama: http://127.0.0.1:11434
+- Empresa dev padrao: ID 4 (Agora SA), DB smart_juno.db
+
+Backend manual:
 
 cd C:\Souza\juno\janus\backend
 .\.venv\Scripts\activate
@@ -198,11 +252,39 @@ npm audit --audit-level=moderate
 npm run lint
 npm run build
 
-Docker, quando Docker Desktop estiver ativo:
+Docker prod local (simula producao na maquina):
+
+  cd C:\Souza\juno
+  janus\backend\.venv\Scripts\python.exe scripts\generate_env_prod.py
+  powershell -File scripts\run_prod_docker_local.ps1
+
+Acessos prod local:
+
+- Backend: http://localhost:8002
+- Frontend: http://localhost:4002
+- Admin: admin@juno.local / Admin123!
+
+Validar:
+
+  powershell -File scripts\prod_hardening_check.ps1 -EnvFile .env.prod
+  powershell -File scripts\pilot_prod_smoke.ps1
+
+Docker, quando Docker Desktop estiver ativo (servidor real — sem compose local):
 
 cd C:\Souza\juno
-docker compose --env-file .env.prod -f docker-compose.prod.yml build
-docker compose --env-file .env.prod -f docker-compose.prod.yml up
+docker compose --env-file .env.prod -f docker-compose.prod.yml up -d --build
+
+Smoke piloto (dev):
+
+  powershell -File scripts\pilot_e2e_smoke.ps1
+
+Checklist API (PDF, audit, templates, cenarios):
+
+  powershell -File scripts\pilot_checklist_api.ps1
+
+Hardening .env.prod:
+
+  powershell -File scripts\prod_hardening_check.ps1 -EnvFile .env.prod
 
 ======================================================================
 7. Variaveis obrigatorias para producao
@@ -212,6 +294,8 @@ Revisar SECURITY_ENV_REVIEW.md antes de qualquer publicacao.
 
 Obrigatorias:
 
+- JUNO_ENV=production
+- JUNO_DEV_AUTH_BYPASS=false
 - POSTGRES_PASSWORD
 - SECRET_KEY
 - ENCRYPTION_KEY
@@ -221,7 +305,18 @@ Obrigatorias:
 - NEXTAUTH_SECRET
 - AUTH_SECRET
 
-Geracao segura:
+Gerar .env.prod automaticamente:
+
+  python scripts/generate_env_prod.py
+
+Validar antes do deploy:
+
+  powershell -File scripts\prod_hardening_check.ps1 -EnvFile .env.prod
+
+Go-live externo (dominio HTTPS): docs/GO_LIVE.md
+Hardening completo: docs/PROD_HARDENING_CHECKLIST.md
+
+Geracao manual de segredos (alternativa):
 
 python -c "import secrets; print(secrets.token_urlsafe(64))"
 python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
@@ -268,10 +363,25 @@ como fluxo governado oficial do coordinator.
 P3 - Documentacao historica
 
 Arquivos em docs/MIGRATION_NOTES.md e docs/CHANGELOG.md preservam fases antigas.
-Eles sao historicos, mas podem mencionar pendencias que ja foram resolvidas.
 Para consumo executivo, usar este Manual_Juno.txt e Juno.pptx.
-Para treinamento de usuarios e implantacao em novas empresas, usar tambem
-Manual_Usuario_Juno.txt.
+Para treinamento de usuarios: Manual_Usuario_Juno.txt.
+Para piloto e validacao: docs/E2E_VALIDATION_RESULT.md, docs/PILOT_E2E_CHECKLIST.md.
+Para publicacao externa: docs/GO_LIVE.md.
+
+Resolvido - auth/me e login em producao (2026-06-12)
+
+- UserOut deixou de usar EmailStr rigido (emails .local do piloto).
+- _serialize_user usa tenant_memberships (nao user_companies legado).
+- Migration companies_created_at adiciona coluna ausente no PostgreSQL fresh.
+- Migration data_versioning_fase_b corrigida (boolean true/false no Postgres).
+- entrypoint.sh normalizado para LF no Dockerfile (evita crash no container).
+- Dev user: dev@example.com (auth bypass local).
+
+Pendente - go-live externo
+
+- Dominio HTTPS real (nao localhost).
+- Checklist manual UI 100% no browser (upload v2, logout, usuario comum).
+- Playwright E2E (fase futura).
 
 ======================================================================
 9. Status de completude contra C:\Souza\Flutter\JANUS_AI
@@ -295,20 +405,31 @@ Nao confirmado como equivalencia literal:
 
 Veredito:
 
-JUNO esta completo para a arquitetura atual e para a continuidade tecnica.
-A stack Docker real ja foi validada. Antes de publicacao externa, resta revisar
-os segredos definitivos do .env.prod e testar login/fluxo /ai no ambiente alvo.
+JUNO esta completo para a arquitetura atual e para demo piloto local.
+Stack Docker prod local validada com auth real (PostgreSQL, bypass off).
+Antes de publicacao externa na internet, seguir docs/GO_LIVE.md (dominio,
+HTTPS, .env.prod definitivo, checklist manual UI 100%).
 
 ======================================================================
-10. Piloto — Fase A (stack confiavel) e Fase B (versionamento)
+10. Piloto — Fases A, B, C, C+ e Docker prod
 ======================================================================
 
-Fase A — concluida no piloto local:
+Historico de commits (main):
 
-- Stack: backend :8001, frontend :4000, Ollama :11434.
+  e01cd9f  Fase A — smoke E2E, snapshot diario, stack piloto
+  01d8d54  Fase B — versionamento v1/v2, /data, ativar versao
+  e135b6c  Fase C — comparativos por cenario, aba Cenarios
+  9d59b54  C+ — templates Orcamento/Budget, hardening, smoke 10 passos
+  6711391  docs — registro smoke 10/10 e pytest
+  c9baad3  Docker prod local, smoke auth real, GO_LIVE.md
+
+Fase A — concluida:
+
+- Stack piloto: backend :8001, frontend :4000, Ollama :11434.
+- Launcher: Smart_Juno.bat (usar "clean" apos mudancas de codigo).
 - Migration daily_snapshots_table aplicada.
-- Smoke: scripts/pilot_e2e_smoke.ps1 (8 checks HTTP).
 - Job diario: scripts/daily_snapshot_job.py + run_daily_snapshot.bat.
+- Smoke: scripts/pilot_e2e_smoke.ps1 (10 passos HTTP).
 - Evidencias: docs/E2E_VALIDATION_RESULT.md, docs/PILOT_E2E_CHECKLIST.md.
 
 Fase B — versionamento de depositos:
@@ -321,51 +442,78 @@ Fase B — versionamento de depositos:
 - GET statements / KPIs usam apenas o batch financeiro ativo.
 - UI: /data — coluna Versao + botao Ativar (admin do tenant).
 - APIs: GET /data/{id}/versions, POST /data/{id}/versions/{batch}/activate.
+- Backfill legado: app/backfill_version_numbers.py
 
-Comandos operacionais:
-
-  cd C:\Souza\juno\janus\backend
-  alembic upgrade head
-  pytest app/tests/test_data_versioning.py -q
-
-Proxima fase sugerida (C): comparativos por cenario (REALIZADO, ORCAMENTO,
-PROJECAO, VALUATION) no relatorio executivo.
-
-Fase C — concluida no piloto local:
+Fase C — comparativos por cenario:
 
 - Modulo: janus/backend/app/comparativos_cenario.py
 - Endpoint: GET /financials/{id}/comparativos/cenario
 - Aba "Cenarios" no relatorio executivo (TemplateExecutiveReport)
 - Matriz: REALIZADO | ORCAMENTO | PROJECAO | VALUATION + variacao vs realizado
-- ORCAMENTO: colunas Orçamento/Budget no template executivo (Templates/)
-  ou templates de upload template_demonstracoes_orcamento/budget.xlsx
+- Metas orcamento 2025 (R$ mi): Receita 21.350 | EBITDA 8.050 | Lucro 1.720
 
-Templates orçamento:
+Fase C+ — templates Orcamento/Budget:
 
-- script: scripts/build_budget_templates.py
-- docs: Templates/BUDGET_TEMPLATES.md
+- Workbook canonico: Templates/Demonstracoes Financeiras_Templates.xlsx
+- Upload PT: template_demonstracoes_orcamento.xlsx (periodo 2025-ORC)
+- Upload EN: template_demonstracoes_budget.xlsx (periodo 2025-BUD)
+- UI: links em /financials (realizado, Orcamento 2025, Budget 2025)
+- Script regeneracao: scripts/build_budget_templates.py
+- Docs: Templates/BUDGET_TEMPLATES.md
 
-Hardening producao:
+Hardening e validacao automatizada:
 
 - docs/PROD_HARDENING_CHECKLIST.md
+- docs/GO_LIVE.md (deploy externo com dominio HTTPS)
 - scripts/prod_hardening_check.ps1
-- Smoke piloto ampliado: 10 passos (Fase A–C)
+- scripts/pilot_checklist_api.ps1 (PDF, audit, templates, cenarios — 10 checks)
+- scripts/pilot_prod_smoke.ps1 (auth real prod — 6 checks)
+- scripts/generate_env_prod.py (gera .env.prod com segredos)
+- scripts/run_prod_docker_local.ps1 (sobe stack :8002/:4002)
+- scripts/bootstrap_prod_docker.ps1 (admin + empresa no PostgreSQL)
+- janus/backend/app/bootstrap_prod_local.py
+- testes: app/tests/test_config.py (bypass e SQLite bloqueados em prod)
 
-Proximo passo sugerido: checklist E2E manual UI 100% + deploy staging com .env.prod real.
+Docker prod local — concluido (2026-06-12):
+
+- docker-compose.prod.yml + docker-compose.prod.local.yml
+- JUNO_DEV_AUTH_BYPASS=false no compose backend
+- PostgreSQL 16 + Redis 7 + backend + frontend healthy
+- Migration companies_created_at (coluna created_at em companies)
+- Login real validado: admin@juno.local / Admin123!
+- Smoke prod: 6/6 OK
+
+Comandos operacionais:
+
+  cd C:\Souza\juno
+  Smart_Juno.bat clean
+  powershell -File scripts\pilot_e2e_smoke.ps1
+  powershell -File scripts\pilot_checklist_api.ps1
+
+  python scripts\generate_env_prod.py
+  powershell -File scripts\run_prod_docker_local.ps1
+  powershell -File scripts\pilot_prod_smoke.ps1
+
+  cd C:\Souza\juno\janus\backend
+  pytest app/tests/test_data_versioning.py app/tests/test_comparativos_cenario.py app/tests/test_config.py -q
+
+Proximo passo: checklist manual UI 100% no browser + go-live externo (docs/GO_LIVE.md).
 
 ======================================================================
 11. Checklist final antes de autorizacao para proxima etapa
 ======================================================================
 
 [x] Ligar Docker Desktop.
-[x] Rodar docker compose build.
-[x] Rodar docker compose up.
-[x] Validar http://localhost:8000/health dentro da stack.
-[x] Validar frontend em http://localhost:4000.
-[x] Fases A, B, C piloto (smoke 10/10, versionamento, cenarios, orcamento).
-[ ] Testar login e fluxo /ai (ambiente com bypass desligado).
-[ ] Revisar .env.prod sem expor segredos (prod_hardening_check.ps1).
-[ ] Checklist manual UI docs/PILOT_E2E_CHECKLIST.md 100%.
-[ ] Remover qualquer .db temporario.
-[ ] Rodar backend e frontend validation completa.
-[ ] Publicar apenas depois de todos os itens acima.
+[x] Rodar docker compose build e up (prod local :8002/:4002).
+[x] Validar health/ready na stack prod.
+[x] Validar frontend dev (:4000) e prod local (:4002).
+[x] Fases A, B, C, C+ piloto (smoke 10/10, versionamento, cenarios, orcamento).
+[x] Smoke checklist API 10/10 (PDF, audit, templates).
+[x] Smoke prod Docker 6/6 (auth real, 401 sem token, login JWT).
+[x] Revisar .env.prod com prod_hardening_check.ps1 (sem commitar segredos).
+[x] Documentacao GO_LIVE.md e PROD_HARDENING_CHECKLIST.md publicadas.
+[ ] Checklist manual UI docs/PILOT_E2E_CHECKLIST.md 100% (upload v2, logout, usuario comum).
+[ ] Go-live externo: dominio HTTPS + .env.prod definitivo (docs/GO_LIVE.md).
+[ ] Playwright E2E automatizado (fase futura).
+[ ] Remover qualquer .db temporario de validacao.
+[ ] Publicar na internet apenas depois dos itens pendentes acima.
