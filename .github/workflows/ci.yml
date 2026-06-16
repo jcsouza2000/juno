@@ -44,6 +44,15 @@ jobs:
       - name: Security scan (bandit, non-blocking)
         run: bandit -r app/ -ll || true
 
+      - name: AI eval (offline — playbook/coverage)
+        env:
+          PYTHONPATH: .
+          JUNO_ENV: development
+          SECRET_KEY: ci-test-secret-key-must-have-at-least-32-chars-xxx
+          ENCRYPTION_KEY: N6zYqfBC2CxUgdztuLcM5nVSyxe7S6TjzS-ZmrkcmCM=
+          DATABASE_URL: sqlite:///./ci-eval.db
+        run: pytest app/tests/test_ai_eval.py app/tests/test_ai_playbook.py -q --no-cov
+
       - name: Tests with coverage
         env:
           PYTHONPATH: .
