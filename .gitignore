@@ -127,3 +127,19 @@ _archive/
 /*.docx
 /*.pptx
 /*.pdf
+
+# --- Artefatos de auditoria/gravação e empacotamento (NÃO versionar) ---
+# (gitignore não aceita aspas nem comentário inline; padrões literais abaixo)
+*.zip
+bundle.json
+# diretórios extraídos de zips de auditoria (juno_audit_v0.2/ etc.)
+juno_audit_v*/
+# venv interna do pacote vendorizado (a fonte de juno_audit/ fica versionada)
+juno_audit/.venv*/
+gravar_*.bat
+juno_demo.ps1
+juno_prepare.ps1
+juno_video.ps1
+README_gravacao.md
+Apresentação Navegando os Riscos.txt
+Go-live real.txt

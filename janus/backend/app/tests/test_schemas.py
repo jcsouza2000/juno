@@ -1,8 +1,5 @@
 """Testes dos schemas Pydantic (app.schemas)."""
 
-import pytest
-from pydantic import ValidationError
-
 from app.schemas.auth import CompanyOut, LoginResponse, UserOut
 from app.schemas.common import ErrorResponse, PaginatedResponse
 
@@ -13,9 +10,11 @@ def test_user_out_valid():
     assert u.role == "admin"
 
 
-def test_user_out_rejects_invalid_email():
-    with pytest.raises(ValidationError):
-        UserOut(id=1, email="not-an-email", role="admin", companies=[])
+def test_user_out_accepts_internal_email():
+    # Schema de SAIDA nao re-valida e-mail ja armazenado: identidades internas
+    # como dev@juno.local (TLD .local, rejeitado por EmailStr) devem passar.
+    u = UserOut(id=1, email="dev@juno.local", role="admin", companies=[])
+    assert u.email == "dev@juno.local"
 
 
 def test_user_out_companies_default():
