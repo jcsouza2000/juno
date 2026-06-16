@@ -20,7 +20,7 @@ export function setActiveCompany(company: TenantCompany) {
 export function useActiveCompany() {
   const { data: session, status } = useSession()
   const [selectedCompany, setSelectedCompany] = useState<TenantCompany | null>(null)
-  const [fetchedCompany, setFetchedCompany] = useState<TenantCompany | null>(null)
+  const [accessible, setAccessible] = useState<TenantCompany[] | null>(null)
 
   useEffect(() => {
     const loadSelectedCompany = () => {
@@ -41,43 +41,46 @@ export function useActiveCompany() {
     }
   }, [])
 
-  const sessionCompany = session?.user?.companies?.[0] ?? null
-
-  // Sem empresa na sessao nem selecionada: busca as empresas reais do backend.
-  // O backend resolve o usuario autenticado (token da sessao) ou, em dev com
-  // JUNO_DEV_AUTH_BYPASS, o dev-user com suas empresas reais (ex.: Agora SA).
-  // Isso substitui o antigo fallback hardcoded (que mostrava nome errado e era
-  // desligado em build de producao).
+  // Lista AUTORITATIVA de empresas que o contexto de auth ATUAL pode acessar.
+  // Buscada do backend (/auth/me) com a mesma autenticacao usada nos uploads —
+  // assim a empresa ativa nunca fica "fantasma" (causando 403 Acesso negado).
+  // Em dev com JUNO_DEV_AUTH_BYPASS, retorna o dev-user com suas empresas reais.
   useEffect(() => {
     if (status === "loading") return
-    if (selectedCompany || sessionCompany || fetchedCompany) return
-
     let active = true
-    const devId = process.env.NEXT_PUBLIC_DEV_COMPANY_ID
-      ? Number(process.env.NEXT_PUBLIC_DEV_COMPANY_ID)
-      : null
     api
       .get("/auth/me")
       .then((res) => {
-        const list: TenantCompany[] = res.data?.companies ?? []
-        // Em dev, prefere a empresa do piloto (NEXT_PUBLIC_DEV_COMPANY_ID, ex.:
-        // Agora SA id 4) — companies[0] pode ser o "JUNO Dev Tenant" vazio.
-        const chosen = (devId ? list.find((c) => c.id === devId) : null) ?? list[0]
-        if (active && chosen) setFetchedCompany({ id: chosen.id, name: chosen.name })
+        if (active) setAccessible(res.data?.companies ?? [])
       })
       .catch(() => {
-        /* sem empresa acessivel — segue sem tenant ativo */
+        if (active) setAccessible([])
       })
     return () => {
       active = false
     }
-  }, [status, selectedCompany, sessionCompany, fetchedCompany])
+  }, [status, session])
 
-  const company = selectedCompany ?? sessionCompany ?? fetchedCompany
+  const devId = process.env.NEXT_PUBLIC_DEV_COMPANY_ID
+    ? Number(process.env.NEXT_PUBLIC_DEV_COMPANY_ID)
+    : null
+
+  let company: TenantCompany | null = null
+  if (accessible === null) {
+    // Lista ainda carregando: usa otimista (sessao/localStorage) sem travar a UI.
+    company = selectedCompany ?? session?.user?.companies?.[0] ?? null
+  } else if (accessible.length > 0) {
+    // So' aceita uma empresa que o usuario REALMENTE acessa (evita 403).
+    const selValid = selectedCompany
+      ? accessible.find((c) => c.id === selectedCompany.id)
+      : null
+    const devPref = devId ? accessible.find((c) => c.id === devId) : null
+    company = selValid ?? devPref ?? accessible[0]
+  }
 
   return {
     company,
     companyId: company?.id ?? null,
-    isLoading: status === "loading",
+    isLoading: status === "loading" || accessible === null,
   }
 }
