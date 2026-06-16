@@ -34,7 +34,11 @@ bcrypt==4.0.1
 cryptography==42.0.8
 argon2-cffi==23.1.0
 PyJWT==2.8.0
+PyNaCl==1.5.0
 bleach==6.1.0
+
+# === Audit ledger (juno_audit) ===
+opentimestamps==0.4.5
 
 # === Rate limit ===
 slowapi==0.1.9

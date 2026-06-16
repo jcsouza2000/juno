@@ -10,6 +10,7 @@ from app.database import get_db
 from app.models import User
 from app.schemas.metrics import ScoreResponse
 from app.score_v2 import get_score_calculator
+from app.services.audit_ledger_service import record_score_industrial
 
 router = APIRouter(prefix="/score", tags=["Score JUNO"])
 
@@ -29,7 +30,7 @@ def get_score(
     calculator = get_score_calculator(db)
     result = calculator.calculate_full_score(company_id)
 
-    return {
+    response = {
         "company_id": result.company_id,
         "company_name": result.company_name,
         "overall_score": result.overall_score,
@@ -49,6 +50,12 @@ def get_score(
         ],
         "recommendations": result.recommendations,
     }
+    record_score_industrial(
+        tenant_id=str(company_id),
+        company_id=company_id,
+        output_payload=response,
+    )
+    return response
 
 
 @router.get("/{company_id}/history")

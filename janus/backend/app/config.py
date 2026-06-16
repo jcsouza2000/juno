@@ -50,6 +50,12 @@ class Settings(BaseSettings):
     # === Rate limiting ===
     LOGIN_RATE_LIMIT: str = Field(default="5/minute")
 
+    # === Audit ledger (juno_audit) ===
+    JUNO_AGENT_SK: str = Field(
+        default="",
+        description="Chave privada Ed25519 do agente (Railway secret). Opcional em dev.",
+    )
+
     # === Logging ===
     LOG_LEVEL: str = Field(default="INFO")
     LOG_FORMAT: str = Field(default="auto", description="auto | text | json")

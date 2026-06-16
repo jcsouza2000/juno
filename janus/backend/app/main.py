@@ -140,6 +140,24 @@ _try_include("app.routers.tenant")
 _try_include("app.routers.tenant_users")
 _try_include("app.routers.score")
 _try_include("app.routers.kpis")
+
+# JUNO Audit v31 — Agent Registry + export bundle (juno-verify)
+if settings.DATABASE_URL.startswith("postgresql"):
+    try:
+        from app.database import SessionLocal
+        from juno_audit.router import build_audit_router
+
+        audit_router = build_audit_router(
+            session_factory=SessionLocal,
+            juno_private_key=settings.JUNO_AGENT_SK or None,
+        )
+        app.include_router(audit_router)
+        logger.info("Router incluido: juno_audit.router (v31)")
+    except ImportError as e:
+        logger.warning("juno_audit router pulado (pacote ausente): %s", e)
+    except Exception as e:
+        logger.error("juno_audit router falhou ao carregar: %s", e, exc_info=True)
+
 _try_include("app.routers.dashboard")
 _try_include("app.routers.pdf")
 _try_include("app.routers.pdf", "legacy_router")
