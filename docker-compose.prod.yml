@@ -25,14 +25,16 @@
 
   juno-backend:
     build:
-      context: ./janus/backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: janus/backend/Dockerfile
     restart: unless-stopped
     depends_on:
       juno-postgres:
         condition: service_healthy
       juno-redis:
         condition: service_healthy
+    env_file:
+      - .env.prod
     environment:
       JUNO_ENV: production
       JUNO_DEV_AUTH_BYPASS: "false"

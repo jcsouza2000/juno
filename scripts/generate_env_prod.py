@@ -2,6 +2,7 @@
 """Gera .env.prod com segredos aleatorios (nao commitar o arquivo gerado)."""
 from __future__ import annotations
 
+import base64
 import secrets
 from pathlib import Path
 
@@ -9,6 +10,17 @@ from cryptography.fernet import Fernet
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / ".env.prod"
+
+
+def _generate_agent_sk() -> str:
+    """Chave privada Ed25519 no formato juno_audit (ed25519:<b64>)."""
+    try:
+        from nacl.signing import SigningKey
+    except ImportError:
+        return ""
+    sk = SigningKey.generate()
+    return "ed25519:" + base64.b64encode(bytes(sk)).decode()
+
 
 # Piloto local via Docker prod (portas 8002/4001). Troque dominios antes de go-live publico.
 LINES = [
@@ -31,6 +43,15 @@ LINES = [
     f"NEXTAUTH_SECRET={secrets.token_urlsafe(32)}",
     f"AUTH_SECRET={secrets.token_urlsafe(32)}",
 ]
+
+agent_sk = _generate_agent_sk()
+if agent_sk:
+    LINES.append(f"JUNO_AGENT_SK={agent_sk}")
+else:
+    LINES.extend([
+        "# Gere com: powershell -File scripts\\generate_juno_agent_key.ps1",
+        "JUNO_AGENT_SK=",
+    ])
 
 text = "\n".join(LINES) + "\n"
 # Substituir placeholder pela senha real do POSTGRES

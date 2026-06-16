@@ -18,3 +18,5 @@ htmlcov/
 .mypy_cache/
 .ruff_cache/
 .DS_Store
+juno_audit/.venv311/
+juno_audit_v0.2/

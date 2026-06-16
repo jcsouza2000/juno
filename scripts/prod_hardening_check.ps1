@@ -65,6 +65,10 @@ if ($vars['POSTGRES_PASSWORD'] -match 'troque_esta_senha|changeme|password') {
     }
 }
 
+if ($vars['DATABASE_URL'] -notmatch '^sqlite:' -and (-not $vars.ContainsKey('JUNO_AGENT_SK') -or [string]::IsNullOrWhiteSpace($vars['JUNO_AGENT_SK']))) {
+    $warnings.Add('JUNO_AGENT_SK ausente — ledger assina eventos sem chave ou nao grava assinatura; gere com scripts/generate_juno_agent_key.ps1')
+}
+
 Write-Host "=== JUNO Prod Hardening Check ==="
 Write-Host "Arquivo: $EnvFile"
 Write-Host ''
