@@ -181,9 +181,7 @@ def get_stats(
         base_query = db.query(AuditLog).filter(AuditLog.company_id.in_(company_ids))
 
     total = base_query.count()
-    today = (
-        base_query.filter(AuditLog.created_at >= utcnow_naive() - timedelta(days=1)).count()
-    )
+    today = base_query.filter(AuditLog.created_at >= utcnow_naive() - timedelta(days=1)).count()
     week = base_query.filter(AuditLog.created_at >= since).count()
 
     # Top ações

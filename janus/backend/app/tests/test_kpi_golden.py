@@ -68,7 +68,10 @@ def test_golden_score_juno_v2_is_canonical(db_session):
     ceo = get_ceo_kpis(db_session, company.id)
     ceo_dashboard = build_persona_dashboard(db_session, company.id, "ceo")
     ceo_score_kpi = next(
-        kpi for section in ceo_dashboard["sections"] for kpi in section["kpis"] if kpi["id"] == "juno_score"
+        kpi
+        for section in ceo_dashboard["sections"]
+        for kpi in section["kpis"]
+        if kpi["id"] == "juno_score"
     )
 
     assert score.overall_score == pytest.approx(GOLDEN_EXPECTED["score_juno"], abs=0.05)
@@ -90,6 +93,4 @@ def test_metric_api_contracts_accept_golden_payloads(client, db_session):
     assert coo.status_code == 200
     assert len(coo.json()) == GOLDEN_EXPECTED["ordens_atrasadas"]
     assert score.status_code == 200
-    assert score.json()["overall_score"] == pytest.approx(
-        GOLDEN_EXPECTED["score_juno"], abs=0.05
-    )
+    assert score.json()["overall_score"] == pytest.approx(GOLDEN_EXPECTED["score_juno"], abs=0.05)

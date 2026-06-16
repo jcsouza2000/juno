@@ -201,10 +201,7 @@ def _parse_analytic_financial_csv(df: pd.DataFrame) -> list[dict]:
         .rename("cmv")
     )
     despesas = (
-        work[
-            (work["tipo"].str.lower() == "despesa")
-            & (work["categoria_dre"].str.lower() != "cmv")
-        ]
+        work[(work["tipo"].str.lower() == "despesa") & (work["categoria_dre"].str.lower() != "cmv")]
         .groupby("periodo")["valor"]
         .sum()
         .rename("despesas_operacionais")

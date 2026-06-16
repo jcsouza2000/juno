@@ -37,7 +37,14 @@ from app.models import (
     ScoreHistory,
 )
 
-OPEN_PRODUCTION_STATUSES = {"aberto", "aberta", "planned", "planejada", "em_andamento", "em andamento"}
+OPEN_PRODUCTION_STATUSES = {
+    "aberto",
+    "aberta",
+    "planned",
+    "planejada",
+    "em_andamento",
+    "em andamento",
+}
 
 # ============================================================
 # CONFIGURAÃ‡Ã•ES DE PESOS POR SETOR

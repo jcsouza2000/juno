@@ -237,7 +237,9 @@ class FinancialStatement(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     company_id = Column(Integer, ForeignKey("companies.id"), nullable=False, index=True)
-    upload_batch_id = Column(Integer, ForeignKey("financial_upload_batches.id"), nullable=True, index=True)
+    upload_batch_id = Column(
+        Integer, ForeignKey("financial_upload_batches.id"), nullable=True, index=True
+    )
     statement_type = Column(String(50), nullable=False)
     period = Column(String(50))
     line_item = Column(String(255), nullable=False)
@@ -536,9 +538,7 @@ class DailySnapshot(Base):
     """
 
     __tablename__ = "daily_snapshots"
-    __table_args__ = (
-        UniqueConstraint("company_id", "snapshot_date", name="uq_daily_snapshot"),
-    )
+    __table_args__ = (UniqueConstraint("company_id", "snapshot_date", name="uq_daily_snapshot"),)
 
     id = Column(Integer, primary_key=True, index=True)
     company_id = Column(Integer, ForeignKey("companies.id"), nullable=False, index=True)

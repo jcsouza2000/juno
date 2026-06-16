@@ -111,7 +111,11 @@ def data_versions(
     if not check_company_access(current_user, company_id):
         raise HTTPException(status_code=403, detail="Acesso negado")
     if source:
-        return {"company_id": company_id, "source": source, "versions": list_versions(db, company_id, source)}
+        return {
+            "company_id": company_id,
+            "source": source,
+            "versions": list_versions(db, company_id, source),
+        }
     return {
         "company_id": company_id,
         "financial": list_versions(db, company_id, "financial"),

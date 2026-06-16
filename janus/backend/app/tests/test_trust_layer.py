@@ -57,7 +57,9 @@ def test_membership_table_only_user_appears_in_me_companies(client, db_session):
 
     user = _create_user(db_session, "member@tenant.com", "user")
     db_session.add(
-        UserCompany(user_id=user.id, company_id=company.id, role_in_tenant="member", is_primary=True)
+        UserCompany(
+            user_id=user.id, company_id=company.id, role_in_tenant="member", is_primary=True
+        )
     )
     db_session.commit()
 

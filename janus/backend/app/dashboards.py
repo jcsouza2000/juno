@@ -6,7 +6,14 @@ from app.score_v2 import get_score_calculator
 
 from .models import Product, ProductionOrder, SalesOrder
 
-OPEN_PRODUCTION_STATUSES = ("aberto", "aberta", "planned", "planejada", "em_andamento", "em andamento")
+OPEN_PRODUCTION_STATUSES = (
+    "aberto",
+    "aberta",
+    "planned",
+    "planejada",
+    "em_andamento",
+    "em andamento",
+)
 
 
 def get_ceo_kpis(db: Session, company_id: int):
@@ -28,7 +35,9 @@ def get_ceo_kpis(db: Session, company_id: int):
         receita_liquida = dre_totals["receita_liquida"]
 
     try:
-        score_juno = get_score_calculator(db).calculate_full_score(company_id, persist=False).overall_score
+        score_juno = (
+            get_score_calculator(db).calculate_full_score(company_id, persist=False).overall_score
+        )
     except Exception:
         score_juno = 50.0
 
@@ -83,7 +92,10 @@ def get_coo_delayed_orders(db: Session, company_id: int):
         .join(Product, Product.id == ProductionOrder.product_id)
         .filter(ProductionOrder.company_id == company_id)
         .filter(
-            ((ProductionOrder.actual_date.isnot(None)) & (ProductionOrder.actual_date > ProductionOrder.planned_date))
+            (
+                (ProductionOrder.actual_date.isnot(None))
+                & (ProductionOrder.actual_date > ProductionOrder.planned_date)
+            )
             | (
                 (ProductionOrder.actual_date.is_(None))
                 & (ProductionOrder.planned_date < func.now())

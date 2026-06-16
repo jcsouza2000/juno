@@ -3,7 +3,14 @@ from sqlalchemy.orm import Session
 
 from .models import Product, ProductionOrder, SalesOrder
 
-OPEN_PRODUCTION_STATUSES = ("aberto", "aberta", "planned", "planejada", "em_andamento", "em andamento")
+OPEN_PRODUCTION_STATUSES = (
+    "aberto",
+    "aberta",
+    "planned",
+    "planejada",
+    "em_andamento",
+    "em andamento",
+)
 
 
 def generate_insights(company_id: int, db: Session):
@@ -42,7 +49,10 @@ def generate_insights(company_id: int, db: Session):
         db.query(func.count(ProductionOrder.id))
         .filter(ProductionOrder.company_id == company_id)
         .filter(
-            ((ProductionOrder.actual_date.isnot(None)) & (ProductionOrder.actual_date > ProductionOrder.planned_date))
+            (
+                (ProductionOrder.actual_date.isnot(None))
+                & (ProductionOrder.actual_date > ProductionOrder.planned_date)
+            )
             | (
                 (ProductionOrder.actual_date.is_(None))
                 & (ProductionOrder.planned_date < func.now())
@@ -116,7 +126,10 @@ def calculate_juno_score(company_id: int, db: Session):
         db.query(func.count(ProductionOrder.id))
         .filter(ProductionOrder.company_id == company_id)
         .filter(
-            ((ProductionOrder.actual_date.isnot(None)) & (ProductionOrder.actual_date > ProductionOrder.planned_date))
+            (
+                (ProductionOrder.actual_date.isnot(None))
+                & (ProductionOrder.actual_date > ProductionOrder.planned_date)
+            )
             | (
                 (ProductionOrder.actual_date.is_(None))
                 & (ProductionOrder.planned_date < func.now())

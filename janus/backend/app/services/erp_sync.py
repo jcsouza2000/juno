@@ -9,6 +9,7 @@ isolamento multi-tenant por company_id.
 Desligado por padrão; habilite com ERP_LIVE_SYNC_ENABLED=true. A factory e a
 sessão são injetáveis para teste, sem alterar a arquitetura dos conectores.
 """
+
 from __future__ import annotations
 
 import logging
@@ -105,5 +106,7 @@ def run_due_syncs(
         logger.debug("ERP live sync desabilitado (ERP_LIVE_SYNC_ENABLED).")
         return []
 
-    connections = db.query(ERPConnection).filter(ERPConnection.is_active == True).all()  # noqa: E712
+    connections = (
+        db.query(ERPConnection).filter(ERPConnection.is_active == True).all()
+    )  # noqa: E712
     return [run_connection_sync(db, conn, factory=factory) for conn in connections]

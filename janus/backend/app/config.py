@@ -105,9 +105,7 @@ class Settings(BaseSettings):
                 raise ValueError("DATABASE_URL e obrigatoria em producao.")
             return "sqlite:///./juno_dev.db"
         if env == "production" and v.startswith("sqlite"):
-            raise ValueError(
-                "DATABASE_URL em producao deve usar PostgreSQL, nao SQLite."
-            )
+            raise ValueError("DATABASE_URL em producao deve usar PostgreSQL, nao SQLite.")
         return v
 
     @field_validator("JUNO_DEV_AUTH_BYPASS")

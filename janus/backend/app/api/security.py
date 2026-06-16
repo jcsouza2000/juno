@@ -518,7 +518,9 @@ def trust_posture(db: Session = Depends(get_db), user=Depends(get_current_user))
     )
     open_dsrs = (
         db.query(DataSubjectRequest)
-        .filter(DataSubjectRequest.company_id == company_id, DataSubjectRequest.status != "completed")
+        .filter(
+            DataSubjectRequest.company_id == company_id, DataSubjectRequest.status != "completed"
+        )
         .count()
     )
 

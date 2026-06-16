@@ -137,5 +137,7 @@ def run_daily_snapshot_job(
     if not getattr(current_user, "is_platform_admin", False) and not getattr(
         current_user, "is_superuser", False
     ):
-        raise HTTPException(status_code=403, detail="Acesso restrito a administradores da plataforma")
+        raise HTTPException(
+            status_code=403, detail="Acesso restrito a administradores da plataforma"
+        )
     return svc.run_daily_snapshots_all_tenants(db)

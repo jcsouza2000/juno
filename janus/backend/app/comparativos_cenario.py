@@ -93,7 +93,9 @@ def _orcamento_metrics(realizado: dict[str, float | None]) -> tuple[dict[str, fl
         }
         out["receita_liquida"] = tf.extract_value_safe(sheets["dre"], "Receita Líquida", period)
         out["ebitda"] = tf.extract_value_safe(sheets["ebitda"], "EBITDA Ajustado", period)
-        out["lucro_liquido"] = tf.extract_value_safe(sheets["ebitda"], "Lucro (prejuízo) Líquido", period)
+        out["lucro_liquido"] = tf.extract_value_safe(
+            sheets["ebitda"], "Lucro (prejuízo) Líquido", period
+        )
         nota = f"Orçamento lido da coluna '{period}' do template."
         return out, nota
 

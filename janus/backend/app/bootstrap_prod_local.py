@@ -1,4 +1,5 @@
 """Bootstrap minimo para stack Docker prod local: empresa + admin."""
+
 from __future__ import annotations
 
 from sqlalchemy import text

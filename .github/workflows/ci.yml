@@ -35,8 +35,8 @@ jobs:
       - name: Lint (ruff)
         run: ruff check app/
 
-      - name: Format check (black, non-blocking)
-        run: black --check app/ || true
+      - name: Format check (black, blocking)
+        run: black --check app/
 
       - name: Type check (mypy, blocking)
         run: mypy app/

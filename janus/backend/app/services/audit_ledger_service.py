@@ -1,4 +1,5 @@
 """Integracao do juno_audit (Ledger) no backend JUNO."""
+
 from __future__ import annotations
 
 import logging
