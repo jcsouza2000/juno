@@ -15,6 +15,7 @@ const pt = {
     ai: 'IA Operacional',
     financial: 'Financeiro',
     myData: 'Meus Dados',
+    retention: 'Retenção',
     integrations: 'Integrações ERP',
     audit: 'Auditoria',
     trust: 'Trust Center',
@@ -446,6 +447,30 @@ const pt = {
       marginsTrend: 'Margens em tendência',
       grossNetEbitda: 'Bruta, líquida e EBITDA',
     },
+  },
+  retention: {
+    title: 'Retenção & Fechamentos',
+    subtitle:
+      'Fechamentos mensais imutáveis e snapshots diários de KPIs do tenant ativo.',
+    monthlyTitle: 'Fechamentos mensais',
+    monthlySubtitle: 'Congela DRE/Balanço/DFC e Score do período. Imutável após criado.',
+    snapshotsTitle: 'Snapshots diários',
+    year: 'Ano',
+    month: 'Mês',
+    createClose: 'Fechar mês',
+    creating: 'Processando...',
+    closedAt: 'Fechado em',
+    status: 'Status',
+    score: 'Score',
+    noCloses: 'Nenhum fechamento registrado.',
+    noSnapshots: 'Nenhum snapshot registrado.',
+    captureSnapshot: 'Capturar snapshot de hoje',
+    snapshotDate: 'Data',
+    closeCreated: 'Fechamento {year}-{month} criado.',
+    snapshotCreated: 'Snapshot de {date} capturado.',
+    adminOnly: 'Criação restrita a administradores do tenant.',
+    immutableNote:
+      'Fechamentos são imutáveis: não podem ser sobrescritos. Snapshots diários são idempotentes por data.',
   },
 }
 

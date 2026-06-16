@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Link from 'next/link';
-import { Home, MessageSquare, ShieldCheck, Factory, Plug, Play, Rocket, BarChart2, ShieldAlert, Gauge, LockKeyhole, Database, Users } from 'lucide-react';
+import { Home, MessageSquare, ShieldCheck, Factory, Plug, Play, Rocket, BarChart2, ShieldAlert, Gauge, LockKeyhole, Database, Users, Archive } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useI18n } from '@/lib/i18n';
 
@@ -17,6 +17,7 @@ export default function Sidebar() {
     { name: t('nav.ai'),            icon: <MessageSquare size={20} />,  href: '/ai',           highlight: false, danger: false },
     { name: t('nav.financial'),     icon: <BarChart2 size={20} />,      href: '/financials',   highlight: false, danger: false },
     { name: t('nav.myData'),        icon: <Database size={20} />,       href: '/data',         highlight: false, danger: false },
+    { name: t('nav.retention'),     icon: <Archive size={20} />,        href: '/retention',    highlight: false, danger: false },
     { name: t('nav.integrations'),  icon: <Plug size={20} />,           href: '/integrations', highlight: false, danger: false },
     { name: t('nav.audit'),         icon: <ShieldCheck size={20} />,    href: '/audit',        highlight: false, danger: false },
     { name: t('nav.trust'),         icon: <LockKeyhole size={20} />,    href: '/trust',        highlight: false, danger: false },
