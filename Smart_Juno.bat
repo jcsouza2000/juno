@@ -24,6 +24,7 @@ set "FORCE_DOCKER=0"
 if /i "%~1"=="docker" set "FORCE_DOCKER=1"
 if /i "%~1"=="clean" call :free_ports
 if /i "%~1"=="verificar" goto verify_mode
+if /i "%~1"=="local" goto local_mode
 
 echo.
 echo ============================================================
@@ -145,6 +146,12 @@ echo [5/5] Iniciando modo local sem Docker...
 echo [INFO] Backend local: %BACKEND_URL%
 echo [INFO] Frontend local: %FRONTEND_URL%
 
+REM Reforco: um container Docker publicando 8001/4000 RESPONDE HTTP e engana o
+REM heal_zombie_port (que so' mata se o HTTP falha), mascarando o modo local com
+REM um frontend que aponta para outro backend. Paramos esses containers antes.
+call :stop_docker_on_port 8001
+call :stop_docker_on_port 4000
+
 call :heal_zombie_port 8001 "%BACKEND_URL%/health" "backend"
 call :wait_http "%BACKEND_URL%/health" 5 "backend local existente"
 if errorlevel 1 (
@@ -235,6 +242,20 @@ exit /b 0
 
 :free_port
 powershell -NoProfile -Command "$port=%~1; $procs = Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique; if ($procs) { Write-Host ('[INFO] Liberando porta ' + $port + '...'); foreach ($procId in $procs) { try { Stop-Process -Id $procId -Force -ErrorAction Stop; Write-Host ('[OK] PID ' + $procId + ' encerrado.') } catch {} } }"
+exit /b 0
+
+:stop_docker_on_port
+REM %1 = porta host. Para containers Docker JUNO que publicam essa porta, para
+REM que o modo local possa bindar (evita o frontend Docker mascarar o local).
+docker info >nul 2>&1
+if errorlevel 1 exit /b 0
+for /f "delims=" %%c in ('docker ps --filter "publish=%~1" --format "{{.Names}}" 2^>nul') do (
+    echo %%c | findstr /i "juno" >nul && (
+        echo [INFO] Parando container Docker '%%c' que ocupa a porta %~1 ^(conflito com modo local^)...
+        docker update --restart=no %%c >nul 2>&1
+        docker stop %%c >nul 2>&1
+    )
+)
 exit /b 0
 
 :heal_zombie_port
