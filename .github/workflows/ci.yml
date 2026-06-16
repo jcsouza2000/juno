@@ -131,6 +131,32 @@ jobs:
       - name: Build
         run: npm run build
 
+  deps-scan:
+    name: Dependency CVE scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: pip-audit (backend, non-blocking)
+        working-directory: janus/backend
+        run: |
+          python -m pip install --upgrade pip pip-audit
+          # Auditoria de CVEs nas deps pinadas. Non-blocking ate triarmos o baseline;
+          # tornar bloqueante (remover '|| true') apos zerar/aceitar os achados.
+          pip-audit -r requirements.txt --desc on || true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: npm audit (frontend, non-blocking)
+        working-directory: janus/frontend
+        run: npm audit --audit-level=high || true
+
   secrets-scan:
     name: Secrets scan
     runs-on: ubuntu-latest

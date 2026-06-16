@@ -16,6 +16,7 @@ from app.auth import authenticate_user, create_access_token, get_current_active_
 from app.config import settings
 from app.core.logger import get_logger
 from app.database import get_db
+from app.models import Company
 from app.schemas.auth import CompanyOut, LoginResponse, UserMeResponse, UserOut
 
 logger = get_logger(__name__)
@@ -29,7 +30,7 @@ router = APIRouter(prefix="/auth", tags=["Autenticacao"])
 
 def _serialize_user(user) -> UserOut:
     """Converte o model SQLAlchemy para o schema seguro."""
-    companies: dict[int, object] = {}
+    companies: dict[int, Company] = {}
     for membership in user.tenant_memberships or []:
         if membership.company:
             companies[membership.company.id] = membership.company
