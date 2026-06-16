@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
 from app.auth import check_company_access, get_current_active_user
+from app.comparativos_cenario import build_comparativos_cenario
 from app.database import get_db
 from app.financials import (
     get_financial_summary,
@@ -19,7 +20,6 @@ from app.financials import (
 )
 from app.models import User
 from app.valuation_scenario import run_valuation_scenario
-from app.comparativos_cenario import build_comparativos_cenario
 
 router = APIRouter(prefix="/financials", tags=["Financials"])
 

@@ -144,8 +144,9 @@ _try_include("app.routers.kpis")
 # JUNO Audit v31 — Agent Registry + export bundle (juno-verify)
 if settings.DATABASE_URL.startswith("postgresql"):
     try:
-        from app.database import SessionLocal
         from juno_audit.router import build_audit_router
+
+        from app.database import SessionLocal
 
         audit_router = build_audit_router(
             session_factory=SessionLocal,

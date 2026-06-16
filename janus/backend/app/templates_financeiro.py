@@ -64,9 +64,7 @@ def use_templates_as_canonical() -> bool:
 def _find_workbook() -> Path | None:
     if not TEMPLATES_DIR.exists():
         return None
-    matches = sorted(
-        p for p in TEMPLATES_DIR.glob("Demontra*.xlsx") if not p.name.startswith("~$")
-    )
+    matches = sorted(p for p in TEMPLATES_DIR.glob("Demontra*.xlsx") if not p.name.startswith("~$"))
     return matches[0] if matches else None
 
 
@@ -161,7 +159,9 @@ def _period_columns(df: pd.DataFrame) -> list[str]:
     return periods
 
 
-def _statements_from_sheet(df: pd.DataFrame, statement_type: str) -> dict[str, dict[str, float]]:
+def _statements_from_sheet(
+    df: pd.DataFrame, statement_type: str
+) -> dict[str, dict[str, dict[str, float]]]:
     periods = _period_columns(df)
     result: dict[str, dict[str, float]] = {}
     for period in periods:
@@ -191,7 +191,9 @@ def build_statements() -> dict[str, dict[str, dict[str, float]]]:
 
 
 @lru_cache(maxsize=2)
-def _build_statements_cached(workbook_path: str, mtime: float) -> dict[str, dict[str, dict[str, float]]]:
+def _build_statements_cached(
+    workbook_path: str, mtime: float
+) -> dict[str, dict[str, dict[str, float]]]:
     dre_df = _load_sheet(workbook_path, mtime, SHEET_DRE)
     bal_df = _load_sheet(workbook_path, mtime, SHEET_BALANCO)
     ebitda_df = _load_sheet(workbook_path, mtime, SHEET_EBITDA)
@@ -216,7 +218,7 @@ def _build_statements_cached(workbook_path: str, mtime: float) -> dict[str, dict
 
 
 def _pct(parte: float | None, base: float | None) -> float | None:
-    if parte is None or base in (None, 0):
+    if parte is None or not base:
         return None
     return round(parte / base * 100, 2)
 
@@ -385,9 +387,7 @@ def _build_unified_payload_cached(
                 "margem_ebitda": _pct(ebitda_tri, rec),
             }
         )
-        tendencia_giro.append(
-            {"periodo": tri, "valor": round(abs(cpv) / est, 2) if est else 0.0}
-        )
+        tendencia_giro.append({"periodo": tri, "valor": round(abs(cpv) / est, 2) if est else 0.0})
 
     kpis_unificados = {
         "Margem Bruta": {
@@ -885,7 +885,9 @@ def _build_busca_inteligente(bundle: TemplateKPIBundle, kpis: dict[str, Any]) ->
             "tags": ["kpi", "indicador", "resumo", "demonstrac"],
             "resposta": (
                 "KPIs consolidados (Templates): "
-                + "; ".join(f"{nome} {dados.get('resultado', 'n/d')}" for nome, dados in kpis.items())
+                + "; ".join(
+                    f"{nome} {dados.get('resultado', 'n/d')}" for nome, dados in kpis.items()
+                )
             ),
         },
     ]

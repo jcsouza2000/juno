@@ -77,7 +77,7 @@ class InforConnector(ERPConnectorBase):
         """Conecta via REST (M3)."""
         self.base_url = f"http://{self.connection.host}:{self.connection.port or 8080}/m3api-rest"
 
-        self.session.auth = (self.connection.username, self.password)
+        self.session.auth = (self.connection.username, self.password)  # type: ignore[assignment]
 
         return True
 

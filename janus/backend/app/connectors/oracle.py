@@ -33,7 +33,7 @@ class OracleConnector(ERPConnectorBase):
         self.base_url = (
             f"https://{self.connection.host}:{self.connection.port or 443}/oracle/apps/rest"
         )
-        self.session.auth = (self.connection.username, self.password)
+        self.session.auth = (self.connection.username, self.password)  # type: ignore[assignment]
         response = self.session.get(f"{self.base_url}/latest/products", verify=False, timeout=30)
         return response.status_code == 200
 

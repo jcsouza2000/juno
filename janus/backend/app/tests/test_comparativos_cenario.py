@@ -45,12 +45,12 @@ def test_build_comparativos_cenario_quatro_colunas(db_session):
     assert section["cenarios"] == list(CENARIOS)
     assert len(section["linhas"]) == 4
 
-    receita = next(l for l in section["linhas"] if l["indicador_key"] == "receita_liquida")
+    receita = next(ln for ln in section["linhas"] if ln["indicador_key"] == "receita_liquida")
     assert receita["valores"]["REALIZADO"] == 1000.0
     assert receita["valores"]["ORCAMENTO"] is not None
     assert receita["valores"]["PROJECAO"] is not None
     assert "variacao_vs_realizado_pct" in receita
 
-    ev = next(l for l in section["linhas"] if l["indicador_key"] == "enterprise_value")
+    ev = next(ln for ln in section["linhas"] if ln["indicador_key"] == "enterprise_value")
     assert ev["valores"]["REALIZADO"] is None
     assert ev["valores"]["VALUATION"] is not None

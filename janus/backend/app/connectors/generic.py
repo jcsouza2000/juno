@@ -24,7 +24,7 @@ class GenericConnector(ERPConnectorBase):
             if self.api_key:
                 self.session.headers.update({"Authorization": f"Bearer {self.api_key}"})
             elif self.connection.username:
-                self.session.auth = (self.connection.username, self.password)
+                self.session.auth = (self.connection.username, self.password)  # type: ignore[assignment]
             return True
         except Exception as e:
             self.errors.append(f"Erro conexao generica: {str(e)}")

@@ -29,7 +29,7 @@ from app.score_v2 import JunoScoreCalculator
 try:
     from app import templates_financeiro
 except ImportError:  # pragma: no cover
-    templates_financeiro = None
+    templates_financeiro = None  # type: ignore[assignment]
 
 JUNO_NAVY = colors.HexColor("#0A2342")
 JUNO_GOLD = colors.HexColor("#C9A959")
@@ -437,7 +437,12 @@ class JUNOPDFReport:
                     ("FONTSIZE", (0, 0), (-1, 0), 9),
                     ("FONTSIZE", (0, 1), (-1, -1), 8),
                     ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e2e8f0")),
-                    ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.HexColor("#f8fafc"), colors.white]),
+                    (
+                        "ROWBACKGROUNDS",
+                        (0, 1),
+                        (-1, -1),
+                        [colors.HexColor("#f8fafc"), colors.white],
+                    ),
                     ("TOPPADDING", (0, 1), (-1, -1), 5),
                     ("BOTTOMPADDING", (0, 1), (-1, -1), 5),
                 ]

@@ -23,9 +23,9 @@ from app.data_management import (
     purge_company_data,
 )
 from app.data_versioning import VersioningError, activate_version, list_versions
-from app.services.tenant_members import is_tenant_admin
 from app.database import get_db
 from app.models import User
+from app.services.tenant_members import is_tenant_admin
 
 logger = get_logger(__name__)
 

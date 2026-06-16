@@ -14,7 +14,7 @@ import json
 import logging
 import logging.config
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from app.config import settings
@@ -26,8 +26,10 @@ class JsonFormatter(logging.Formatter):
     """Small JSON formatter with support for `extra` fields."""
 
     def format(self, record: logging.LogRecord) -> str:
+        # timezone.utc (nao datetime.UTC): typeshed do mypy py311 nao reconhece o alias
+        ts = datetime.fromtimestamp(record.created, tz=timezone.utc)  # noqa: UP017
         payload: dict[str, Any] = {
-            "ts": datetime.fromtimestamp(record.created, tz=datetime.UTC).isoformat(),
+            "ts": ts.isoformat(),
             "level": record.levelname,
             "logger": record.name,
             "message": record.getMessage(),

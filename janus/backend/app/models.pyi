@@ -36,6 +36,7 @@ class User(_Model):
     is_active: OrmAttr[bool]
     created_at: OrmAttr[datetime]
     companies: OrmAttr[list[Company]]
+    tenant_memberships: OrmAttr[list[UserCompany]]
 
 class Product(_Model):
     id: OrmAttr[int]
@@ -153,6 +154,9 @@ class FinancialStatement(_Model):
     period: OrmAttr[str]
     line_item: OrmAttr[str]
     value: OrmAttr[float]
+    upload_batch_id: OrmAttr[int]
+    version_number: OrmAttr[int]
+    is_active: OrmAttr[bool]
     created_at: OrmAttr[datetime]
 
 class FinancialUploadBatch(_Model):
@@ -162,6 +166,8 @@ class FinancialUploadBatch(_Model):
     periods: OrmAttr[str]
     rows_imported: OrmAttr[int]
     status: OrmAttr[str]
+    version_number: OrmAttr[int]
+    is_active: OrmAttr[bool]
     created_at: OrmAttr[datetime]
 
 class ErpFinancial(_Model):
@@ -583,5 +589,23 @@ class SnapshotIndex(_Model):
     id: OrmAttr[int]
     snapshot_id: OrmAttr[int]
     object_id: OrmAttr[int]
+
+class MonthlyClose(_Model):
+    id: OrmAttr[int]
+    company_id: OrmAttr[int]
+    year: OrmAttr[int]
+    month: OrmAttr[int]
+    snapshot: OrmAttr[str]
+    status: OrmAttr[str]
+    closed_at: OrmAttr[datetime]
+    closed_by: OrmAttr[int]
+
+class DailySnapshot(_Model):
+    id: OrmAttr[int]
+    company_id: OrmAttr[int]
+    snapshot_date: OrmAttr[Any]
+    snapshot: OrmAttr[str]
+    created_at: OrmAttr[datetime]
+    updated_at: OrmAttr[datetime]
 
 ErpImportBatch = ERPImportBatch

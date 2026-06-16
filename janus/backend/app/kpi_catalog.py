@@ -37,7 +37,14 @@ from app.score_v2 import get_score_calculator
 Persona = str
 Status = str
 
-OPEN_PRODUCTION_STATUSES = ("aberto", "aberta", "planned", "planejada", "em_andamento", "em andamento")
+OPEN_PRODUCTION_STATUSES = (
+    "aberto",
+    "aberta",
+    "planned",
+    "planejada",
+    "em_andamento",
+    "em andamento",
+)
 
 
 @dataclass(frozen=True)
@@ -561,7 +568,11 @@ def build_all_dashboards(db: Session, company_id: int) -> dict[str, Any]:
 
 
 def _unified_fallback_path() -> Path:
-    return Path(__file__).resolve().parents[3] / "uploads_piloto_juno" / "dashboard_unificado_2025.json"
+    return (
+        Path(__file__).resolve().parents[3]
+        / "uploads_piloto_juno"
+        / "dashboard_unificado_2025.json"
+    )
 
 
 def _load_unified_fallback() -> dict[str, Any] | None:
@@ -581,7 +592,9 @@ def _short_period_label(period: str) -> str:
     return period
 
 
-def _unified_synthesis(score: float, margem_ebitda: float | None, margem_liquida: float | None, giro: float | None) -> str:
+def _unified_synthesis(
+    score: float, margem_ebitda: float | None, margem_liquida: float | None, giro: float | None
+) -> str:
     if score >= 80:
         estabilidade = "Operacao estavel"
     elif score >= 65:
@@ -606,7 +619,9 @@ def _build_unified_overlay(db: Session, company_id: int) -> dict[str, Any]:
         .scalar()
         or 0
     )
-    open_status = func.lower(func.coalesce(ProductionOrder.status, "")).in_(OPEN_PRODUCTION_STATUSES)
+    open_status = func.lower(func.coalesce(ProductionOrder.status, "")).in_(
+        OPEN_PRODUCTION_STATUSES
+    )
     delayed_count = (
         db.query(func.count(ProductionOrder.id))
         .filter(
@@ -634,10 +649,14 @@ def _build_unified_overlay(db: Session, company_id: int) -> dict[str, Any]:
         .first()
     )
     sales_count = (
-        db.query(func.count(SalesOrder.id)).filter(SalesOrder.company_id == company_id).scalar() or 0
+        db.query(func.count(SalesOrder.id)).filter(SalesOrder.company_id == company_id).scalar()
+        or 0
     )
     erp_uploads = (
-        db.query(func.count(ERPImportBatch.id)).filter(ERPImportBatch.company_id == company_id).scalar() or 0
+        db.query(func.count(ERPImportBatch.id))
+        .filter(ERPImportBatch.company_id == company_id)
+        .scalar()
+        or 0
     )
     financial_uploads = (
         db.query(func.count(FinancialUploadBatch.id))
@@ -651,7 +670,11 @@ def _build_unified_overlay(db: Session, company_id: int) -> dict[str, Any]:
     customer_count = (
         db.query(func.count(Customer.id)).filter(Customer.company_id == company_id).scalar() or 0
     )
-    statements = get_statements(company_id, db) if not templates_financeiro.use_templates_as_canonical() else {}
+    statements = (
+        get_statements(company_id, db)
+        if not templates_financeiro.use_templates_as_canonical()
+        else {}
+    )
     return {
         "trust_report": {"trust_score": {"score": 85}},
         "production_count": int(production_count),
@@ -790,7 +813,9 @@ def build_unified_dashboard(db: Session, company_id: int) -> dict[str, Any]:
     giro_estoque = round(cmv / inv_value, 2) if inv_value > 0 and cmv else None
 
     despesas_fixas = dre_acc.get("despesas_fixas")
-    racio_admin = _rate(abs(despesas_fixas), revenue_gross) if despesas_fixas and revenue_gross else None
+    racio_admin = (
+        _rate(abs(despesas_fixas), revenue_gross) if despesas_fixas and revenue_gross else None
+    )
 
     op = ctx.get("op_totals")
     planned_qty = _float(getattr(op, "planned_qty", 0) if op else 0)
@@ -847,13 +872,18 @@ def build_unified_dashboard(db: Session, company_id: int) -> dict[str, Any]:
         "meta": {
             "fonte": "demonstracoes_financeiras" if has_dre else "operacional",
             "unidade": "R$",
-            "periodo_competencia": periods[-1].split("-", 1)[0] if periods else str(datetime.utcnow().year),
+            "periodo_competencia": (
+                periods[-1].split("-", 1)[0] if periods else str(datetime.utcnow().year)
+            ),
             "periodo_patrimonial": periods[-1] if periods else None,
             "source_mode": "database",
             "generated_at": datetime.utcnow().isoformat(),
         },
         "governanca": {
-            "erp_conexao": {"label": "Conexao ERP", "status": "ativa" if erp_active else "pendente"},
+            "erp_conexao": {
+                "label": "Conexao ERP",
+                "status": "ativa" if erp_active else "pendente",
+            },
             "auditoria_lgpd": {
                 "label": "Auditoria LGPD",
                 "status": "ok" if trust_score >= 70 else "revisar",
@@ -868,8 +898,16 @@ def build_unified_dashboard(db: Session, company_id: int) -> dict[str, Any]:
             "operacoes": {
                 "titulo": "Operacoes",
                 "series": {
-                    "oee": {"valor": oee, "meta_wcm": 85, "fonte": "ordens_producao" if oee else "integracao_producao_pendente"},
-                    "ftt_fpy": {"valor": ftt, "meta_wcm": 98, "fonte": "ordens_producao" if ftt else "integracao_producao_pendente"},
+                    "oee": {
+                        "valor": oee,
+                        "meta_wcm": 85,
+                        "fonte": "ordens_producao" if oee else "integracao_producao_pendente",
+                    },
+                    "ftt_fpy": {
+                        "valor": ftt,
+                        "meta_wcm": 98,
+                        "fonte": "ordens_producao" if ftt else "integracao_producao_pendente",
+                    },
                     "giro_estoque": {
                         "valor": giro_estoque,
                         "meta_wcm": None,
@@ -894,7 +932,11 @@ def build_unified_dashboard(db: Session, company_id: int) -> dict[str, Any]:
                 "titulo": "Risco e Pessoas",
                 "indicadores": {
                     "tfa": {"valor": None, "meta_wcm": 0, "fonte": "integracao_rh_pendente"},
-                    "turnover": {"valor": None, "meta_wcm": None, "fonte": "integracao_rh_pendente"},
+                    "turnover": {
+                        "valor": None,
+                        "meta_wcm": None,
+                        "fonte": "integracao_rh_pendente",
+                    },
                     "racio_administrativo_pct": racio_admin,
                 },
                 "contas_receber": None,
@@ -956,7 +998,9 @@ def _build_context(db: Session, company_id: int) -> dict[str, Any]:
         .scalar()
         or 0
     )
-    open_status = func.lower(func.coalesce(ProductionOrder.status, "")).in_(OPEN_PRODUCTION_STATUSES)
+    open_status = func.lower(func.coalesce(ProductionOrder.status, "")).in_(
+        OPEN_PRODUCTION_STATUSES
+    )
     delayed_count = (
         db.query(func.count(ProductionOrder.id))
         .filter(
@@ -1056,7 +1100,9 @@ def _build_context(db: Session, company_id: int) -> dict[str, Any]:
                 "ebitda": bundle.ebitda_ajustado,
                 "despesas_fixas": abs(bundle.despesas_admin),
             }
-        reporting_periods = dre_tpl.get("todos_periodos") or list(templates_financeiro.DEFAULT_TRIMESTRES)
+        reporting_periods = dre_tpl.get("todos_periodos") or list(
+            templates_financeiro.DEFAULT_TRIMESTRES
+        )
 
     balanco = fin.get("balanco", {}) if fin.get("available") else {}
     ativo_circulante = _optional_float(balanco.get("ativo_circulante"))
@@ -1070,7 +1116,9 @@ def _build_context(db: Session, company_id: int) -> dict[str, Any]:
     margin_rows = _margin_rows(db, company_id)
     negative_margin_count = sum(1 for row in margin_rows if row["margem"] < 0)
     margin_loss = sum(abs(row["margem"]) for row in margin_rows if row["margem"] < 0)
-    average_order_revenue = revenue_net / int(getattr(sales_rows, "count", 0) or 1) if revenue_net else 0
+    average_order_revenue = (
+        revenue_net / int(getattr(sales_rows, "count", 0) or 1) if revenue_net else 0
+    )
     delay_loss = delayed_count * average_order_revenue * 0.05 if average_order_revenue else None
     estimated_loss = margin_loss + (delay_loss or 0)
 
@@ -1135,7 +1183,9 @@ def _build_context(db: Session, company_id: int) -> dict[str, Any]:
 def _calculate_juno_score(company_id: int, db: Session) -> float:
     """Canonical Score JUNO used by executive KPIs."""
     try:
-        return get_score_calculator(db).calculate_full_score(company_id, persist=False).overall_score
+        return (
+            get_score_calculator(db).calculate_full_score(company_id, persist=False).overall_score
+        )
     except Exception:
         return 50.0
 
@@ -1205,18 +1255,16 @@ def _kpi_value(kpi_id: str, persona: str, ctx: dict[str, Any]) -> tuple[Any, Sta
     if value is None:
         return None, "missing", "Dados insuficientes para calcular este KPI."
 
-    status_key = (
-        "taxa_atraso"
-        if kpi_id == "ordens_atrasadas" and persona == "coo"
-        else kpi_id
-    )
+    status_key = "taxa_atraso" if kpi_id == "ordens_atrasadas" and persona == "coo" else kpi_id
     status_value = (
         _rate(ctx["delayed_count"], ctx["production_count"])
         if status_key == "taxa_atraso"
         else value
     )
     status = _status_for(
-        status_key, persona, float(status_value) if isinstance(status_value, (int, float)) else status_value
+        status_key,
+        persona,
+        float(status_value) if isinstance(status_value, (int, float)) else status_value,
     )
     return value, status, _note_for(status)
 
@@ -1302,7 +1350,9 @@ def _is_cmv_detail_line(key: str) -> bool:
     return key.startswith("cmv_")
 
 
-def _detail_expense_keys(stmts: dict[str, dict[str, dict[str, float]]], periods: list[str]) -> list[str]:
+def _detail_expense_keys(
+    stmts: dict[str, dict[str, dict[str, float]]], periods: list[str]
+) -> list[str]:
     keys: set[str] = set()
     for period in periods:
         dre = stmts.get("DRE", {}).get(period, {})
@@ -1359,9 +1409,7 @@ def _build_pnl_table(ctx: dict[str, Any]) -> dict[str, Any]:
         total = (
             sum(numeric_values)
             if total_mode == "flow" and numeric_values
-            else numeric_values[-1]
-            if numeric_values
-            else None
+            else numeric_values[-1] if numeric_values else None
         )
         pct = (
             (total / revenue_total * 100)
@@ -1425,7 +1473,10 @@ def _pnl_value(ctx: dict[str, Any], period: str, source: str) -> float | None:
     if source == "endividamento_pct":
         return _balance_metric(ctx, period, "endividamento_pct")
     if source == "caixa_operacional":
-        return _lookup(ctx["statements"].get("DFC", {}).get(period, {}), ("caixa_operacional", "total_operacional"))
+        return _lookup(
+            ctx["statements"].get("DFC", {}).get(period, {}),
+            ("caixa_operacional", "total_operacional"),
+        )
     if source == "capital_giro":
         return _balance_metric(ctx, period, "capital_giro")
     return _lookup(dre, (source,))
@@ -1586,9 +1637,10 @@ def _accumulated_dre(
         "receita_liquida": receita_liquida or receita_bruta or 0.0,
         "custo_variavel": custo or 0.0,
         "lucro_bruto": lucro_bruto or 0.0,
-        "despesas_fixas": _sum_fixed_expenses(totals),
+        "despesas_fixas": _sum_fixed_expenses(totals) or 0.0,
         "ebitda": _lookup(totals, ("ebitda",)) or 0.0,
-        "lucro_liquido": _lookup(totals, ("lucro_liquido", "resultado_liquido", "margem_liquida")) or 0.0,
+        "lucro_liquido": _lookup(totals, ("lucro_liquido", "resultado_liquido", "margem_liquida"))
+        or 0.0,
     }
 
 
@@ -1612,7 +1664,8 @@ def _accumulated_dfc(
     return {
         "caixa_operacional": _lookup(totals, ("caixa_operacional", "total_operacional")) or 0.0,
         "caixa_investimento": _lookup(totals, ("caixa_investimento", "total_investimento")) or 0.0,
-        "caixa_financiamento": _lookup(totals, ("caixa_financiamento", "total_financiamento")) or 0.0,
+        "caixa_financiamento": _lookup(totals, ("caixa_financiamento", "total_financiamento"))
+        or 0.0,
         "variacao_caixa": _lookup(totals, ("variacao_caixa",)) or 0.0,
         "caixa_final": _lookup(totals, ("caixa_final",)) or 0.0,
     }
@@ -1711,8 +1764,10 @@ def _critical_suppliers(ctx: dict[str, Any]) -> int | None:
     return int(critical_by_time or 0)
 
 
-def _rate(part: float, total: float) -> float | None:
-    return round(part / total * 100, 2) if total else None
+def _rate(part: float | None, total: float | None) -> float | None:
+    if part is None or not total:
+        return None
+    return round(part / total * 100, 2)
 
 
 def _status_for(kpi_id: str, persona: str, value: Any) -> Status:

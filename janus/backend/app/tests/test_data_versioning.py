@@ -4,8 +4,6 @@ Testes de versionamento de depositos (Fase B).
 
 from __future__ import annotations
 
-import pytest
-
 from app.data_versioning import (
     activate_version,
     get_active_financial_batch_id,
@@ -14,7 +12,7 @@ from app.data_versioning import (
     register_financial_upload_batch,
 )
 from app.financials import get_statements, save_financial_statements
-from app.models import Company, FinancialStatement, FinancialUploadBatch
+from app.models import Company, FinancialStatement
 
 
 def _company(db) -> int:

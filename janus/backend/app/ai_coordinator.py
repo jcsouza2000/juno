@@ -6,6 +6,7 @@ Agente local via qwen3:8b (Ollama) com tool calling sobre os dados reais.
 import json
 import logging
 import re
+from typing import cast
 
 import ollama
 from sqlalchemy.orm import Session
@@ -534,12 +535,12 @@ def coordinate(
             yield json.dumps({"type": "error", "message": msg})
             return
 
-        msg = probe.get("message", {})
+        probe_msg = cast(dict, probe.get("message", {}))
 
-        if msg.get("tool_calls"):
+        if probe_msg.get("tool_calls"):
             # Execute tools, loop back for next round
-            messages.append(msg)
-            for tc in msg.get("tool_calls", []):
+            messages.append(probe_msg)
+            for tc in probe_msg.get("tool_calls", []):
                 name = tc["function"]["name"]
                 args = tc["function"]["arguments"]
                 if isinstance(args, str):

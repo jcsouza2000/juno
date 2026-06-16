@@ -11,7 +11,7 @@ from __future__ import annotations
 from app.ai_coordinator import TOOLS
 from app.ai_playbook import build_prompt_fragment, load_playbook
 
-_TOOL_NAMES = {t["function"]["name"] for t in TOOLS}
+_TOOL_NAMES = {t["function"]["name"] for t in TOOLS}  # type: ignore[index]
 
 
 def test_playbook_carrega_com_intents():
