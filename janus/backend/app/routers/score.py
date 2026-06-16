@@ -2,7 +2,7 @@
 JUNO Score Router — Endpoints do Score JUNO 2.0
 """
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.auth import check_company_access, get_current_active_user
@@ -18,6 +18,7 @@ router = APIRouter(prefix="/score", tags=["Score JUNO"])
 @router.get("/{company_id}", response_model=ScoreResponse)
 def get_score(
     company_id: int,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -50,7 +51,10 @@ def get_score(
         ],
         "recommendations": result.recommendations,
     }
-    record_score_industrial(
+    # Gravacao no ledger de auditoria FORA do caminho de resposta: roda apos o
+    # response ser enviado (best-effort; gated a PostgreSQL; engole falhas).
+    background_tasks.add_task(
+        record_score_industrial,
         tenant_id=str(company_id),
         company_id=company_id,
         output_payload=response,
