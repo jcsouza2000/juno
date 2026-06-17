@@ -522,134 +522,137 @@ def coordinate(
     # /no_think disables qwen3's extended thinking block — cuts latency from ~60s to ~10s per call
     messages.append({"role": "user", "content": f"{question} /no_think"})
 
-    for _ in range(6):
-        # ── Tool-call probe: small budget, fast decision ──────────────────
-        try:
-            probe = ollama.chat(
-                model=MODEL,
-                messages=messages,
-                tools=full_tools,
-                options={"temperature": 0.1, "num_predict": 150},
-            )
-        except Exception as exc:
-            msg = str(exc)
-            if "Failed to connect to Ollama" in msg or "Connection refused" in msg.lower():
-                msg = (
-                    "Ollama nao esta acessivel. Inicie o Ollama Desktop ou execute "
-                    "'ollama serve' no terminal. Modelo necessario: qwen3:8b."
-                )
-            yield json.dumps({"type": "error", "message": msg})
-            return
+    # Otimizacao de latencia: SEMPRE 2 chamadas ao modelo por pergunta
+    #   (1) probe com tools — decide e executa as tools necessarias num round;
+    #   (2) resposta final sem tools — gera o texto.
+    # Antes era um loop de ate 6 rounds (3+ chamadas por pergunta + risco de
+    # loop), com prefill caro do prompt+tools a cada chamada. O modelo pode
+    # pedir VARIAS tools numa unica resposta (tratadas no for abaixo); as tools
+    # do JUNO sao independentes (cada uma busca dados), entao um round basta.
 
-        probe_msg = cast(dict, probe.get("message", {}))
-
-        if probe_msg.get("tool_calls"):
-            # Execute tools, loop back for next round
-            messages.append(probe_msg)
-            for tc in probe_msg.get("tool_calls", []):
-                name = tc["function"]["name"]
-                args = tc["function"]["arguments"]
-                if isinstance(args, str):
-                    try:
-                        args = json.loads(args)
-                    except Exception:
-                        args = {}
-
-                # Label: legado tem fixo, auto-geradas usam nome bonito
-                label = TOOL_LABELS.get(name)
-                if label is None:
-                    if name.startswith("propose_"):
-                        label = f"Propondo {name[len('propose_'):]}..."
-                    elif name.startswith("search_"):
-                        label = f"Buscando {name[len('search_'):]}..."
-                    elif name.startswith("get_") and name.endswith("_by_id"):
-                        label = f"Consultando {name[len('get_'):-len('_by_id')]}..."
-                    elif name.startswith("list_"):
-                        label = f"Listando {name[len('list_'):]}..."
-                    else:
-                        label = f"Executando {name}..."
-
-                yield json.dumps({"type": "tool_call", "tool": name, "label": label})
-
-                # Tenant da UI e' autoritativo: sobrescreve o que o modelo chutou.
-                # Ainda validado contra permissoes em _resolve_company_id.
-                if company_id is not None:
-                    args["company_id"] = company_id
-                result = _run_tool(name, args, db, user=user)
-                messages.append({"role": "tool", "content": result})
-
-                if name == "run_valuation_scenario":
-                    try:
-                        parsed = json.loads(result)
-                        if isinstance(parsed, dict) and parsed.get("kind") == "valuation_scenario":
-                            yield json.dumps({"type": "valuation_result", "data": parsed})
-                    except (json.JSONDecodeError, AttributeError):
-                        pass
-
-                # Se a tool foi propose_*, emite tambem evento dedicado pro frontend
-                # mostrar card de confirmacao em vez de so' texto.
-                if name.startswith("propose_"):
-                    try:
-                        parsed = json.loads(result)
-                        if isinstance(parsed, dict) and parsed.get("kind") == "proposed_action":
-                            yield json.dumps(
-                                {
-                                    "type": "proposed_action",
-                                    "action": parsed.get("action"),
-                                    "target_id": parsed.get("target_id"),
-                                    "inputs": parsed.get("inputs", {}),
-                                    "preview": parsed.get("preview"),
-                                    "next_step": parsed.get("next_step"),
-                                }
-                            )
-                    except (json.JSONDecodeError, AttributeError):
-                        pass
-            continue
-
-        # ── No more tools — generate final answer with full budget ────────
-        # Reforco anti-"resposta vazia": qwen3 as vezes gasta todo o budget em
-        # <think>...</think> e o _strip_thinking zera o texto. O nudge /no_think
-        # pede resposta direta; o fallback abaixo garante que algo util e' emitido.
-        messages.append(
-            {
-                "role": "user",
-                "content": (
-                    "/no_think Responda agora, de forma objetiva e em portugues, "
-                    "usando os dados das ferramentas. Nao mostre raciocinio."
-                ),
-            }
+    # ── Passo 1: probe com tools (orcamento curto, decisao rapida) ──────────
+    try:
+        probe = ollama.chat(
+            model=MODEL,
+            messages=messages,
+            tools=full_tools,
+            options={"temperature": 0.1, "num_predict": 150},
         )
-        try:
-            final = ollama.chat(
-                model=MODEL,
-                messages=messages,
-                options={"temperature": 0.1, "num_predict": 900},
+    except Exception as exc:
+        msg = str(exc)
+        if "Failed to connect to Ollama" in msg or "Connection refused" in msg.lower():
+            msg = (
+                "Ollama nao esta acessivel. Inicie o Ollama Desktop ou execute "
+                "'ollama serve' no terminal. Modelo necessario: qwen3:8b."
             )
-        except Exception as exc:
-            msg = str(exc)
-            if "Failed to connect to Ollama" in msg or "Connection refused" in msg.lower():
-                msg = (
-                    "Ollama nao esta acessivel. Inicie o Ollama Desktop ou execute "
-                    "'ollama serve' no terminal. Modelo necessario: qwen3:8b."
-                )
-            yield json.dumps({"type": "error", "message": msg})
-            return
-
-        raw = final.get("message", {}).get("content", "")
-        content = _strip_thinking(raw)
-        if not content.strip():
-            # Tudo veio como raciocinio (<think>...): usa o texto apos o ultimo
-            # </think>; se ainda vazio, cai para o bruto sem as tags de think.
-            tail = raw.split("</think>")[-1].strip()
-            content = tail or re.sub(r"</?think>", "", raw).strip()
-        buf = ""
-        for char in content:
-            buf += char
-            if len(buf) >= 40 or char in ".!?\n":
-                yield json.dumps({"type": "text", "content": buf})
-                buf = ""
-        if buf:
-            yield json.dumps({"type": "text", "content": buf})
+        yield json.dumps({"type": "error", "message": msg})
         return
 
-    yield json.dumps({"type": "error", "message": "Limite de iterações atingido."})
+    probe_msg = cast(dict, probe.get("message", {}))
+
+    if probe_msg.get("tool_calls"):
+        messages.append(probe_msg)
+        for tc in probe_msg.get("tool_calls", []):
+            name = tc["function"]["name"]
+            args = tc["function"]["arguments"]
+            if isinstance(args, str):
+                try:
+                    args = json.loads(args)
+                except Exception:
+                    args = {}
+
+            # Label: legado tem fixo, auto-geradas usam nome bonito
+            label = TOOL_LABELS.get(name)
+            if label is None:
+                if name.startswith("propose_"):
+                    label = f"Propondo {name[len('propose_'):]}..."
+                elif name.startswith("search_"):
+                    label = f"Buscando {name[len('search_'):]}..."
+                elif name.startswith("get_") and name.endswith("_by_id"):
+                    label = f"Consultando {name[len('get_'):-len('_by_id')]}..."
+                elif name.startswith("list_"):
+                    label = f"Listando {name[len('list_'):]}..."
+                else:
+                    label = f"Executando {name}..."
+
+            yield json.dumps({"type": "tool_call", "tool": name, "label": label})
+
+            # Tenant da UI e' autoritativo: sobrescreve o que o modelo chutou.
+            # Ainda validado contra permissoes em _resolve_company_id.
+            if company_id is not None:
+                args["company_id"] = company_id
+            result = _run_tool(name, args, db, user=user)
+            messages.append({"role": "tool", "content": result})
+
+            if name == "run_valuation_scenario":
+                try:
+                    parsed = json.loads(result)
+                    if isinstance(parsed, dict) and parsed.get("kind") == "valuation_scenario":
+                        yield json.dumps({"type": "valuation_result", "data": parsed})
+                except (json.JSONDecodeError, AttributeError):
+                    pass
+
+            # Se a tool foi propose_*, emite tambem evento dedicado pro frontend
+            # mostrar card de confirmacao em vez de so' texto.
+            if name.startswith("propose_"):
+                try:
+                    parsed = json.loads(result)
+                    if isinstance(parsed, dict) and parsed.get("kind") == "proposed_action":
+                        yield json.dumps(
+                            {
+                                "type": "proposed_action",
+                                "action": parsed.get("action"),
+                                "target_id": parsed.get("target_id"),
+                                "inputs": parsed.get("inputs", {}),
+                                "preview": parsed.get("preview"),
+                                "next_step": parsed.get("next_step"),
+                            }
+                        )
+                except (json.JSONDecodeError, AttributeError):
+                    pass
+
+    # ── Passo 2: resposta final (sem tools, orcamento cheio) ────────────────
+    # Reforco anti-"resposta vazia": qwen3 as vezes gasta todo o budget em
+    # <think>...</think> e o _strip_thinking zera o texto. O nudge /no_think
+    # pede resposta direta; o fallback abaixo garante que algo util e' emitido.
+    messages.append(
+        {
+            "role": "user",
+            "content": (
+                "/no_think Responda agora, de forma objetiva e em portugues, "
+                "usando os dados das ferramentas. Nao mostre raciocinio."
+            ),
+        }
+    )
+    try:
+        final = ollama.chat(
+            model=MODEL,
+            messages=messages,
+            options={"temperature": 0.1, "num_predict": 900},
+        )
+    except Exception as exc:
+        msg = str(exc)
+        if "Failed to connect to Ollama" in msg or "Connection refused" in msg.lower():
+            msg = (
+                "Ollama nao esta acessivel. Inicie o Ollama Desktop ou execute "
+                "'ollama serve' no terminal. Modelo necessario: qwen3:8b."
+            )
+        yield json.dumps({"type": "error", "message": msg})
+        return
+
+    raw = final.get("message", {}).get("content", "")
+    content = _strip_thinking(raw)
+    if not content.strip():
+        # Tudo veio como raciocinio (<think>...): usa o texto apos o ultimo
+        # </think>; se ainda vazio, cai para o bruto sem as tags de think.
+        tail = raw.split("</think>")[-1].strip()
+        content = tail or re.sub(r"</?think>", "", raw).strip()
+    buf = ""
+    for char in content:
+        buf += char
+        if len(buf) >= 40 or char in ".!?\n":
+            yield json.dumps({"type": "text", "content": buf})
+            buf = ""
+    if buf:
+        yield json.dumps({"type": "text", "content": buf})
+    return
