@@ -607,6 +607,18 @@ def coordinate(
             continue
 
         # ── No more tools — generate final answer with full budget ────────
+        # Reforco anti-"resposta vazia": qwen3 as vezes gasta todo o budget em
+        # <think>...</think> e o _strip_thinking zera o texto. O nudge /no_think
+        # pede resposta direta; o fallback abaixo garante que algo util e' emitido.
+        messages.append(
+            {
+                "role": "user",
+                "content": (
+                    "/no_think Responda agora, de forma objetiva e em portugues, "
+                    "usando os dados das ferramentas. Nao mostre raciocinio."
+                ),
+            }
+        )
         try:
             final = ollama.chat(
                 model=MODEL,
@@ -623,7 +635,13 @@ def coordinate(
             yield json.dumps({"type": "error", "message": msg})
             return
 
-        content = _strip_thinking(final.get("message", {}).get("content", ""))
+        raw = final.get("message", {}).get("content", "")
+        content = _strip_thinking(raw)
+        if not content.strip():
+            # Tudo veio como raciocinio (<think>...): usa o texto apos o ultimo
+            # </think>; se ainda vazio, cai para o bruto sem as tags de think.
+            tail = raw.split("</think>")[-1].strip()
+            content = tail or re.sub(r"</?think>", "", raw).strip()
         buf = ""
         for char in content:
             buf += char
