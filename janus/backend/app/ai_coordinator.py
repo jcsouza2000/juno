@@ -5,6 +5,7 @@ Agente local via qwen3:8b (Ollama) com tool calling sobre os dados reais.
 
 import json
 import logging
+import os
 import re
 from typing import cast
 
@@ -52,7 +53,10 @@ def _get_ontology_extensions():
     return _ONTOLOGY_TOOLS_CACHE, _ONTOLOGY_PROMPT_CACHE or ""
 
 
-MODEL = "qwen3:8b"
+# Modelo do Coordinator. Configuravel por env JUNO_AI_MODEL: em CPU pura, um
+# modelo menor (ex.: "phi3:mini" ~3.8B) e' varias vezes mais rapido que o
+# qwen3:8b; com GPU, qwen3:8b entrega melhor qualidade de tool-calling.
+MODEL = os.getenv("JUNO_AI_MODEL", "qwen3:8b")
 
 SYSTEM_PROMPT = """Você é o Coordinator do JUNO, sistema de diagnóstico operacional.
 Você tem acesso a ferramentas que consultam dados reais da empresa do usuário.
