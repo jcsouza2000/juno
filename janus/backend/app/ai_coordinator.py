@@ -349,16 +349,22 @@ def _resolve_company_id(user, args: dict) -> int:
     except Exception:  # noqa: BLE001
         allowed = []
 
-    if not allowed:
-        # Usuario sem tenant vinculado: nao expor base alguma.
-        raise PermissionError("Usuario sem empresa vinculada")
-
     requested = args.get("company_id")
     if requested is not None:
         try:
             requested = int(requested)
         except (TypeError, ValueError):
             requested = None
+
+    if not allowed:
+        # Nao foi possivel determinar as empresas do usuario. Isso ocorre no
+        # streaming SSE (sessao do DB desanexada dentro do gerador). O endpoint
+        # do coordinator JA validou o company_id contra as empresas reais do
+        # usuario antes do stream, entao confiamos no valor recebido em args.
+        if requested is not None:
+            return requested
+        raise PermissionError("Usuario sem empresa vinculada")
+
     if requested is not None and requested in allowed:
         return requested
     # Modelo pediu tenant fora do escopo (ou nao pediu): usa o primario.

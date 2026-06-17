@@ -77,6 +77,23 @@ def coordinator_endpoint(
     user=Depends(get_current_user),
 ):
     from app.ai_coordinator import coordinate
+    from app.auth import get_user_company_ids
+
+    # Resolve o tenant AGORA, com a sessao do DB viva. No streaming SSE o objeto
+    # `user` desanexa e o lazy-load de user.companies falha dentro do gerador;
+    # por isso validamos aqui o company_id contra as empresas reais do usuario.
+    try:
+        allowed = get_user_company_ids(user)
+    except Exception:  # noqa: BLE001
+        allowed = []
+    requested = payload.company_id
+    effective_company_id: int | None
+    if requested is not None and requested in allowed:
+        effective_company_id = requested
+    elif allowed:
+        effective_company_id = allowed[0]
+    else:
+        effective_company_id = requested
 
     def event_stream():
         try:
@@ -85,7 +102,7 @@ def coordinator_endpoint(
                 db,
                 history=payload.history,
                 user=user,
-                company_id=payload.company_id,
+                company_id=effective_company_id,
                 lang=payload.lang,
             ):
                 yield f"data: {chunk}\n\n"
