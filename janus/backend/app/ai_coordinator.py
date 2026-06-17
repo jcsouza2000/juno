@@ -624,11 +624,15 @@ def coordinate(
             ),
         }
     )
+    # Streaming token-a-token: a resposta surge enquanto e' gerada (latencia
+    # PERCEBIDA = tempo ate a 1a palavra, nao o total). num_predict menor (400)
+    # corta o tempo total — respostas executivas sao curtas.
     try:
-        final = ollama.chat(
+        stream = ollama.chat(
             model=MODEL,
             messages=messages,
-            options={"temperature": 0.1, "num_predict": 900},
+            stream=True,
+            options={"temperature": 0.1, "num_predict": 400},
         )
     except Exception as exc:
         msg = str(exc)
@@ -640,19 +644,29 @@ def coordinate(
         yield json.dumps({"type": "error", "message": msg})
         return
 
-    raw = final.get("message", {}).get("content", "")
-    content = _strip_thinking(raw)
-    if not content.strip():
-        # Tudo veio como raciocinio (<think>...): usa o texto apos o ultimo
-        # </think>; se ainda vazio, cai para o bruto sem as tags de think.
-        tail = raw.split("</think>")[-1].strip()
-        content = tail or re.sub(r"</?think>", "", raw).strip()
-    buf = ""
-    for char in content:
-        buf += char
-        if len(buf) >= 40 or char in ".!?\n":
-            yield json.dumps({"type": "text", "content": buf})
-            buf = ""
-    if buf:
-        yield json.dumps({"type": "text", "content": buf})
+    full = ""
+    emitted = 0
+    try:
+        for chunk in stream:
+            piece = chunk.get("message", {}).get("content", "") or ""
+            if not piece:
+                continue
+            full += piece
+            # Nao emite enquanto um bloco <think> estiver aberto (qwen3); quando
+            # fecha, _strip_thinking remove tudo e o texto util e' emitido.
+            if "<think>" in full and "</think>" not in full:
+                continue
+            visible = _strip_thinking(full)
+            if len(visible) > emitted:
+                yield json.dumps({"type": "text", "content": visible[emitted:]})
+                emitted = len(visible)
+    except Exception as exc:  # noqa: BLE001
+        yield json.dumps({"type": "error", "message": str(exc)})
+        return
+
+    # Fallback: se nada foi emitido (tudo virou raciocinio), usa o bruto limpo.
+    if emitted == 0:
+        content = full.split("</think>")[-1].strip() or re.sub(r"</?think>", "", full).strip()
+        if content:
+            yield json.dumps({"type": "text", "content": content})
     return
