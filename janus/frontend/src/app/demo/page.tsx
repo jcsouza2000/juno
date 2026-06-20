@@ -1,7 +1,8 @@
 ﻿'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
+import { useActiveCompany } from '@/lib/tenant';
 import {
   Play, ChevronLeft, ChevronRight, Loader2, Download,
   TrendingDown, AlertTriangle, ShieldCheck, BarChart3,
@@ -308,13 +309,25 @@ function FlowAuditoria({ d }: { d: DemoData }) {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function DemoPage() {
-  const [company, setCompany] = useState(1);
+  // Empresa ativa do tenant logado: o demo opera sobre os dados a que o usuario
+  // tem acesso (antes fixava empresa 1, que retornava 403 "Acesso negado").
+  const { company: activeCompany, companyId } = useActiveCompany();
+  const [company, setCompany] = useState(0);
   const [flow, setFlow]       = useState(0);
   const [data, setData]       = useState<DemoData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState('');
 
+  useEffect(() => {
+    if (companyId) setCompany(companyId);
+  }, [companyId]);
+
+  const companies = companyId
+    ? [{ id: companyId, label: activeCompany?.name ?? 'Minha Empresa', sector: 'Diagnóstico multi-setorial' }]
+    : COMPANIES;
+
   const loadDemo = async (cid = company) => {
+    if (!cid) return;
     setLoading(true);
     setError('');
     try {
@@ -358,7 +371,7 @@ export default function DemoPage() {
         </div>
         <div className="flex items-center gap-3">
           <div className="flex gap-2">
-            {COMPANIES.map(c => (
+            {companies.map(c => (
               <button key={c.id} onClick={() => switchCompany(c.id)}
                 className={`px-4 py-2 rounded-lg border-2 font-bold text-sm transition-all ${
                   company === c.id ? 'bg-[#0A2342] text-white border-[#0A2342]' : 'bg-white text-[#0A2342] border-gray-200 hover:border-[#0A2342]'
