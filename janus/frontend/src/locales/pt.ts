@@ -662,6 +662,36 @@ const pt = {
     futureText:
       'O JUNO mantém os controles essenciais ativos e deixa MFA, SSO, SOC 2 e ISO 27001 como trilhas futuras para quando houver cliente, receita ou exigência contratual.',
   },
+  overview: {
+    eyebrow: 'SaaS híbrido para empresas brasileiras',
+    title: 'JUNO — Sistema Operacional de Dados e IA',
+    subtitle:
+      'Plataforma para decisões empresariais governadas, com IA, auditoria e integração ERP sem tirar o cliente do seu ambiente.',
+    badgeCloud: 'Cloud ou on-prem',
+    badgeLgpd: 'LGPD e trilha de auditoria',
+    badgeErp: 'TOTVS, Sankhya, Senior, SAP e Infor',
+    open: 'Abrir Diagnóstico',
+    card1Title: 'Minha Empresa',
+    card1Desc:
+      'Diagnóstico operacional unificado para qualquer atividade econômica — manufatura, serviços, comércio ou agroindústria.',
+    card2Title: 'KPIs Executivos',
+    card2Desc:
+      'Score proprietário, síntese analítica e três quadrantes — operação, financeiro e risco em uma única tela.',
+    card3Title: 'IA Operacional',
+    card3Desc: 'Decisões governadas por dados cruzando Ontology e RAG.',
+    card4Title: 'Score Industrial',
+    card4Desc: 'Métrica proprietária de saúde operacional em tempo real.',
+    trustTitle: 'Confiança para diretoria',
+    trustDesc:
+      'Score JUNO, Data Trust, logs e governança para explicar de onde veio cada recomendação.',
+    csvTitle: 'Entrada por CSV, escala por ERP',
+    csvDesc:
+      'Comece com planilhas no piloto e evolua para conectores controlados por tenant.',
+    pilotTitle: 'Piloto de 30 dias',
+    pilotDesc:
+      'Diagnóstico executivo, auditoria de dados e plano de ação para validar valor antes da implantação completa.',
+    pilotCta: 'Ver roteiro do piloto',
+  },
 }
 
 // O shape do PT é a fonte da verdade; en.ts e es.ts são validados contra ele.

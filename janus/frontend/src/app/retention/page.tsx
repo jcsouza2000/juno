@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import {
   Archive, CalendarCheck, CameraIcon, Loader2, AlertCircle, CheckCircle, ShieldAlert, Lock,
@@ -45,8 +45,15 @@ export default function RetentionPage() {
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [busy, setBusy] = useState(false);
 
+  // Guard contra empresa-fantasma: se o companyId mudar durante o fetch (ex.:
+  // resolucao tardia do tenant ativo), uma chamada antiga pode falhar com 403
+  // "Acesso negado" e fixar o erro mesmo apos a carga correta. So a ULTIMA
+  // chamada aplica resultado/erro.
+  const reqRef = useRef(0);
+
   const load = useCallback(async () => {
     if (!companyId) { setCloses([]); setSnapshots([]); return; }
+    const reqId = ++reqRef.current;
     setLoading(true);
     setError(null);
     try {
@@ -54,12 +61,14 @@ export default function RetentionPage() {
         api.get(`/retention/${companyId}/monthly-close`),
         api.get(`/retention/${companyId}/daily-snapshot?limit=30`),
       ]);
+      if (reqId !== reqRef.current) return;
       setCloses(c.data);
       setSnapshots(s.data);
     } catch (err: unknown) {
+      if (reqId !== reqRef.current) return;
       setError(getApiErrorMessage(err));
     } finally {
-      setLoading(false);
+      if (reqId === reqRef.current) setLoading(false);
     }
   }, [companyId]);
 

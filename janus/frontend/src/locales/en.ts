@@ -660,6 +660,35 @@ const en: Dictionary = {
     futureText:
       'JUNO keeps the essential controls active and leaves MFA, SSO, SOC 2 and ISO 27001 as future tracks for when there is a client, revenue or contractual requirement.',
   },
+  overview: {
+    eyebrow: 'Hybrid SaaS for Brazilian companies',
+    title: 'JUNO — Data and AI Operating System',
+    subtitle:
+      'A platform for governed business decisions, with AI, audit and ERP integration without taking the client out of their environment.',
+    badgeCloud: 'Cloud or on-prem',
+    badgeLgpd: 'LGPD and audit trail',
+    badgeErp: 'TOTVS, Sankhya, Senior, SAP and Infor',
+    open: 'Open Diagnosis',
+    card1Title: 'My Company',
+    card1Desc:
+      'Unified operational diagnosis for any economic activity — manufacturing, services, retail or agribusiness.',
+    card2Title: 'Executive KPIs',
+    card2Desc:
+      'Proprietary score, analytical synthesis and three quadrants — operations, financial and risk on a single screen.',
+    card3Title: 'Operational AI',
+    card3Desc: 'Decisions governed by data, cross-referencing Ontology and RAG.',
+    card4Title: 'Industrial Score',
+    card4Desc: 'Proprietary real-time operational health metric.',
+    trustTitle: 'Trust for the board',
+    trustDesc:
+      'JUNO Score, Data Trust, logs and governance to explain where each recommendation came from.',
+    csvTitle: 'Start with CSV, scale with ERP',
+    csvDesc: 'Start with spreadsheets in the pilot and evolve to per-tenant controlled connectors.',
+    pilotTitle: '30-day pilot',
+    pilotDesc:
+      'Executive diagnosis, data audit and action plan to validate value before the full rollout.',
+    pilotCta: 'See the pilot roadmap',
+  },
 }
 
 export default en

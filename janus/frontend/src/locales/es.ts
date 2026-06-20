@@ -661,6 +661,35 @@ const es: Dictionary = {
     futureText:
       'JUNO mantiene los controles esenciales activos y deja MFA, SSO, SOC 2 e ISO 27001 como pistas futuras para cuando haya cliente, ingresos o exigencia contractual.',
   },
+  overview: {
+    eyebrow: 'SaaS híbrido para empresas brasileñas',
+    title: 'JUNO — Sistema Operativo de Datos e IA',
+    subtitle:
+      'Plataforma para decisiones empresariales gobernadas, con IA, auditoría e integración ERP sin sacar al cliente de su entorno.',
+    badgeCloud: 'Cloud u on-prem',
+    badgeLgpd: 'LGPD y rastro de auditoría',
+    badgeErp: 'TOTVS, Sankhya, Senior, SAP e Infor',
+    open: 'Abrir Diagnóstico',
+    card1Title: 'Mi Empresa',
+    card1Desc:
+      'Diagnóstico operacional unificado para cualquier actividad económica — manufactura, servicios, comercio o agroindustria.',
+    card2Title: 'KPIs Ejecutivos',
+    card2Desc:
+      'Score propietario, síntesis analítica y tres cuadrantes — operación, financiero y riesgo en una sola pantalla.',
+    card3Title: 'IA Operacional',
+    card3Desc: 'Decisiones gobernadas por datos cruzando Ontology y RAG.',
+    card4Title: 'Score Industrial',
+    card4Desc: 'Métrica propietaria de salud operacional en tiempo real.',
+    trustTitle: 'Confianza para la dirección',
+    trustDesc:
+      'Score JUNO, Data Trust, logs y gobernanza para explicar de dónde vino cada recomendación.',
+    csvTitle: 'Entrada por CSV, escala por ERP',
+    csvDesc: 'Comience con planillas en el piloto y evolucione a conectores controlados por tenant.',
+    pilotTitle: 'Piloto de 30 días',
+    pilotDesc:
+      'Diagnóstico ejecutivo, auditoría de datos y plan de acción para validar el valor antes de la implementación completa.',
+    pilotCta: 'Ver la hoja de ruta del piloto',
+  },
 }
 
 export default es
