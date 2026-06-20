@@ -22,7 +22,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 
 from fastapi import Depends
-from sqlalchemy import desc
+from sqlalchemy import case, desc, extract, func
 from sqlalchemy.orm import Session
 
 from app.core.datetime_utils import utcnow_naive
@@ -316,35 +316,57 @@ class JunoScoreCalculator:
         Score de EficiÃªncia de ProduÃ§Ã£o (0-100).
         Baseado em: atrasos, estouro de custo, qualidade.
         """
-        orders = (
-            self.db.query(ProductionOrder).filter(ProductionOrder.company_id == company_id).all()
+        # Agregacao em SQL (antes carregava todas as ordens no ORM e iterava em
+        # Python — ~78k linhas levavam ~3s). today vira limite de datetime: a
+        # logica original comparava planned_date.date() < today.
+        today_start = datetime.combine(utcnow_naive().date(), datetime.min.time())
+        open_status = func.lower(func.trim(func.coalesce(ProductionOrder.status, ""))).in_(
+            OPEN_PRODUCTION_STATUSES
         )
+        delayed_case = case(
+            (
+                (
+                    (ProductionOrder.actual_date.isnot(None))
+                    & (ProductionOrder.planned_date.isnot(None))
+                    & (ProductionOrder.actual_date > ProductionOrder.planned_date)
+                )
+                | (
+                    (ProductionOrder.actual_date.is_(None))
+                    & (ProductionOrder.planned_date.isnot(None))
+                    & (ProductionOrder.planned_date < today_start)
+                    & open_status
+                ),
+                1,
+            ),
+            else_=0,
+        )
+        overrun_case = case(
+            (
+                (ProductionOrder.planned_cost.isnot(None))
+                & (ProductionOrder.planned_cost != 0)
+                & (ProductionOrder.actual_cost.isnot(None))
+                & (ProductionOrder.actual_cost != 0)
+                & (ProductionOrder.actual_cost > ProductionOrder.planned_cost * 1.1),
+                1,
+            ),
+            else_=0,
+        )
+        agg = (
+            self.db.query(
+                func.count(ProductionOrder.id),
+                func.coalesce(func.sum(delayed_case), 0),
+                func.coalesce(func.sum(overrun_case), 0),
+            )
+            .filter(ProductionOrder.company_id == company_id)
+            .one()
+        )
+        total_orders = int(agg[0] or 0)
 
-        if not orders:
+        if total_orders == 0:
             return 50, {"error": "Sem ordens de produÃ§Ã£o"}
 
-        total_orders = len(orders)
-        today = utcnow_naive().date()
-        delayed_orders = len(
-            [
-                o
-                for o in orders
-                if (o.actual_date and o.planned_date and o.actual_date > o.planned_date)
-                or (
-                    not o.actual_date
-                    and o.planned_date
-                    and o.planned_date.date() < today
-                    and str(o.status or "").strip().lower() in OPEN_PRODUCTION_STATUSES
-                )
-            ]
-        )
-        cost_overruns = len(
-            [
-                o
-                for o in orders
-                if o.planned_cost and o.actual_cost and o.actual_cost > o.planned_cost * 1.1
-            ]
-        )
+        delayed_orders = int(agg[1] or 0)
+        cost_overruns = int(agg[2] or 0)
 
         # Atrasos: 0% = 100 pontos, >30% = 0 pontos
         delay_rate = delayed_orders / total_orders if total_orders > 0 else 0
@@ -377,10 +399,22 @@ class JunoScoreCalculator:
         # Verificar completude das tabelas principais
         checks: list[dict[str, float | int | str]] = []
 
+        # Counts agregados em SQL (antes materializava products + production_orders
+        # no ORM e contava em Python).
         # Produtos
-        products = self.db.query(Product).filter(Product.company_id == company_id).all()
-        products_complete = len([p for p in products if p.standard_cost > 0 and p.sale_price > 0])
-        products_total = len(products)
+        prod_complete_case = case(
+            ((Product.standard_cost > 0) & (Product.sale_price > 0), 1), else_=0
+        )
+        prod_agg = (
+            self.db.query(
+                func.count(Product.id),
+                func.coalesce(func.sum(prod_complete_case), 0),
+            )
+            .filter(Product.company_id == company_id)
+            .one()
+        )
+        products_total = int(prod_agg[0] or 0)
+        products_complete = int(prod_agg[1] or 0)
         checks.append(
             {
                 "table": "products",
@@ -391,27 +425,46 @@ class JunoScoreCalculator:
         )
 
         # Clientes
-        customers = self.db.query(Customer).filter(Customer.company_id == company_id).all()
+        customers_total = (
+            self.db.query(func.count(Customer.id))
+            .filter(Customer.company_id == company_id)
+            .scalar()
+            or 0
+        )
         checks.append(
             {
                 "table": "customers",
-                "complete": len(customers),
-                "total": max(len(customers), 10),
-                "rate": min(1.0, len(customers) / 10),
+                "complete": customers_total,
+                "total": max(customers_total, 10),
+                "rate": min(1.0, customers_total / 10),
             }
         )
 
         # Ordens de produÃ§Ã£o
-        orders = (
-            self.db.query(ProductionOrder).filter(ProductionOrder.company_id == company_id).all()
+        with_dates_case = case(
+            (
+                (ProductionOrder.planned_date.isnot(None))
+                & (ProductionOrder.actual_date.isnot(None)),
+                1,
+            ),
+            else_=0,
         )
-        orders_with_dates = len([o for o in orders if o.planned_date and o.actual_date])
+        po_agg = (
+            self.db.query(
+                func.count(ProductionOrder.id),
+                func.coalesce(func.sum(with_dates_case), 0),
+            )
+            .filter(ProductionOrder.company_id == company_id)
+            .one()
+        )
+        po_total = int(po_agg[0] or 0)
+        orders_with_dates = int(po_agg[1] or 0)
         checks.append(
             {
                 "table": "production_orders",
                 "complete": orders_with_dates,
-                "total": len(orders),
-                "rate": orders_with_dates / len(orders) if len(orders) > 0 else 0,
+                "total": po_total,
+                "rate": orders_with_dates / po_total if po_total > 0 else 0,
             }
         )
 
@@ -436,19 +489,29 @@ class JunoScoreCalculator:
         Score de Sazonalidade (0-100).
         Analisa variaÃ§Ã£o de vendas ao longo do ano.
         """
-        orders = self.db.query(SalesOrder).filter(SalesOrder.company_id == company_id).all()
-
-        if not orders:
+        # GROUP BY mes em SQL (antes carregava todos os pedidos no ORM —
+        # ~117k linhas levavam ~5s). Agrega por numero do mes (1-12) somando
+        # receita liquida (revenue - discount), ignorando pedidos sem data.
+        any_sales = self.db.query(SalesOrder.id).filter(SalesOrder.company_id == company_id).first()
+        if any_sales is None:
             return 50, {"error": "Sem pedidos de venda"}
 
-        # Agrupar por mÃªs
-        monthly_revenue: dict[int, float] = {}
-        for o in orders:
-            if o.order_date:
-                month = o.order_date.month
-                monthly_revenue[month] = monthly_revenue.get(month, 0) + (
-                    (o.revenue or 0) - (o.discount or 0)
-                )
+        month_col = extract("month", SalesOrder.order_date)
+        rows = (
+            self.db.query(
+                month_col.label("month"),
+                func.sum(
+                    func.coalesce(SalesOrder.revenue, 0) - func.coalesce(SalesOrder.discount, 0)
+                ).label("revenue"),
+            )
+            .filter(
+                SalesOrder.company_id == company_id,
+                SalesOrder.order_date.isnot(None),
+            )
+            .group_by(month_col)
+            .all()
+        )
+        monthly_revenue: dict[int, float] = {int(r.month): float(r.revenue or 0) for r in rows}
 
         if not monthly_revenue:
             return 50, {"error": "Sem datas nos pedidos"}
@@ -484,17 +547,26 @@ class JunoScoreCalculator:
         Score de ConcentraÃ§Ã£o de Clientes (0-100).
         Menor concentraÃ§Ã£o = maior score (diversificaÃ§Ã£o Ã© saudÃ¡vel).
         """
-        orders = self.db.query(SalesOrder).filter(SalesOrder.company_id == company_id).all()
+        # GROUP BY cliente em SQL (antes carregava todos os pedidos no ORM —
+        # ~117k linhas levavam ~5s). Mantem o agrupamento por customer_id
+        # (inclusive NULL como um grupo, como no comportamento original).
+        rows = (
+            self.db.query(
+                SalesOrder.customer_id.label("customer_id"),
+                func.sum(
+                    func.coalesce(SalesOrder.revenue, 0) - func.coalesce(SalesOrder.discount, 0)
+                ).label("revenue"),
+            )
+            .filter(SalesOrder.company_id == company_id)
+            .group_by(SalesOrder.customer_id)
+            .all()
+        )
 
-        if not orders:
+        if not rows:
             return 50, {"error": "Sem pedidos"}
 
         # Receita por cliente
-        customer_revenue: dict[int, float] = {}
-        for o in orders:
-            customer_revenue[o.customer_id] = customer_revenue.get(o.customer_id, 0) + (
-                (o.revenue or 0) - (o.discount or 0)
-            )
+        customer_revenue: dict[int, float] = {r.customer_id: float(r.revenue or 0) for r in rows}
 
         total_revenue = sum(customer_revenue.values())
 
