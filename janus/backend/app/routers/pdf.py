@@ -45,16 +45,17 @@ def build_diagnostic(company_id: int, db: Session) -> dict:
 @router.get("/pdf/{company_id}")
 def generate_pdf_report(
     company_id: int,
+    lang: str = "pt",
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
-    """Generate the executive PDF report."""
+    """Generate the executive PDF report. lang: pt|en|es (segue o seletor da UI)."""
     if not check_company_access(current_user, company_id):
         raise HTTPException(status_code=403, detail="Acesso negado")
 
     try:
         pdf_service = get_pdf_service(db)
-        pdf_bytes = pdf_service.generate_executive_report(company_id)
+        pdf_bytes = pdf_service.generate_executive_report(company_id, lang=lang)
         return Response(
             content=pdf_bytes,
             media_type="application/pdf",

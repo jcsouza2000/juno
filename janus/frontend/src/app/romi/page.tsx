@@ -52,7 +52,7 @@ interface ReportData {
 }
 
 export default function RomiPage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { company, companyId, isLoading: companyLoading } = useActiveCompany();
   const [ceoData, setCeoData] = useState<CeoData | null>(null);
   const [cfoData, setCfoData] = useState<CfoRow[]>([]);
@@ -130,7 +130,7 @@ export default function RomiPage() {
     if (!companyId) return;
     setDownloadingPDF(true);
     try {
-      const res = await api.get(`/report/pdf/${companyId}`, { responseType: 'blob' });
+      const res = await api.get(`/report/pdf/${companyId}?lang=${locale}`, { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
       const a = document.createElement('a');
       a.href = url;

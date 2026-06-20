@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import { useActiveCompany } from '@/lib/tenant';
+import { useI18n } from '@/lib/i18n';
 import {
   Play, ChevronLeft, ChevronRight, Loader2, Download,
   TrendingDown, AlertTriangle, ShieldCheck, BarChart3,
@@ -312,6 +313,7 @@ export default function DemoPage() {
   // Empresa ativa do tenant logado: o demo opera sobre os dados a que o usuario
   // tem acesso (antes fixava empresa 1, que retornava 403 "Acesso negado").
   const { company: activeCompany, companyId } = useActiveCompany();
+  const { locale } = useI18n();
   const [company, setCompany] = useState(0);
   const [flow, setFlow]       = useState(0);
   const [data, setData]       = useState<DemoData | null>(null);
@@ -347,7 +349,7 @@ export default function DemoPage() {
 
   const handleDownloadPDF = async () => {
     try {
-      const res = await api.get(`/report/pdf/${company}`, { responseType: 'blob' });
+      const res = await api.get(`/report/pdf/${company}?lang=${locale}`, { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
       const a = document.createElement('a');
       a.href = url; a.download = `JUNO_Demo_${data?.company.name ?? company}.pdf`;
