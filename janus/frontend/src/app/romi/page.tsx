@@ -41,20 +41,6 @@ interface InsightRow {
   action: string;
 }
 
-interface OntologyProduct {
-  id: number | string;
-  nome?: string;
-  margem?: number;
-  saudavel?: boolean;
-}
-
-interface OntologyOrder {
-  id: number | string;
-  produto_id?: number | string;
-  atraso_dias?: number;
-  atrasada?: boolean;
-}
-
 interface ReportData {
   company_name: string;
   score_juno: number;
@@ -70,8 +56,6 @@ export default function RomiPage() {
   const [cfoData, setCfoData] = useState<CfoRow[]>([]);
   const [cooData, setCooData] = useState<DashboardRow[]>([]);
   const [insightsData, setInsightsData] = useState<InsightRow[]>([]);
-  const [ontologyProducts, setOntologyProducts] = useState<OntologyProduct[]>([]);
-  const [ontologyOrders, setOntologyOrders] = useState<OntologyOrder[]>([]);
   const [events7d, setEvents7d] = useState(0);
   const [eventsPrev7d, setEventsPrev7d] = useState(0);
   const [reportData, setReportData] = useState<ReportData | null>(null);
@@ -100,28 +84,22 @@ export default function RomiPage() {
         const fetchCfo = api.get(`/dashboard/cfo/${companyId}`).then(r => r.data).catch(() => []);
         const fetchCoo = api.get(`/dashboard/coo/${companyId}`).then(r => r.data).catch(() => []);
         const fetchIns = api.get(`/insights/${companyId}`).then(r => r.data).catch(() => []);
-        const fetchOntology = api.get(`/products/${companyId}/v2`).then(r => r.data).catch(() => []);
-        const fetchOntologyOrders = api.get(`/production-orders/${companyId}/v2`).then(r => r.data).catch(() => []);
         const fetchEvents7d = api.get(`/events/${companyId}?count_only=true&days=7`).then(r => Number(r.data?.count ?? 0)).catch(() => 0);
         const fetchEvents14d = api.get(`/events/${companyId}?count_only=true&days=14`).then(r => Number(r.data?.count ?? 0)).catch(() => 0);
 
-        const [ceo, cfo, coo, ins, productsV2, ordersV2, e7, e14] = await Promise.all([
+        const [ceo, cfo, coo, ins, e7, e14] = await Promise.all([
           fetchCeo,
           fetchCfo,
           fetchCoo,
           fetchIns,
-          fetchOntology,
-          fetchOntologyOrders,
           fetchEvents7d,
           fetchEvents14d,
         ]);
-        
+
         setCeoData(ceo);
         setCfoData(cfo);
         setCooData(coo);
         setInsightsData(ins);
-        setOntologyProducts(productsV2);
-        setOntologyOrders(ordersV2);
         setEvents7d(e7);
         setEventsPrev7d(previousWindowCount(e7, e14));
       } catch (error) {
@@ -237,86 +215,6 @@ export default function RomiPage() {
       <div className="grid grid-cols-1 gap-8">
         <MarginTable data={cfoData} />
         <DelayTable data={cooData} />
-      </div>
-
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h3 className="font-bold text-[#0A2342]">Prova de Ontologia (Rota v2)</h3>
-          <span className="text-xs text-gray-400">/products/{companyId}/v2</span>
-        </div>
-        <div className="p-4">
-          {ontologyProducts.length === 0 ? (
-            <p className="text-sm text-gray-500">Nenhum produto retornado pela camada ontológica.</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="text-left text-gray-500 border-b border-gray-100">
-                    <th className="py-2 pr-4">Produto</th>
-                    <th className="py-2 pr-4">Margem</th>
-                    <th className="py-2 pr-4">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ontologyProducts.slice(0, 8).map((p) => (
-                    <tr key={p.id} className="border-b border-gray-50">
-                      <td className="py-2 pr-4 font-medium text-gray-700">{p.nome}</td>
-                      <td className={`py-2 pr-4 font-semibold ${(p.margem ?? 0) > 0 ? 'text-green-700' : 'text-red-600'}`}>
-                        R$ {Number(p.margem ?? 0).toLocaleString('pt-BR')}
-                      </td>
-                      <td className="py-2 pr-4">
-                        <span className={`text-xs font-bold px-2 py-1 rounded-full ${p.saudavel ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                          {p.saudavel ? 'Saudavel' : 'Critico'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h3 className="font-bold text-[#0A2342]">Prova de Ontologia de Ordens (Rota v2)</h3>
-          <span className="text-xs text-gray-400">/production-orders/{companyId}/v2</span>
-        </div>
-        <div className="p-4">
-          {ontologyOrders.length === 0 ? (
-            <p className="text-sm text-gray-500">Nenhuma ordem retornada pela camada ontológica.</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="text-left text-gray-500 border-b border-gray-100">
-                    <th className="py-2 pr-4">Ordem</th>
-                    <th className="py-2 pr-4">Produto</th>
-                    <th className="py-2 pr-4">Atraso (dias)</th>
-                    <th className="py-2 pr-4">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ontologyOrders.slice(0, 8).map((o) => (
-                    <tr key={o.id} className="border-b border-gray-50">
-                      <td className="py-2 pr-4 font-medium text-gray-700">#{o.id}</td>
-                      <td className="py-2 pr-4 text-gray-600">{o.produto_id}</td>
-                      <td className={`py-2 pr-4 font-semibold ${(o.atraso_dias ?? 0) > 0 ? 'text-red-600' : 'text-green-700'}`}>
-                        {o.atraso_dias ?? 0}
-                      </td>
-                      <td className="py-2 pr-4">
-                        <span className={`text-xs font-bold px-2 py-1 rounded-full ${o.atrasada ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
-                          {o.atrasada ? 'Atrasada' : 'No prazo'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
       </div>
 
       <div className="bg-blue-50 border-l-4 border-[#0A2342] p-4 rounded-r-lg">
