@@ -26,6 +26,7 @@ from sqlalchemy import case, desc, extract, func
 from sqlalchemy.orm import Session
 
 from app.core.datetime_utils import utcnow_naive
+from app.core.i18n import tr, tr_component
 from app.database import get_db
 from app.models import (
     Company,
@@ -600,7 +601,9 @@ class JunoScoreCalculator:
     # CÃLCULO COMPLETO
     # ============================================================
 
-    def calculate_full_score(self, company_id: int, persist: bool = True) -> JunoScoreResult:
+    def calculate_full_score(
+        self, company_id: int, persist: bool = True, lang: str = "pt"
+    ) -> JunoScoreResult:
         """
         Calcula o Score JUNO completo com todos os componentes.
         """
@@ -715,7 +718,7 @@ class JunoScoreCalculator:
         trend, trend_delta = self._calculate_trend(company_id, overall_score)
 
         # Gerar recomendaÃ§Ãµes
-        recommendations = self._generate_recommendations(components)
+        recommendations = self._generate_recommendations(components, lang)
 
         # Salvar no histÃ³rico
         if persist:
@@ -786,31 +789,31 @@ class JunoScoreCalculator:
         self.db.add(history)
         self.db.commit()
 
-    def _generate_recommendations(self, components: list[ScoreComponent]) -> list[str]:
-        """Gera recomendaÃ§Ãµes baseadas nos componentes mais fracos."""
+    def _generate_recommendations(
+        self, components: list[ScoreComponent], lang: str = "pt"
+    ) -> list[str]:
+        """Gera recomendacoes (i18n) baseadas nos componentes mais fracos.
+
+        O emoji prefixo (mantido) e usado pelo pdf_service para escolher o
+        estilo do paragrafo; so o texto e traduzido.
+        """
         recommendations = []
 
         # Ordenar por score (menores primeiro)
         sorted_components = sorted(components, key=lambda c: c.normalized_score)
 
         for comp in sorted_components[:3]:  # Top 3 problemas
+            name = tr_component(comp.name, lang)
+            score = f"{comp.normalized_score:.0f}"
             if comp.normalized_score < 40:
-                recommendations.append(
-                    f"ðŸ”´ {comp.name}: SituaÃ§Ã£o crÃ­tica ({comp.normalized_score:.0f}/100). AÃ§Ã£o imediata necessÃ¡ria."
-                )
+                recommendations.append("🔴 " + tr("score.critical", lang, name=name, score=score))
             elif comp.normalized_score < 60:
-                recommendations.append(
-                    f"ðŸŸ¡ {comp.name}: AtenÃ§Ã£o necessÃ¡ria ({comp.normalized_score:.0f}/100). Revisar processos."
-                )
+                recommendations.append("🟡 " + tr("score.attention", lang, name=name, score=score))
             elif comp.normalized_score < 75:
-                recommendations.append(
-                    f"ðŸŸ¢ {comp.name}: Regular ({comp.normalized_score:.0f}/100). Oportunidade de melhoria."
-                )
+                recommendations.append("🟢 " + tr("score.regular", lang, name=name, score=score))
 
         if not recommendations:
-            recommendations.append(
-                "âœ… Todos os indicadores estÃ£o saudÃ¡veis. Manter monitoramento."
-            )
+            recommendations.append("✅ " + tr("score.healthy", lang))
 
         return recommendations
 

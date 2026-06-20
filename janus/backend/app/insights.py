@@ -1,6 +1,7 @@
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from .core.i18n import tr
 from .models import Product, ProductionOrder, SalesOrder
 
 OPEN_PRODUCTION_STATUSES = (
@@ -13,7 +14,7 @@ OPEN_PRODUCTION_STATUSES = (
 )
 
 
-def generate_insights(company_id: int, db: Session):
+def generate_insights(company_id: int, db: Session, lang: str = "pt"):
     insights = []
 
     # 1. Negative Margin Risk — revenue vs standard_cost × units_sold
@@ -38,9 +39,11 @@ def generate_insights(company_id: int, db: Session):
             insights.append(
                 {
                     "type": "margin_risk",
-                    "message": f"Produto {row.name} está com margem negativa (R$ {margin:,.0f})",
-                    "impact": "Alto",
-                    "action": "Revisar precificação ou reduzir custos de produção imediatamente.",
+                    "message": tr(
+                        "insight.margin.message", lang, name=row.name, margin=f"{margin:,.0f}"
+                    ),
+                    "impact": tr("impact.high", lang),
+                    "action": tr("insight.margin.action", lang),
                 }
             )
 
@@ -68,9 +71,9 @@ def generate_insights(company_id: int, db: Session):
         insights.append(
             {
                 "type": "delay_risk",
-                "message": f"{delay_count} ordens de produção estão com entrega atrasada",
-                "impact": "Médio",
-                "action": "Revisar capacidade produtiva e logística de entrega.",
+                "message": tr("insight.delay.message", lang, count=delay_count),
+                "impact": tr("impact.medium", lang),
+                "action": tr("insight.delay.action", lang),
             }
         )
 
@@ -86,9 +89,9 @@ def generate_insights(company_id: int, db: Session):
         insights.append(
             {
                 "type": "cost_risk",
-                "message": f"{cost_overrun} ordens excederam o custo planejado em mais de 10%",
-                "impact": "Alto",
-                "action": "Auditar desperdícios na linha de produção e variação de preço de insumos.",
+                "message": tr("insight.cost.message", lang, count=cost_overrun),
+                "impact": tr("impact.high", lang),
+                "action": tr("insight.cost.action", lang),
             }
         )
 

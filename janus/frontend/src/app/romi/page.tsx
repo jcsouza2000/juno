@@ -85,7 +85,7 @@ export default function RomiPage() {
         const fetchCeo = api.get(`/dashboard/ceo/${companyId}`).then(r => r.data).catch(() => ({ receita_liquida: 0, score_juno: 0 }));
         const fetchCfo = api.get(`/dashboard/cfo/${companyId}`).then(r => r.data).catch(() => []);
         const fetchCoo = api.get(`/dashboard/coo/${companyId}`).then(r => r.data).catch(() => []);
-        const fetchIns = api.get(`/insights/${companyId}`).then(r => r.data).catch(() => []);
+        const fetchIns = api.get(`/insights/${companyId}?lang=${locale}`).then(r => r.data).catch(() => []);
         const fetchEvents7d = api.get(`/events/${companyId}?count_only=true&days=7`).then(r => Number(r.data?.count ?? 0)).catch(() => 0);
         const fetchEvents14d = api.get(`/events/${companyId}?count_only=true&days=14`).then(r => Number(r.data?.count ?? 0)).catch(() => 0);
 
@@ -111,13 +111,13 @@ export default function RomiPage() {
       }
     }
     fetchData();
-  }, [companyId, companyLoading]);
+  }, [companyId, companyLoading, locale]);
 
   const handleGenerateReport = async () => {
     if (!companyId) return;
     setGeneratingReport(true);
     try {
-      const res = await api.get(`/report/diagnostic/${companyId}`);
+      const res = await api.get(`/report/diagnostic/${companyId}?lang=${locale}`);
       setReportData(res.data);
     } catch (error) {
       console.error("Erro ao gerar diagnóstico:", error);

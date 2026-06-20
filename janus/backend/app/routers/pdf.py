@@ -15,15 +15,15 @@ router = APIRouter(prefix="/reports", tags=["Reports"])
 legacy_router = APIRouter(prefix="/report", tags=["Reports"])
 
 
-def build_diagnostic(company_id: int, db: Session) -> dict:
+def build_diagnostic(company_id: int, db: Session, lang: str = "pt") -> dict:
     """Diagnostico 360 em JSON: score, receita, insights, recomendacoes e plano.
 
     Reaproveita score_v2 (score + recomendacoes), generate_insights (riscos) e
     get_ceo_kpis (receita liquida). O plano de acao deriva das acoes dos insights
     com fallback nas recomendacoes do score.
     """
-    result = get_score_calculator(db).calculate_full_score(company_id, persist=False)
-    insights = generate_insights(company_id, db)
+    result = get_score_calculator(db).calculate_full_score(company_id, persist=False, lang=lang)
+    insights = generate_insights(company_id, db, lang=lang)
     ceo = get_ceo_kpis(db, company_id)
 
     action_plan = [i["action"] for i in insights if i.get("action")]
@@ -95,13 +95,14 @@ def get_pdf_info(
 @router.get("/diagnostic/{company_id}")
 def diagnostic_report(
     company_id: int,
+    lang: str = "pt",
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
     """Diagnostico Operacional 360 em JSON (consumido pela aba Minha Empresa)."""
     if not check_company_access(current_user, company_id):
         raise HTTPException(status_code=403, detail="Acesso negado")
-    return build_diagnostic(company_id, db)
+    return build_diagnostic(company_id, db, lang=lang)
 
 
 legacy_router.add_api_route(

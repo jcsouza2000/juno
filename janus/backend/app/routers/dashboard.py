@@ -58,11 +58,12 @@ def coo_dashboard(
 @insights_router.get("/{company_id}", response_model=list[InsightItem])
 def company_insights(
     company_id: int,
+    lang: str = "pt",
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
     _ensure_access(current_user, company_id)
-    return generate_insights(company_id, db)
+    return generate_insights(company_id, db, lang=lang)
 
 
 router.include_router(dashboard_router)

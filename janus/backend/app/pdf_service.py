@@ -383,7 +383,7 @@ class JUNOPDFReport:
 
         # Calcular Score JUNO 2.0
         calculator = JunoScoreCalculator(self.db)
-        score_result = calculator.calculate_full_score(company_id)
+        score_result = calculator.calculate_full_score(company_id, lang=self.lang)
 
         # Buffer de memória
         buffer = io.BytesIO()
@@ -606,7 +606,7 @@ class JUNOPDFReport:
 
         # Riscos e insights
         story.append(Paragraph(self._t("risksInsights"), self.styles["JUNO_SubSection"]))
-        insights = generate_insights(company_id, self.db)
+        insights = generate_insights(company_id, self.db, lang=self.lang)
         if insights:
             for ins in insights[:6]:
                 msg = ins.get("message", "")
