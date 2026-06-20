@@ -44,9 +44,9 @@ const DATA_TYPES = [
   { id: 'customers',          icon: Users,        template: 'customers_template.csv', supported: true },
   { id: 'sales_orders',       icon: ShoppingCart, template: 'sales_orders_template.csv', supported: true },
   { id: 'production_orders',  icon: Factory,      template: 'production_orders_template.csv', supported: true },
-  { id: 'inventory',          icon: BarChart3,    template: null, supported: false },
-  { id: 'financials',         icon: DollarSign,   template: null, supported: false },
-  { id: 'suppliers',          icon: Truck,        template: null, supported: false },
+  { id: 'inventory',          icon: BarChart3,    template: 'inventory_template.csv', supported: true },
+  { id: 'financials',         icon: DollarSign,   template: 'financials_template.csv', supported: true },
+  { id: 'suppliers',          icon: Truck,        template: 'suppliers_template.csv', supported: true },
 ];
 
 // ── Helpers ────────────────────────────────────────────────────────────────

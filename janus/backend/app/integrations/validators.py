@@ -5,7 +5,7 @@ REQUIRED_FIELDS: dict[str, list[str]] = {
     "production_orders": ["product_name", "planned_qty", "actual_qty"],
     "inventory": ["product_name"],
     "suppliers": ["name"],
-    "financials": ["revenue"],
+    "financials": ["account_name"],
 }
 
 ALLOWED_TYPES = list(REQUIRED_FIELDS.keys())

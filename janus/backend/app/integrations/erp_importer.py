@@ -9,9 +9,12 @@ from ..event_logging import log_event
 from ..models import (
     AuditLog,
     Customer,
+    ErpFinancial,
+    Inventory,
     Product,
     ProductionOrder,
     SalesOrder,
+    Supplier,
 )
 from .file_parser import parse_erp_file
 from .mapper import apply_mapping, normalize_columns
@@ -95,6 +98,9 @@ def import_erp_data(
         "customers": _import_customers,
         "sales_orders": _import_sales_orders,
         "production_orders": _import_production_orders,
+        "inventory": _import_inventory,
+        "suppliers": _import_suppliers,
+        "financials": _import_financials,
     }
     handler = dispatch.get(data_type)
     if handler:
@@ -285,6 +291,158 @@ def _import_production_orders(df: pd.DataFrame, company_id: int, db: Session):
                     planned_date=_clean_date(row.get("planned_date")),
                     actual_date=_clean_date(row.get("actual_date")),
                     status=_safe_str(row.get("status")) or "Importado",
+                )
+            )
+            imported += 1
+        except Exception as exc:
+            rejected += 1
+            errors.append(f"Linha {row_idx + 2}: {exc}")
+    return imported, rejected, errors
+
+
+def _import_inventory(df: pd.DataFrame, company_id: int, db: Session):
+    """Estoque: saldo por produto/deposito. Atualiza se ja existir o par."""
+    imported, rejected, errors = 0, 0, []
+    for row_idx, row in df.iterrows():
+        try:
+            product_name = _safe_str(row.get("product_name"))
+            if not product_name:
+                rejected += 1
+                errors.append(f"Linha {row_idx + 2}: produto ausente — ignorado")
+                continue
+
+            product = _get_or_create_product(db, company_id, product_name)
+            warehouse = _safe_str(row.get("warehouse_location")) or "Principal"
+            on_hand = _clean_numeric(row.get("quantity_on_hand"))
+            reserved = _clean_numeric(row.get("quantity_reserved")) or 0.0
+            available = _clean_numeric(row.get("quantity_available"))
+            if available is None:
+                available = (on_hand or 0.0) - reserved
+
+            existing = (
+                db.query(Inventory)
+                .filter_by(
+                    company_id=company_id,
+                    product_id=product.id,
+                    warehouse_location=warehouse,
+                )
+                .first()
+            )
+            if existing:
+                existing.quantity_on_hand = int(on_hand or 0)
+                existing.quantity_reserved = int(reserved)
+                existing.quantity_available = int(available)
+                if _clean_numeric(row.get("unit_cost")) is not None:
+                    existing.unit_cost = _clean_numeric(row.get("unit_cost"))
+                existing.last_movement_date = _clean_date(row.get("last_movement_date"))
+            else:
+                db.add(
+                    Inventory(
+                        company_id=company_id,
+                        product_id=product.id,
+                        warehouse_location=warehouse,
+                        quantity_on_hand=int(on_hand or 0),
+                        quantity_reserved=int(reserved),
+                        quantity_available=int(available),
+                        unit_cost=_clean_numeric(row.get("unit_cost")) or 0.0,
+                        min_stock_level=int(_clean_numeric(row.get("min_stock_level")) or 0),
+                        max_stock_level=int(_clean_numeric(row.get("max_stock_level")) or 0),
+                        last_movement_date=_clean_date(row.get("last_movement_date")),
+                        status="Importado ERP",
+                    )
+                )
+            imported += 1
+        except Exception as exc:
+            rejected += 1
+            errors.append(f"Linha {row_idx + 2}: {exc}")
+    return imported, rejected, errors
+
+
+def _import_suppliers(df: pd.DataFrame, company_id: int, db: Session):
+    """Fornecedores: cadastro por nome. Atualiza dados de contato/prazo se existir."""
+    imported, rejected, errors = 0, 0, []
+    for row_idx, row in df.iterrows():
+        try:
+            name = _safe_str(row.get("name"))
+            if not name:
+                rejected += 1
+                errors.append(f"Linha {row_idx + 2}: nome do fornecedor vazio — ignorado")
+                continue
+
+            lead_time = _clean_numeric(row.get("lead_time_days"))
+            rating = _clean_numeric(row.get("rating"))
+            existing = db.query(Supplier).filter_by(company_id=company_id, name=name).first()
+            if existing:
+                if _safe_str(row.get("cnpj")):
+                    existing.cnpj = _safe_str(row.get("cnpj"))
+                if _safe_str(row.get("contact_name")):
+                    existing.contact_name = _safe_str(row.get("contact_name"))
+                if _safe_str(row.get("email")):
+                    existing.email = _safe_str(row.get("email"))
+                if _safe_str(row.get("phone")):
+                    existing.phone = _safe_str(row.get("phone"))
+                if _safe_str(row.get("payment_terms")):
+                    existing.payment_terms = _safe_str(row.get("payment_terms"))
+                if lead_time is not None:
+                    existing.lead_time_days = int(lead_time)
+                if rating is not None:
+                    existing.rating = rating
+            else:
+                db.add(
+                    Supplier(
+                        company_id=company_id,
+                        name=name,
+                        cnpj=_safe_str(row.get("cnpj")) or None,
+                        contact_name=_safe_str(row.get("contact_name")) or None,
+                        email=_safe_str(row.get("email")) or None,
+                        phone=_safe_str(row.get("phone")) or None,
+                        address=_safe_str(row.get("address")) or None,
+                        payment_terms=_safe_str(row.get("payment_terms")) or None,
+                        lead_time_days=int(lead_time) if lead_time is not None else 0,
+                        rating=rating or 0.0,
+                        status=_safe_str(row.get("status")) or "active",
+                    )
+                )
+            imported += 1
+        except Exception as exc:
+            rejected += 1
+            errors.append(f"Linha {row_idx + 2}: {exc}")
+    return imported, rejected, errors
+
+
+def _import_financials(df: pd.DataFrame, company_id: int, db: Session):
+    """Financeiro operacional (lancamentos ERP): conta, debito/credito/saldo.
+
+    Distinto da DRE/Balanco formais (aba Financials) — aqui entram lancamentos
+    operacionais do ERP no modelo ErpFinancial.
+    """
+    imported, rejected, errors = 0, 0, []
+    for row_idx, row in df.iterrows():
+        try:
+            account_name = _safe_str(row.get("account_name"))
+            if not account_name:
+                rejected += 1
+                errors.append(f"Linha {row_idx + 2}: conta ausente — ignorado")
+                continue
+
+            debit = _clean_numeric(row.get("debit")) or 0.0
+            credit = _clean_numeric(row.get("credit")) or 0.0
+            balance = _clean_numeric(row.get("balance"))
+            if balance is None:
+                balance = debit - credit
+
+            db.add(
+                ErpFinancial(
+                    company_id=company_id,
+                    document_type=_safe_str(row.get("document_type")) or "lancamento",
+                    document_number=_safe_str(row.get("document_number")) or None,
+                    account_code=_safe_str(row.get("account_code")) or None,
+                    account_name=account_name,
+                    debit=debit,
+                    credit=credit,
+                    balance=balance,
+                    period=_safe_str(row.get("period")) or None,
+                    posting_date=_clean_date(row.get("posting_date")),
                 )
             )
             imported += 1

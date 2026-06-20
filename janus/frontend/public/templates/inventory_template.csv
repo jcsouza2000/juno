@@ -1,3 +1,3 @@
-﻿product_id,warehouse_location,quantity_on_hand,quantity_reserved,unit_cost
-1,Principal,500,50,10.00
-1,Filial SP,200,20,10.50
+product_name,warehouse_location,quantity_on_hand,quantity_reserved,unit_cost,min_stock_level,max_stock_level,last_movement_date
+Produto Exemplo A,Principal,500,50,10.00,100,1000,2024-01-15
+Produto Exemplo B,CD-SP,200,20,25.50,50,500,2024-01-20
