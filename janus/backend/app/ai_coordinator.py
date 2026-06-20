@@ -75,7 +75,7 @@ Regras:
 2. Foque em impacto financeiro — cite valores em R$ sempre que possível.
 3. Destaque problemas críticos com clareza e urgência.
 4. Seja objetivo: o usuário é executivo, sem tempo para rodeios.
-5. Responda sempre em português do Brasil.
+5. Responda no idioma indicado pela diretiva "OUTPUT LANGUAGE" abaixo (padrão: português do Brasil).
 6. Nunca tente acessar dados de outra empresa/base; você só enxerga a empresa do usuário.
 7. Para valuation, projeção DRE/DFC ou Enterprise Value, use SEMPRE run_valuation_scenario
    (nunca calcule projeções manualmente). Apresente o resultado com base nos números retornados pela ferramenta."""
@@ -96,6 +96,29 @@ LANG_INSTRUCTION = {
         "el significado al español. Mantén los valores monetarios en R$ (real brasileño)."
     ),
 }
+
+# Nudge final (Passo 2) por idioma — a ultima mensagem domina o idioma da saida,
+# entao ela PRECISA estar no idioma escolhido (antes era fixa em PT e sobrescrevia
+# a diretiva de idioma, fazendo EN/ES responderem em portugues).
+FINAL_NUDGE = {
+    "pt": (
+        "/no_think Responda agora, de forma objetiva e em português do Brasil, "
+        "usando os dados das ferramentas. Não mostre raciocínio."
+    ),
+    "en": (
+        "/no_think Answer now, concisely and in English (US), using the tool data. "
+        "Do not show your reasoning."
+    ),
+    "es": (
+        "/no_think Responde ahora, de forma concisa y en español, usando los datos "
+        "de las herramientas. No muestres tu razonamiento."
+    ),
+}
+
+
+def _final_nudge(lang: str | None = None) -> str:
+    """Mensagem final que reforca o idioma da resposta (Passo 2 do coordinate)."""
+    return FINAL_NUDGE.get((lang or "pt").lower(), FINAL_NUDGE["pt"])
 
 
 def build_system_prompt(lang: str | None = None) -> str:
@@ -619,15 +642,7 @@ def coordinate(
     # Reforco anti-"resposta vazia": qwen3 as vezes gasta todo o budget em
     # <think>...</think> e o _strip_thinking zera o texto. O nudge /no_think
     # pede resposta direta; o fallback abaixo garante que algo util e' emitido.
-    messages.append(
-        {
-            "role": "user",
-            "content": (
-                "/no_think Responda agora, de forma objetiva e em portugues, "
-                "usando os dados das ferramentas. Nao mostre raciocinio."
-            ),
-        }
-    )
+    messages.append({"role": "user", "content": _final_nudge(lang)})
     # Streaming token-a-token: a resposta surge enquanto e' gerada (latencia
     # PERCEBIDA = tempo ate a 1a palavra, nao o total). num_predict menor (400)
     # corta o tempo total — respostas executivas sao curtas.
