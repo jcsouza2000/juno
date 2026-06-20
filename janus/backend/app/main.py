@@ -252,4 +252,46 @@ async def global_error(request: Request, exc: Exception):
     )
 
 
+def _warmup() -> None:
+    """Pre-aquece os caminhos pesados (Score + PDF) para a 1a requisicao real
+    nao pagar o custo de inicializacao (ORM, query plans, reportlab).
+
+    Roda em thread de background; nunca bloqueia o startup nem derruba o app.
+    Desligavel via JUNO_WARMUP=false.
+    """
+    import os
+    import time
+
+    if os.getenv("JUNO_WARMUP", "true").lower() in {"0", "false", "no"}:
+        return
+    try:
+        from app.database import SessionLocal
+        from app.models import Company
+
+        t0 = time.time()
+        db = SessionLocal()
+        try:
+            company = db.query(Company).order_by(Company.id).first()
+            if not company:
+                logger.info("warmup: nenhuma empresa — pulado")
+                return
+            from app.pdf_service import JUNOPDFReport
+            from app.score_v2 import get_score_calculator
+
+            get_score_calculator(db).calculate_full_score(company.id, persist=False)
+            JUNOPDFReport(db).generate_executive_report(company.id)
+            logger.info(f"warmup concluido em {time.time() - t0:.1f}s (company={company.id})")
+        finally:
+            db.close()
+    except Exception as exc:  # noqa: BLE001 — warmup nunca pode derrubar o app
+        logger.warning(f"warmup falhou (ignorado): {exc}")
+
+
+@app.on_event("startup")
+def _on_startup() -> None:
+    import threading
+
+    threading.Thread(target=_warmup, name="juno-warmup", daemon=True).start()
+
+
 logger.info(f"JUNO API iniciada (env={settings.JUNO_ENV}, origins={settings.cors_origins})")
