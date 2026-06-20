@@ -4,12 +4,42 @@ from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
 
 from app.auth import check_company_access, get_current_active_user
+from app.dashboards import get_ceo_kpis
 from app.database import get_db
+from app.insights import generate_insights
 from app.models import User
 from app.pdf_service import get_pdf_service
+from app.score_v2 import get_score_calculator
 
 router = APIRouter(prefix="/reports", tags=["Reports"])
 legacy_router = APIRouter(prefix="/report", tags=["Reports"])
+
+
+def build_diagnostic(company_id: int, db: Session) -> dict:
+    """Diagnostico 360 em JSON: score, receita, insights, recomendacoes e plano.
+
+    Reaproveita score_v2 (score + recomendacoes), generate_insights (riscos) e
+    get_ceo_kpis (receita liquida). O plano de acao deriva das acoes dos insights
+    com fallback nas recomendacoes do score.
+    """
+    result = get_score_calculator(db).calculate_full_score(company_id, persist=False)
+    insights = generate_insights(company_id, db)
+    ceo = get_ceo_kpis(db, company_id)
+
+    action_plan = [i["action"] for i in insights if i.get("action")]
+    if not action_plan:
+        action_plan = list(result.recommendations)
+
+    return {
+        "company_name": result.company_name,
+        "score_juno": round(result.overall_score, 1),
+        "revenue": float(ceo.get("receita_liquida") or 0),
+        "insights": [
+            {"message": i.get("message", ""), "impact": i.get("impact", "")} for i in insights
+        ],
+        "recommendations": list(result.recommendations),
+        "action_plan": action_plan,
+    }
 
 
 @router.get("/pdf/{company_id}")
@@ -61,6 +91,24 @@ def get_pdf_info(
     }
 
 
+@router.get("/diagnostic/{company_id}")
+def diagnostic_report(
+    company_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
+    """Diagnostico Operacional 360 em JSON (consumido pela aba Minha Empresa)."""
+    if not check_company_access(current_user, company_id):
+        raise HTTPException(status_code=403, detail="Acesso negado")
+    return build_diagnostic(company_id, db)
+
+
+legacy_router.add_api_route(
+    "/diagnostic/{company_id}",
+    diagnostic_report,
+    methods=["GET"],
+    include_in_schema=False,
+)
 legacy_router.add_api_route(
     "/pdf/{company_id}",
     generate_pdf_report,
