@@ -1,6 +1,6 @@
 JUNO Industrial Diagnostic - Manual de Usuario e Implantacao
 Versao do produto: 0.3.2
-Data: 2026-05-25
+Data: 2026-06-20 (atualizado: Retencao, Trust Center, trilingue, novos importadores ERP)
 Arquivo: Manual_Usuario_Juno.txt
 Ambiente de referencia: http://localhost:4000
 
@@ -13,16 +13,19 @@ no uso do JUNO Industrial Diagnostic em empresas cliente.
 
 Ele explica, passo a passo, cada aba do menu lateral:
 
-1. Visao Geral
-2. Minha Empresa
-3. IA Operacional
-4. Demonstracoes
-5. Integracoes ERP
-6. Auditoria
-7. KPIs Executivos
-8. Auto Teste
-9. Demo Executivo
-10. Piloto
+1. Visao Geral (Overview)
+2. Minha Empresa (My Company) - diagnostico 360 e PDF executivo
+3. KPIs Executivos (Executive KPIs)
+4. IA Operacional (Operational AI)
+5. Demonstracoes (Financials)
+6. Meus Dados (My Data) - versionamento e exclusao
+7. Retencao e Fechamentos (Retention) - secao 21
+8. Integracoes ERP (ERP Integrations)
+9. Auditoria (Audit)
+10. Trust Center (Central de Confianca) - secao 22
++ Demo Executivo, Piloto e Auto Teste (apresentacao e validacao)
+
+A interface e trilingue (PT / EN / ES) - ver secao 23 (Novidades 0.3.2).
 
 O foco e permitir que uma nova empresa seja configurada, tenha dados
 importados, seja auditada, receba diagnostico executivo e possa iniciar
@@ -1888,7 +1891,140 @@ Boas praticas:
 - Ajuste premissas de valuation em /executive (bloco Valuation abaixo).
 
 ======================================================================
-21. Encerramento
+21. Aba: Retencao e Fechamentos (Retention & Closings)
+======================================================================
+
+Finalidade
+
+A aba Retencao e Fechamentos e a "memoria oficial imutavel" da empresa.
+Ela existe para garantir que os numeros apresentados ao conselho, a
+diretoria ou a auditoria em um determinado mes NAO mudem retroativamente,
+mesmo que dados sejam reimportados ou corrigidos depois. E a Fase 5
+(retencao) do roadmap e atende governanca e LGPD.
+
+Componentes da tela
+
+1. Fechamentos Mensais (Monthly Closings)
+   - Congela DRE, Balanco, Fluxo de Caixa (DFC) e o Score JUNO de um
+     periodo (ano/mes).
+   - Uma vez criado, o fechamento e IMUTAVEL: nao pode ser sobrescrito.
+   - Util para "fechar" oficialmente um mes apos a conferencia contabil.
+   - Restrito a administradores do tenant.
+
+2. Snapshots Diarios (Daily Snapshots)
+   - Foto idempotente dos KPIs e do Score em uma data.
+   - Idempotente por data: capturar duas vezes no mesmo dia nao duplica.
+   - Gera uma serie historica para analise de tendencia do Score/KPIs.
+
+Como usar
+
+1. Abra Retencao e Fechamentos (/retention) e confirme a empresa ativa.
+2. Para fechar um mes:
+   a. Selecione Ano e Mes.
+   b. Clique em "Fechar mes". O sistema congela DRE/Balanco/DFC/Score.
+   c. O fechamento aparece na lista com data e status. Nao pode ser
+      alterado depois.
+3. Para capturar um snapshot do dia:
+   a. Clique em "Capturar snapshot de hoje".
+   b. A data aparece na lista de snapshots diarios.
+
+Boas praticas
+
+- Faca o fechamento mensal somente apos validar os dados na Auditoria.
+- Use snapshots diarios em periodos de mudanca (importacoes frequentes)
+  para acompanhar a evolucao do Score.
+- Os fechamentos sao a fonte oficial para relatorios historicos: eles
+  nao acompanham reimportacoes posteriores (por design).
+
+======================================================================
+22. Aba: Trust Center (Central de Confianca)
+======================================================================
+
+Finalidade
+
+O Trust Center e o painel que PROVA a postura de seguranca, isolamento,
+LGPD e governanca de IA por tenant. Serve para apresentar a clientes,
+conselho ou area de compliance que o JUNO nao apenas promete tecnologia,
+mas demonstra controles ativos e auditaveis.
+
+Indicadores do topo
+
+- Eventos auditados 24h: volume de eventos registrados na trilha nas
+  ultimas 24 horas.
+- DSR em aberto: solicitacoes de titular de dados (LGPD) pendentes.
+- MFA: status do segundo fator (Ativo ou Planejado).
+- Sessao: tempo de expiracao da sessao (em minutos).
+
+Pilares (cartoes)
+
+1. Seguranca enterprise: RBAC, papeis por tenant, autenticacao
+   obrigatoria e trilha para MFA/SSO.
+2. Isolamento multi-tenant: cada leitura sensivel carrega o tenant
+   validado antes de consultar dados.
+3. LGPD operacional: DSR, consentimentos, retencao e evidencias por
+   empresa, com auditoria consultavel.
+4. IA governada: acoes propostas pela IA exigem confirmacao humana e
+   mantem evidencia auditavel.
+
+Controles com evidencia
+
+Lista de controles ativos/planejados e a evidencia associada (vinda do
+backend). O estado entre parenteses indica "active" (ativo) ou
+"planned" (planejado).
+
+Trilhas futuras
+
+MFA, SSO, SOC 2 e ISO 27001 aparecem como trilhas futuras: o terreno
+esta preparado, mas a ativacao ocorre quando houver cliente, receita ou
+exigencia contratual. Nao sao lacunas de funcionalidade da v0.3.2.
+
+Como usar
+
+1. Abra Trust Center (/trust).
+2. Use os indicadores e pilares em apresentacoes de seguranca/compliance.
+3. A postura em tempo real pode exigir perfil de administrador do tenant;
+   sem permissao, a tela mostra um aviso e os pilares estaticos.
+
+======================================================================
+23. Novidades da versao 0.3.2
+======================================================================
+
+1. Interface trilingue (PT / EN / ES)
+   - Seletor de idioma no topo direito.
+   - Telas Visao Geral, Minha Empresa, KPIs, Demonstracoes, Meus Dados,
+     Retencao, Integracoes ERP, Auditoria e Trust Center traduzidas.
+   - Insights e recomendacoes do Score tambem seguem o idioma.
+   - Observacao: parte do detalhe tecnico da Auditoria (dominios,
+     reconciliacao) ainda e exibida em portugues.
+
+2. PDF executivo bilingue e mais completo
+   - O botao "Baixar PDF Executivo" (Minha Empresa) gera o relatorio no
+     idioma selecionado (PT/EN/ES).
+   - O PDF passou a incluir a secao "Diagnostico Operacional" (KPIs,
+     riscos/insights e as 5 piores margens), alem do score e do
+     financeiro.
+
+3. Diagnostico 360 em JSON
+   - O botao "Gerar Diagnostico 360" agora abre o relatorio executivo na
+     propria tela (score, receita, riscos, recomendacoes e plano de acao).
+
+4. Novos importadores ERP (Integracoes ERP)
+   - Estoque (Inventory): saldo por produto/deposito, com custo e niveis
+     minimo/maximo.
+   - Fornecedores (Suppliers): cadastro com CNPJ, contato, prazo de
+     pagamento, lead time e avaliacao.
+   - Financeiro operacional (Financials): lancamentos com conta,
+     debito/credito/saldo e periodo (distinto da DRE/Balanco formais).
+   - Cada tipo tem template CSV proprio (botao "Baixar modelo").
+   - Arquivos de exemplo prontos em uploads_piloto_juno:
+     07_inventory_juno.csv, 08_suppliers_juno.csv, 09_financials_juno.csv.
+
+5. Performance
+   - Dashboards e Score muito mais rapidos (indices de banco e calculo do
+     Score em SQL agregado).
+
+======================================================================
+24. Encerramento
 ======================================================================
 
 O uso correto do JUNO segue a sequencia:
