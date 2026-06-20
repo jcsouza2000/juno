@@ -3,7 +3,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import { useActiveCompany } from '@/lib/tenant';
+import { useI18n } from '@/lib/i18n';
 import { getTrendInfo, previousWindowCount } from '@/lib/trends';
+
+type Translator = (key: string, vars?: Record<string, string | number>) => string;
 import {
   Shield, AlertTriangle, CheckCircle, XCircle,
   Loader2, Database, TrendingUp, TrendingDown, Minus, Factory, Clock,
@@ -157,15 +160,20 @@ function scoreColors(score: number) {
   };
 }
 
+// Severidade vem do backend em PT ('Alto'/'Médio'/'Baixo'); mapeia para a chave i18n.
+const SEVERITY_KEY: Record<string, string> = { Alto: 'high', Médio: 'medium', Baixo: 'low' };
+
 function SeverityBadge({ s }: { s: string }) {
+  const { t } = useI18n();
   const map: Record<string, string> = {
     Alto:  'bg-red-100 text-red-800 border-red-300',
     Médio: 'bg-yellow-100 text-yellow-800 border-yellow-300',
     Baixo: 'bg-blue-100 text-blue-800 border-blue-300',
   };
+  const label = SEVERITY_KEY[s] ? t(`audit.severity.${SEVERITY_KEY[s]}`) : s;
   return (
     <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${map[s] ?? map.Baixo}`}>
-      {s}
+      {label}
     </span>
   );
 }
@@ -184,33 +192,25 @@ function statusBadgeClass(status: string) {
   return 'bg-yellow-100 text-yellow-800 border-yellow-300';
 }
 
-function statusLabel(status: string) {
-  const labels: Record<string, string> = {
-    ok: 'OK',
-    warning: 'Atencao',
-    critical: 'Critico',
-    missing: 'Pendente',
-    loaded: 'Carregado',
-    ready: 'Pronto',
-    blocked: 'Bloqueado',
-  };
-  return labels[status] ?? status;
+const KNOWN_STATUS = ['ok', 'warning', 'critical', 'missing', 'loaded', 'ready', 'blocked'];
+
+function statusLabel(status: string, t: Translator) {
+  return KNOWN_STATUS.includes(status) ? t(`audit.status.${status}`) : status;
 }
 
 function fmtMaybe(n: number | null) {
   return n == null ? '-' : n.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
 }
 
-function eventTypeLabel(t: string) {
-  const labels: Record<string, string> = {
-    price_update: 'Atualizacao de preco',
-    erp_import: 'Importacao ERP',
-  };
-  return labels[t] ?? t;
+function eventTypeLabel(eventType: string, t: Translator) {
+  if (eventType === 'price_update') return t('audit.priceUpdate');
+  if (eventType === 'erp_import') return t('audit.erpImport');
+  return eventType;
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function AuditPage() {
+  const { t } = useI18n();
   const { company, companyId, isLoading: companyLoading } = useActiveCompany();
   const [report, setReport]   = useState<Report | null>(null);
   const [events, setEvents]   = useState<EventItem[]>([]);
@@ -225,7 +225,7 @@ export default function AuditPage() {
       setReport(null);
       setEvents([]);
       setEventMetrics(null);
-      setError('Nenhuma empresa vinculada ao usuario.');
+      setError(t('audit.noCompany'));
       return;
     }
     setLoading(true);
@@ -286,13 +286,13 @@ export default function AuditPage() {
         erp30d: Number(erp30dRes.data?.count ?? 0),
       });
     } catch {
-      setError('Erro ao carregar relatório de validação. Verifique se o backend está ativo.');
+      setError(t('audit.errorLoad'));
       setEvents([]);
       setEventMetrics(null);
     } finally {
       setLoading(false);
     }
-  }, [companyId, eventTypeFilter, periodFilter]);
+  }, [companyId, eventTypeFilter, periodFilter, t]);
 
   useEffect(() => {
     if (!companyId) return;
@@ -310,21 +310,21 @@ export default function AuditPage() {
       {/* Header */}
       <div className="border-b border-gray-200 pb-4 flex flex-wrap justify-between items-end gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[#0A2342]">Auditoria de Dados</h1>
+          <h1 className="text-2xl font-bold text-[#0A2342]">{t('audit.title')}</h1>
           <p className="text-gray-500 text-sm mt-1">
-            Verifique a confiabilidade dos dados antes de apresentar ao conselho.
+            {t('audit.subtitle')}
           </p>
         </div>
         <div className="flex items-center gap-3">
           <span className="px-4 py-2 rounded-lg border-2 border-[#0A2342] bg-[#0A2342] text-white font-bold text-sm">
-            {company?.name ?? 'Tenant nao selecionado'}
+            {company?.name ?? t('audit.noTenant')}
           </span>
           <button onClick={() => loadReport(companyId)} disabled={loading || companyLoading || !companyId}
             className="flex items-center gap-2 bg-[#C9A959] text-[#0A2342] font-bold py-2 px-5 rounded-lg hover:bg-[#b89a51] transition-colors shadow-md disabled:opacity-50">
             {loading
               ? <Loader2 className="animate-spin" size={18} />
               : <Shield size={18} />}
-            Validar Dados
+            {t('audit.validateBtn')}
           </button>
         </div>
       </div>
@@ -334,9 +334,9 @@ export default function AuditPage() {
         <div className="bg-[#F0F4F8] rounded-xl p-12 text-center flex flex-col items-center gap-3">
           <Shield size={44} className="text-[#0A2342] opacity-30" />
           <p className="text-gray-500 font-medium">
-            Clique em <strong>Validar Dados</strong> para auditar a qualidade dos dados da empresa selecionada.
+            {t('audit.idleText')}
           </p>
-          <p className="text-xs text-gray-400">O relatório verifica integridade, consistência e prontidão para decisão executiva.</p>
+          <p className="text-xs text-gray-400">{t('audit.idleHint')}</p>
         </div>
       )}
 
@@ -365,20 +365,20 @@ export default function AuditPage() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Shield size={16} className="text-[#0A2342]" />
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Data Trust Score</span>
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t('audit.trustScore')}</span>
               </div>
 
               <div className={`${C.bg} rounded-xl p-5 text-center border-2 ${C.ring}`}>
                 <div className={`text-6xl font-extrabold ${C.num}`}>{report.trust_score.score}</div>
                 <div className="text-xs text-gray-400 mt-1">/100</div>
                 <span className={`mt-2 inline-block px-3 py-1 rounded-full text-xs font-bold border ${C.badge}`}>
-                  Confiabilidade {report.trust_score.label}
+                  {t('audit.reliability', { label: report.trust_score.label })}
                 </span>
               </div>
 
               {report.trust_score.deductions.length > 0 && (
                 <div className="mt-4">
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Deduções</p>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">{t('audit.deductions')}</p>
                   <ul className="space-y-1.5">
                     {report.trust_score.deductions.map((d, i) => (
                       <li key={i} className="flex justify-between items-start gap-2 text-xs text-gray-600">
@@ -395,17 +395,17 @@ export default function AuditPage() {
             <div className="lg:col-span-3 flex flex-col gap-4">
               {report.validation.financial_scope && (
                 <p className="text-xs text-gray-500">
-                  Resumo financeiro (DRE): {report.validation.financial_scope}
+                  {t('audit.financialSummary', { scope: report.validation.financial_scope })}
                 </p>
               )}
               <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
                 {[
-                  { label: 'Receita (DRE)', value: `R$ ${fmt(report.validation.receita_total)}`, icon: TrendingUp },
-                  { label: 'CMV (DRE)', value: `R$ ${fmt(report.validation.cmv_total ?? 0)}`, icon: TrendingDown },
-                  { label: 'Despesa (DRE)', value: `R$ ${fmt(report.validation.despesa_total ?? 0)}`, icon: Minus },
-                  { label: 'Pedidos de Venda', value: fmt(report.validation.total_pedidos), icon: ShoppingCart },
-                  { label: 'Produtos', value: fmt(report.validation.total_produtos), icon: Database },
-                  { label: 'Ordens Produção', value: fmt(report.validation.total_ordens_producao), icon: Factory },
+                  { label: t('audit.stat.revenueDre'), value: `R$ ${fmt(report.validation.receita_total)}`, icon: TrendingUp },
+                  { label: t('audit.stat.cmvDre'), value: `R$ ${fmt(report.validation.cmv_total ?? 0)}`, icon: TrendingDown },
+                  { label: t('audit.stat.expenseDre'), value: `R$ ${fmt(report.validation.despesa_total ?? 0)}`, icon: Minus },
+                  { label: t('audit.stat.salesOrders'), value: fmt(report.validation.total_pedidos), icon: ShoppingCart },
+                  { label: t('audit.stat.products'), value: fmt(report.validation.total_produtos), icon: Database },
+                  { label: t('audit.stat.productionOrders'), value: fmt(report.validation.total_ordens_producao), icon: Factory },
                 ].map(s => {
                   const Icon = s.icon;
                   return (
@@ -425,8 +425,7 @@ export default function AuditPage() {
                 && report.validation.financial_source === 'dre'
                 && Math.abs(report.validation.receita_pedidos - report.validation.receita_total) > report.validation.receita_total * 0.05 && (
                 <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2">
-                  Receita de pedidos (ERP): R$ {fmt(report.validation.receita_pedidos)} — diverge da DRE.
-                  Use a DRE como referência financeira oficial.
+                  {t('audit.erpDivergence', { value: fmt(report.validation.receita_pedidos) })}
                 </p>
               )}
 
@@ -441,7 +440,7 @@ export default function AuditPage() {
                   : <XCircle size={20} className="text-red-600 shrink-0" />}
                 <div>
                   <p className={`font-bold text-sm ${report.validation.status === 'ok' ? 'text-green-800' : 'text-red-800'}`}>
-                    {report.validation.status === 'ok' ? 'Validação Básica: Aprovada' : 'Validação Básica: Falha'}
+                    {report.validation.status === 'ok' ? t('audit.basicValidationOk') : t('audit.basicValidationFail')}
                   </p>
                   <p className={`text-xs mt-0.5 ${report.validation.status === 'ok' ? 'text-green-600' : 'text-red-600'}`}>
                     {report.validation.mensagem}
@@ -449,7 +448,7 @@ export default function AuditPage() {
                 </div>
                 {report.high_severity > 0 && (
                   <span className="ml-auto text-xs font-bold bg-red-100 text-red-700 px-3 py-1 rounded-full shrink-0">
-                    {report.high_severity} problema(s) crítico(s)
+                    {t('audit.criticalProblems', { n: report.high_severity })}
                   </span>
                 )}
               </div>
@@ -461,10 +460,10 @@ export default function AuditPage() {
             <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
               <div className="flex items-center gap-2">
                 <ClipboardList size={18} className="text-[#0A2342]" />
-                <h3 className="font-bold text-[#0A2342]">Cobertura de Dados</h3>
+                <h3 className="font-bold text-[#0A2342]">{t('audit.coverage')}</h3>
               </div>
               <span className={`text-xs font-bold px-3 py-1 rounded-full border ${report.coverage.score >= 80 ? 'bg-green-100 text-green-800 border-green-300' : report.coverage.score >= 60 ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : 'bg-red-100 text-red-800 border-red-300'}`}>
-                {report.coverage.loaded}/{report.coverage.total} fontes · {report.coverage.score.toFixed(0)}%
+                {t('audit.coverageBadge', { loaded: report.coverage.loaded, total: report.coverage.total, score: report.coverage.score.toFixed(0) })}
               </span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -478,8 +477,8 @@ export default function AuditPage() {
                   <div className="min-w-0">
                     <p className="font-semibold text-sm text-gray-800">{source.name}</p>
                     <p className="text-xs text-gray-500">
-                      {source.loaded ? 'Carregado' : `Pendente: ${source.action}`}
-                      {source.records != null ? ` · ${source.records} registro(s)` : ''}
+                      {source.loaded ? t('audit.loaded') : t('audit.pendingAction', { action: source.action })}
+                      {source.records != null ? ` · ${t('audit.records', { n: source.records })}` : ''}
                     </p>
                   </div>
                 </div>
@@ -491,7 +490,7 @@ export default function AuditPage() {
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
               <CheckSquare size={18} className="text-[#0A2342]" />
-              <h3 className="font-bold text-[#0A2342]">Validações por Domínio</h3>
+              <h3 className="font-bold text-[#0A2342]">{t('audit.domainValidations')}</h3>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 p-5">
               {report.domain_validations.map(domain => (
@@ -499,10 +498,10 @@ export default function AuditPage() {
                   <div className="flex items-center justify-between gap-3 mb-3">
                     <div>
                       <p className="font-bold text-[#0A2342]">{domain.domain}</p>
-                      <p className="text-xs text-gray-400">{domain.total_records} registro(s)</p>
+                      <p className="text-xs text-gray-400">{t('audit.records', { n: domain.total_records })}</p>
                     </div>
                     <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${statusBadgeClass(domain.status)}`}>
-                      {statusLabel(domain.status)}
+                      {statusLabel(domain.status, t)}
                     </span>
                   </div>
                   <ul className="space-y-2">
@@ -529,17 +528,17 @@ export default function AuditPage() {
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
               <BarChart3 size={18} className="text-[#0A2342]" />
-              <h3 className="font-bold text-[#0A2342]">Reconciliação e Cruzamentos</h3>
+              <h3 className="font-bold text-[#0A2342]">{t('audit.reconciliation')}</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-gray-500 bg-gray-50">
-                    <th className="px-6 py-3">Cruzamento</th>
-                    <th className="px-6 py-3 text-right">Valor</th>
-                    <th className="px-6 py-3 text-right">Referencia</th>
-                    <th className="px-6 py-3 text-right">Dif.</th>
-                    <th className="px-6 py-3">Status</th>
+                    <th className="px-6 py-3">{t('audit.colCrossing')}</th>
+                    <th className="px-6 py-3 text-right">{t('audit.colValue')}</th>
+                    <th className="px-6 py-3 text-right">{t('audit.colReference')}</th>
+                    <th className="px-6 py-3 text-right">{t('audit.colDiff')}</th>
+                    <th className="px-6 py-3">{t('audit.colStatus')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -554,7 +553,7 @@ export default function AuditPage() {
                       <td className="px-6 py-3 text-right">{item.difference_pct == null ? '-' : `${item.difference_pct.toFixed(1)}%`}</td>
                       <td className="px-6 py-3">
                         <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${statusBadgeClass(item.status)}`}>
-                          {statusLabel(item.status)}
+                          {statusLabel(item.status, t)}
                         </span>
                       </td>
                     </tr>
@@ -569,17 +568,17 @@ export default function AuditPage() {
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <AlertTriangle size={17} className="text-[#0A2342]" />
-                <h3 className="font-bold text-[#0A2342]">Problemas Detectados</h3>
+                <h3 className="font-bold text-[#0A2342]">{t('audit.issuesDetected')}</h3>
               </div>
-              <span className="text-xs text-gray-400">{report.total_issues} ocorrência(s)</span>
+              <span className="text-xs text-gray-400">{t('audit.occurrences', { n: report.total_issues })}</span>
             </div>
 
             {report.issues.length === 0 ? (
               <div className="p-10 flex flex-col items-center gap-2">
                 <CheckCircle size={36} className="text-green-500" />
-                <p className="font-semibold text-green-700">Nenhum problema detectado</p>
+                <p className="font-semibold text-green-700">{t('audit.noIssues')}</p>
                 <p className="text-sm text-gray-400 text-center max-w-sm">
-                  Os dados estão consistentes e prontos para o diagnóstico executivo. Este relatório pode ir ao conselho.
+                  {t('audit.noIssuesHint')}
                 </p>
               </div>
             ) : (
@@ -608,11 +607,11 @@ export default function AuditPage() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 px-6 py-4 flex flex-wrap items-center gap-4">
               <Clock size={17} className="text-[#0A2342] shrink-0" />
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-sm text-[#0A2342]">Última Importação ERP</p>
+                <p className="font-bold text-sm text-[#0A2342]">{t('audit.lastImport')}</p>
                 <p className="text-xs text-gray-500 truncate">
                   {report.last_import.data_type.replace('_', ' ')} &nbsp;·&nbsp;
                   {report.last_import.file_name} &nbsp;·&nbsp;
-                  {report.last_import.rows_imported} linhas importadas
+                  {t('audit.rowsImported', { n: report.last_import.rows_imported })}
                 </p>
               </div>
               <div className="flex items-center gap-3 shrink-0">
@@ -634,28 +633,28 @@ export default function AuditPage() {
           {eventMetrics && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-[#0A2342]">Governanca de Eventos</h3>
-                <span className="text-xs text-gray-400">Ultimos 7 e 30 dias</span>
+                <h3 className="font-bold text-[#0A2342]">{t('audit.eventGovernance')}</h3>
+                <span className="text-xs text-gray-400">{t('audit.last7and30')}</span>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {[
                   {
-                    label: 'Eventos (7d)',
+                    label: t('audit.events7d'),
                     value: eventMetrics.total7d,
                     trend: getTrendInfo(eventMetrics.total7d, eventMetrics.totalPrev7d),
                   },
-                  { label: 'Eventos (30d)', value: eventMetrics.total30d },
+                  { label: t('audit.events30d'), value: eventMetrics.total30d },
                   {
-                    label: 'Mudancas de Preco (7d)',
+                    label: t('audit.priceChanges7d'),
                     value: eventMetrics.price7d,
                     trend: getTrendInfo(eventMetrics.price7d, eventMetrics.pricePrev7d),
-                    sublabel: `30d: ${eventMetrics.price30d}`,
+                    sublabel: t('audit.sub30d', { n: eventMetrics.price30d }),
                   },
                   {
-                    label: 'Importacoes ERP (7d)',
+                    label: t('audit.erpImports7d'),
                     value: eventMetrics.erp7d,
                     trend: getTrendInfo(eventMetrics.erp7d, eventMetrics.erpPrev7d),
-                    sublabel: `30d: ${eventMetrics.erp30d}`,
+                    sublabel: t('audit.sub30d', { n: eventMetrics.erp30d }),
                   },
                 ].map((item) => (
                   <div key={item.label} className="bg-[#F0F4F8] rounded-lg p-3 border border-gray-100">
@@ -682,9 +681,9 @@ export default function AuditPage() {
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <div>
-                <h3 className="font-bold text-[#0A2342]">Linha do Tempo de Eventos</h3>
+                <h3 className="font-bold text-[#0A2342]">{t('audit.eventTimeline')}</h3>
                 <span className="text-xs text-gray-400">
-                  /events/{companyId ?? '-'} · {company?.name ?? 'Tenant nao selecionado'}
+                  /events/{companyId ?? '-'} · {company?.name ?? t('audit.noTenant')}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -693,32 +692,32 @@ export default function AuditPage() {
                   onChange={(e) => setEventTypeFilter(e.target.value)}
                   className="text-xs border border-gray-200 rounded-md px-2 py-1 text-gray-700"
                 >
-                  <option value="all">Todos tipos</option>
-                  <option value="price_update">Atualizacao de preco</option>
-                  <option value="erp_import">Importacao ERP</option>
+                  <option value="all">{t('audit.allTypes')}</option>
+                  <option value="price_update">{t('audit.priceUpdate')}</option>
+                  <option value="erp_import">{t('audit.erpImport')}</option>
                 </select>
                 <select
                   value={periodFilter}
                   onChange={(e) => setPeriodFilter(e.target.value)}
                   className="text-xs border border-gray-200 rounded-md px-2 py-1 text-gray-700"
                 >
-                  <option value="7">7 dias</option>
-                  <option value="30">30 dias</option>
-                  <option value="90">90 dias</option>
-                  <option value="all">Todo periodo</option>
+                  <option value="7">{t('audit.days7')}</option>
+                  <option value="30">{t('audit.days30')}</option>
+                  <option value="90">{t('audit.days90')}</option>
+                  <option value="all">{t('audit.allPeriod')}</option>
                 </select>
                 <button
                   onClick={() => loadReport()}
                   className="text-xs font-bold bg-[#0A2342] text-white px-3 py-1.5 rounded-md hover:bg-[#0d2d57]"
                 >
-                  Aplicar
+                  {t('audit.apply')}
                 </button>
               </div>
             </div>
 
             {events.length === 0 ? (
               <div className="p-8 text-center text-sm text-gray-500">
-                Nenhum evento recente para esta empresa.
+                {t('audit.noEvents')}
               </div>
             ) : (
               <ul className="divide-y divide-gray-50">
@@ -726,17 +725,17 @@ export default function AuditPage() {
                   <li key={e.id} className="px-6 py-4 flex items-start justify-between gap-4">
                     <div className="min-w-0">
                       <p className="font-semibold text-gray-800 text-sm">
-                        {eventTypeLabel(e.event_type)}
+                        {eventTypeLabel(e.event_type, t)}
                       </p>
                       <p className="text-xs text-gray-500 mt-0.5">
-                        Entidade: {e.entity_type}
+                        {t('audit.entity')} {e.entity_type}
                         {e.entity_id ? ` #${e.entity_id}` : ''}
-                        {e.user_id ? ` · Usuario: ${e.user_id}` : ''}
+                        {e.user_id ? ` · ${t('audit.user')} ${e.user_id}` : ''}
                       </p>
 
                       {e.event_type === 'price_update' && (
                         <p className="text-xs text-gray-600 mt-1">
-                          Preco: R$ {Number(e.old_state?.sale_price ?? 0).toLocaleString('pt-BR')}
+                          {t('audit.price')} R$ {Number(e.old_state?.sale_price ?? 0).toLocaleString('pt-BR')}
                           {' -> '}
                           R$ {Number(e.new_state?.sale_price ?? 0).toLocaleString('pt-BR')}
                         </p>
@@ -744,10 +743,10 @@ export default function AuditPage() {
 
                       {e.event_type === 'erp_import' && (
                         <p className="text-xs text-gray-600 mt-1">
-                          Arquivo: {String(e.new_state?.file_name ?? '-')}
-                          {' · Importadas: '}
+                          {t('audit.file')} {String(e.new_state?.file_name ?? '-')}
+                          {` · ${t('audit.imported')} `}
                           {Number(e.new_state?.rows_imported ?? 0)}
-                          {' · Rejeitadas: '}
+                          {` · ${t('audit.rejected')} `}
                           {Number(e.new_state?.rows_rejected ?? 0)}
                         </p>
                       )}
@@ -766,11 +765,11 @@ export default function AuditPage() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
                 <AlertTriangle size={18} className="text-[#0A2342]" />
-                <h3 className="font-bold text-[#0A2342]">Pendências e Plano de Ação</h3>
+                <h3 className="font-bold text-[#0A2342]">{t('audit.pendingActions')}</h3>
               </div>
               {report.pending_actions.length === 0 ? (
                 <div className="p-8 text-center text-sm text-gray-500">
-                  Nenhuma pendência aberta para os critérios atuais.
+                  {t('audit.noPending')}
                 </div>
               ) : (
                 <ul className="divide-y divide-gray-50">
@@ -780,7 +779,7 @@ export default function AuditPage() {
                         <div>
                           <p className="font-semibold text-gray-800 text-sm">{action.action}</p>
                           <p className="text-xs text-gray-500 mt-1">{action.reason}</p>
-                          <p className="text-[11px] text-gray-400 mt-1">Responsavel: {action.owner}</p>
+                          <p className="text-[11px] text-gray-400 mt-1">{t('audit.owner')} {action.owner}</p>
                         </div>
                         <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${action.priority === 'Alta' ? 'bg-red-100 text-red-800 border-red-300' : 'bg-yellow-100 text-yellow-800 border-yellow-300'}`}>
                           {action.priority}
@@ -795,7 +794,7 @@ export default function AuditPage() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
                 <Shield size={18} className="text-[#0A2342]" />
-                <h3 className="font-bold text-[#0A2342]">Prontidão Executiva</h3>
+                <h3 className="font-bold text-[#0A2342]">{t('audit.executiveReadiness')}</h3>
               </div>
               <ul className="divide-y divide-gray-50">
                 {report.executive_readiness.map(item => (
@@ -805,7 +804,7 @@ export default function AuditPage() {
                       <p className="text-xs text-gray-500 mt-1">{item.message}</p>
                     </div>
                     <span className={`shrink-0 text-xs font-bold px-2 py-0.5 rounded-full border ${statusBadgeClass(item.status)}`}>
-                      {statusLabel(item.status)}
+                      {statusLabel(item.status, t)}
                     </span>
                   </li>
                 ))}
@@ -817,7 +816,7 @@ export default function AuditPage() {
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
             <div className="flex items-center gap-2 mb-4">
               <FileText size={18} className="text-[#0A2342]" />
-              <h3 className="font-bold text-[#0A2342]">Exportações de Auditoria</h3>
+              <h3 className="font-bold text-[#0A2342]">{t('audit.auditExports')}</h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {report.exports.map(item => (
@@ -837,14 +836,14 @@ export default function AuditPage() {
           <div className="bg-[#0A2342] rounded-xl p-6 text-white">
             <div className="flex items-center gap-2 mb-3">
               <BarChart3 size={18} className="text-[#C9A959]" />
-              <h3 className="font-bold text-sm uppercase tracking-wider text-[#C9A959]">Resumo Executivo — Prontidão dos Dados</h3>
+              <h3 className="font-bold text-sm uppercase tracking-wider text-[#C9A959]">{t('audit.execSummaryTitle')}</h3>
             </div>
             <p className="text-sm leading-relaxed opacity-90">
               {report.trust_score.score >= 80
-                ? `Os dados da empresa apresentam alta confiabilidade (Score ${report.trust_score.score}/100). O diagnóstico JUNO está pronto para ser apresentado ao conselho e à diretoria.`
+                ? t('audit.summaryHigh', { score: report.trust_score.score })
                 : report.trust_score.score >= 60
-                ? `Os dados apresentam confiabilidade média (Score ${report.trust_score.score}/100). Recomenda-se corrigir os ${report.total_issues} problema(s) identificados antes da apresentação executiva.`
-                : `Atenção: confiabilidade baixa (Score ${report.trust_score.score}/100). Há ${report.high_severity} problema(s) crítico(s) que devem ser resolvidos antes de qualquer apresentação ao conselho.`
+                ? t('audit.summaryMid', { score: report.trust_score.score, issues: report.total_issues })
+                : t('audit.summaryLow', { score: report.trust_score.score, high: report.high_severity })
               }
             </p>
           </div>

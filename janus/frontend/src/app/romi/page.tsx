@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { useActiveCompany } from '@/lib/tenant';
+import { useI18n } from '@/lib/i18n';
 import MetricCard from '@/components/dashboard/MetricCard';
 import ScoreCard from '@/components/dashboard/ScoreCard';
 import MarginTable from '@/components/dashboard/MarginTable';
@@ -51,6 +52,7 @@ interface ReportData {
 }
 
 export default function RomiPage() {
+  const { t } = useI18n();
   const { company, companyId, isLoading: companyLoading } = useActiveCompany();
   const [ceoData, setCeoData] = useState<CeoData | null>(null);
   const [cfoData, setCfoData] = useState<CfoRow[]>([]);
@@ -144,12 +146,12 @@ export default function RomiPage() {
     }
   };
 
-  if (loading || companyLoading) return <div className="flex items-center justify-center h-full">Carregando diagnóstico...</div>;
+  if (loading || companyLoading) return <div className="flex items-center justify-center h-full">{t('myCompany.loading')}</div>;
   if (!companyId) {
     return (
       <div className="bg-white border border-yellow-100 rounded-lg p-8">
-        <h1 className="text-xl font-bold text-[#0A2342]">Nenhuma empresa vinculada</h1>
-        <p className="mt-2 text-sm text-gray-600">Vincule um tenant ao usuario para carregar o diagnostico operacional.</p>
+        <h1 className="text-xl font-bold text-[#0A2342]">{t('myCompany.noCompanyTitle')}</h1>
+        <p className="mt-2 text-sm text-gray-600">{t('myCompany.noCompanyDesc')}</p>
       </div>
     );
   }
@@ -160,8 +162,8 @@ export default function RomiPage() {
     <div className="space-y-8">
       <div className="border-b border-gray-200 pb-4 flex justify-between items-end">
         <div>
-          <h1 className="text-2xl font-bold text-[#0A2342]">{company?.name ?? 'Minha Empresa'} — Diagnóstico Operacional 360°</h1>
-          <p className="text-gray-500 text-sm">Foco: margem, custo real, atrasos, gargalos e prontidão executiva.</p>
+          <h1 className="text-2xl font-bold text-[#0A2342]">{company?.name ?? t('myCompany.defaultName')} — {t('myCompany.title360')}</h1>
+          <p className="text-gray-500 text-sm">{t('myCompany.subtitle')}</p>
         </div>
         <div className="flex items-center gap-3">
           <button
@@ -170,7 +172,7 @@ export default function RomiPage() {
             className="flex items-center gap-2 bg-[#C9A959] text-[#0A2342] font-bold py-2 px-6 rounded-lg hover:bg-[#b89a51] transition-colors shadow-md disabled:opacity-50"
           >
             {generatingReport ? <Loader2 className="animate-spin" size={18} /> : <FileText size={18} />}
-            Gerar Diagnóstico 360
+            {t('myCompany.generate')}
           </button>
           <button
             onClick={handleDownloadPDF}
@@ -178,7 +180,7 @@ export default function RomiPage() {
             className="flex items-center gap-2 bg-[#0A2342] text-white font-bold py-2 px-6 rounded-lg hover:bg-[#0d2d57] transition-colors shadow-md disabled:opacity-50"
           >
             {downloadingPDF ? <Loader2 className="animate-spin" size={18} /> : <Download size={18} />}
-            Baixar PDF Executivo
+            {t('myCompany.downloadPdf')}
           </button>
         </div>
       </div>
@@ -190,21 +192,21 @@ export default function RomiPage() {
           <ScoreCard score={ceoData?.score_juno ?? 0} />
         </div>
         <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <MetricCard 
-            title="Receita Líquida" 
-            value={`R$ ${receitaLiquida.toLocaleString()}`} 
-            icon={<DollarSign size={20} />} 
+          <MetricCard
+            title={t('myCompany.revenueNet')}
+            value={`R$ ${receitaLiquida.toLocaleString()}`}
+            icon={<DollarSign size={20} />}
           />
-          <MetricCard 
-            title="Margem Média" 
-            value={averageMarginPct == null ? 'Sem dados' : `${averageMarginPct.toFixed(1)}%`}
-            icon={<TrendingUp size={20} />} 
+          <MetricCard
+            title={t('myCompany.avgMargin')}
+            value={averageMarginPct == null ? t('myCompany.noData') : `${averageMarginPct.toFixed(1)}%`}
+            icon={<TrendingUp size={20} />}
           />
-          <MetricCard 
-            title="Alertas Críticos" 
-            value={cooData.length} 
-            subtitle={`Eventos 7d: ${events7d} (ant. ${eventsPrev7d})`}
-            icon={<AlertTriangle size={20} />} 
+          <MetricCard
+            title={t('myCompany.criticalAlerts')}
+            value={cooData.length}
+            subtitle={t('myCompany.eventsSub', { n: events7d, prev: eventsPrev7d })}
+            icon={<AlertTriangle size={20} />}
             trend={eventTrend}
           />
         </div>
@@ -218,16 +220,16 @@ export default function RomiPage() {
       </div>
 
       <div className="bg-blue-50 border-l-4 border-[#0A2342] p-4 rounded-r-lg">
-        <h4 className="font-bold text-[#0A2342] mb-1 uppercase text-xs">Alertas Executivos</h4>
+        <h4 className="font-bold text-[#0A2342] mb-1 uppercase text-xs">{t('myCompany.execAlerts')}</h4>
         {insightsData.length === 0 && cooData.length === 0 ? (
-          <p className="text-sm text-gray-700">Nenhum alerta crítico calculado com os dados atuais.</p>
+          <p className="text-sm text-gray-700">{t('myCompany.noAlerts')}</p>
         ) : (
           <ul className="text-sm text-gray-700 list-disc ml-4 space-y-1">
             {insightsData.slice(0, 3).map((insight, index) => (
               <li key={`${insight.type ?? 'insight'}-${index}`}>{insight.message}</li>
             ))}
             {insightsData.length === 0 && cooData.length > 0 && (
-              <li>{cooData.length} ordens de produção em atraso.</li>
+              <li>{t('myCompany.delayedOrdersAlert', { n: cooData.length })}</li>
             )}
           </ul>
         )}

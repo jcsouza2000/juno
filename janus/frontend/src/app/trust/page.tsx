@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AlertTriangle, BrainCircuit, CheckCircle2, Database, FileText, Lock, ShieldCheck } from "lucide-react";
 import { api } from "@/lib/api";
+import { useI18n } from "@/lib/i18n";
 
 type TrustControl = {
   id: string;
@@ -25,32 +26,17 @@ type TrustPosture = {
   next_certification_targets: string[];
 };
 
-const pillars = [
-  {
-    title: "Segurança enterprise",
-    icon: <Lock size={24} />,
-    text: "RBAC, roles por tenant, autenticação obrigatória e trilha para MFA/SSO.",
-  },
-  {
-    title: "Isolamento multi-tenant",
-    icon: <Database size={24} />,
-    text: "Cada leitura sensível precisa carregar o tenant validado antes de consultar dados.",
-  },
-  {
-    title: "LGPD operacional",
-    icon: <FileText size={24} />,
-    text: "DSR, consentimentos, retenção e evidências por empresa, com auditoria consultável.",
-  },
-  {
-    title: "IA governada",
-    icon: <BrainCircuit size={24} />,
-    text: "Ações propostas pela IA exigem confirmação humana e devem manter evidência auditável.",
-  },
-];
-
 export default function TrustCenterPage() {
+  const { t } = useI18n();
   const [posture, setPosture] = useState<TrustPosture | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const pillars = [
+    { title: t("trust.pillars.securityTitle"), icon: <Lock size={24} />, text: t("trust.pillars.securityText") },
+    { title: t("trust.pillars.isolationTitle"), icon: <Database size={24} />, text: t("trust.pillars.isolationText") },
+    { title: t("trust.pillars.lgpdTitle"), icon: <FileText size={24} />, text: t("trust.pillars.lgpdText") },
+    { title: t("trust.pillars.aiTitle"), icon: <BrainCircuit size={24} />, text: t("trust.pillars.aiText") },
+  ];
 
   useEffect(() => {
     api
@@ -60,32 +46,31 @@ export default function TrustCenterPage() {
         setError(null);
       })
       .catch(() => {
-        setError("Postura em tempo real restrita a administradores do tenant.");
+        setError(t("trust.error"));
       });
-  }, []);
+  }, [t]);
 
   return (
     <div className="space-y-8">
       <section className="rounded-2xl bg-[#0A2342] p-8 text-white">
-        <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#C9A959]">Trust Center</p>
-        <h1 className="mt-4 text-3xl font-extrabold">Confiança inata para SaaS hibrido</h1>
+        <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#C9A959]">{t("trust.eyebrow")}</p>
+        <h1 className="mt-4 text-3xl font-extrabold">{t("trust.title")}</h1>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-blue-100">
-          O JUNO deve provar segurança, isolamento, LGPD, IA governada e operação confiável em cada tenant,
-          não apenas prometer tecnologia.
+          {t("trust.subtitle")}
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold uppercase">Cloud ou on-prem</span>
-          <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold uppercase">Auditoria por tenant</span>
-          <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold uppercase">LGPD-ready</span>
+          <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold uppercase">{t("trust.badgeCloud")}</span>
+          <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold uppercase">{t("trust.badgeAudit")}</span>
+          <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold uppercase">{t("trust.badgeLgpd")}</span>
         </div>
       </section>
 
       {posture && (
         <section className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <Metric label="Eventos auditados 24h" value={String(posture.summary.audit_events_24h)} />
-          <Metric label="DSR em aberto" value={String(posture.summary.open_data_subject_requests)} />
-          <Metric label="MFA" value={posture.summary.mfa_required ? "Ativo" : "Planejado"} />
-          <Metric label="Sessão" value={`${posture.summary.session_timeout_minutes} min`} />
+          <Metric label={t("trust.metricAuditEvents")} value={String(posture.summary.audit_events_24h)} />
+          <Metric label={t("trust.metricDsr")} value={String(posture.summary.open_data_subject_requests)} />
+          <Metric label={t("trust.metricMfa")} value={posture.summary.mfa_required ? t("trust.active") : t("trust.planned")} />
+          <Metric label={t("trust.metricSession")} value={t("trust.minutes", { n: posture.summary.session_timeout_minutes })} />
         </section>
       )}
 
@@ -110,7 +95,7 @@ export default function TrustCenterPage() {
         <section className="rounded-xl border border-gray-100 bg-white p-6">
           <div className="flex items-center gap-2">
             <ShieldCheck className="text-[#C9A959]" size={22} />
-            <h2 className="text-xl font-bold text-[#0A2342]">Controles com evidência</h2>
+            <h2 className="text-xl font-bold text-[#0A2342]">{t("trust.controlsTitle")}</h2>
           </div>
           <div className="mt-6 space-y-4">
             {posture.controls.map((control) => (
@@ -132,10 +117,9 @@ export default function TrustCenterPage() {
       )}
 
       <section className="rounded-xl border border-gray-100 bg-white p-6">
-        <h2 className="text-xl font-bold text-[#0A2342]">Terreno preparado, sem custo enterprise agora</h2>
+        <h2 className="text-xl font-bold text-[#0A2342]">{t("trust.futureTitle")}</h2>
         <p className="mt-2 text-sm leading-6 text-gray-500">
-          O JUNO mantém os controles essenciais ativos e deixa MFA, SSO, SOC 2 e ISO 27001 como trilhas
-          futuras para quando houver cliente, receita ou exigência contratual.
+          {t("trust.futureText")}
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           {(posture?.next_certification_targets ?? ["LGPD-ready", "ISO 27001 readiness", "SOC 2 readiness"]).map(

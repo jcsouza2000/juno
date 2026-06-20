@@ -1,4 +1,5 @@
 import { Minus, TrendingDown, TrendingUp } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 interface MetricCardProps {
   title: string;
@@ -9,6 +10,7 @@ interface MetricCardProps {
 }
 
 export default function MetricCard({ title, value, subtitle, icon, trend }: MetricCardProps) {
+  const { t } = useI18n();
   const trendStyle =
     trend === 'up'
       ? 'bg-green-100 text-green-700'
@@ -30,7 +32,7 @@ export default function MetricCard({ title, value, subtitle, icon, trend }: Metr
               {trend === 'up' && <TrendingUp size={11} />}
               {trend === 'down' && <TrendingDown size={11} />}
               {trend === 'neutral' && <Minus size={11} />}
-              <span>{trend === 'up' ? 'Alta' : trend === 'down' ? 'Queda' : 'Estavel'}</span>
+              <span>{trend === 'up' ? t('myCompany.trend.up') : trend === 'down' ? t('myCompany.trend.down') : t('myCompany.trend.stable')}</span>
             </span>
           )}
         </div>
