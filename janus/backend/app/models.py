@@ -157,8 +157,8 @@ class SalesOrder(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     company_id = Column(Integer, ForeignKey("companies.id"), nullable=False, index=True)
-    customer_id = Column(Integer, ForeignKey("customers.id"))
-    product_id = Column(Integer, ForeignKey("products.id"))
+    customer_id = Column(Integer, ForeignKey("customers.id"), index=True)
+    product_id = Column(Integer, ForeignKey("products.id"), index=True)
     revenue = Column(Float, default=0)
     discount = Column(Float, default=0)
     total = Column(Float, default=0)
@@ -171,7 +171,7 @@ class ProductionOrder(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     company_id = Column(Integer, ForeignKey("companies.id"), nullable=False, index=True)
-    product_id = Column(Integer, ForeignKey("products.id"))
+    product_id = Column(Integer, ForeignKey("products.id"), index=True)
     planned_qty = Column(Integer, default=0)
     actual_qty = Column(Integer, default=0)
     planned_cost = Column(Float, default=0)
@@ -187,7 +187,7 @@ class Inventory(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     company_id = Column(Integer, ForeignKey("companies.id"), nullable=False, index=True)
-    product_id = Column(Integer, ForeignKey("products.id"))
+    product_id = Column(Integer, ForeignKey("products.id"), index=True)
     warehouse_location = Column(String(100))
     quantity_on_hand = Column(Integer, default=0)
     quantity_reserved = Column(Integer, default=0)
