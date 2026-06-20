@@ -16,6 +16,9 @@ set "DASHBOARD_URL=%FRONTEND_URL%/executive"
 set "LOCAL_DB=sqlite:///./smart_juno.db"
 set "LOCAL_SECRET_KEY=smart-juno-local-secret-key-must-have-at-least-32-chars"
 set "LOCAL_ENCRYPTION_KEY=N6zYqfBC2CxUgdztuLcM5nVSyxe7S6TjzS-ZmrkcmCM="
+REM Modelo do Coordinator (IA). qwen3:8b suporta tool-calling. Para acelerar em
+REM maquinas com GPU/modelo menor, troque aqui (ex: llama3.2:3b se suportar tools).
+set "JUNO_AI_MODEL=qwen3:8b"
 set "LOCAL_AUTH_SECRET=smart-juno-local-auth-secret-only-for-development-32-chars"
 set "LOG_DIR=%ROOT%\logs"
 set "BACKEND_LOG=%LOG_DIR%\backend-smart-juno.log"
@@ -173,7 +176,7 @@ if errorlevel 1 (
 
     echo [INFO] Log backend: %BACKEND_LOG%
     call :free_port 8001
-    start "JUNO Backend :8001" /D "%BACKEND%" cmd /k "set ""PYTHONPATH=."" && set ""JUNO_ENV=development"" && set ""JUNO_DEV_COMPANY_ID=4"" && set ""DATABASE_URL=%LOCAL_DB%"" && set ""SECRET_KEY=%LOCAL_SECRET_KEY%"" && set ""ENCRYPTION_KEY=%LOCAL_ENCRYPTION_KEY%"" && set ""ALLOWED_ORIGINS=http://localhost:4000,http://127.0.0.1:4000"" && call ""%PY%"" -m uvicorn app.main:app --host 127.0.0.1 --port 8001 --reload > ""%BACKEND_LOG%"" 2>&1"
+    start "JUNO Backend :8001" /D "%BACKEND%" cmd /k "set ""PYTHONPATH=."" && set ""JUNO_ENV=development"" && set ""JUNO_DEV_COMPANY_ID=4"" && set ""JUNO_AI_MODEL=%JUNO_AI_MODEL%"" && set ""DATABASE_URL=%LOCAL_DB%"" && set ""SECRET_KEY=%LOCAL_SECRET_KEY%"" && set ""ENCRYPTION_KEY=%LOCAL_ENCRYPTION_KEY%"" && set ""ALLOWED_ORIGINS=http://localhost:4000,http://127.0.0.1:4000"" && call ""%PY%"" -m uvicorn app.main:app --host 127.0.0.1 --port 8001 --reload > ""%BACKEND_LOG%"" 2>&1"
     call :wait_http "%BACKEND_URL%/health" 90 "backend local"
     if errorlevel 1 (
         echo [ERRO] Backend local nao respondeu em %BACKEND_URL%/health.
