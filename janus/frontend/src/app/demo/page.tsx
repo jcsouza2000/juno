@@ -30,9 +30,9 @@ interface DemoData {
 const COMPANIES = [{ id: 1, label: 'Minha Empresa', sector: 'Diagnóstico multi-setorial' }];
 
 const FLOWS = [
-  { id: 'dashboard', label: 'Dashboard Executivo',    emoji: '📊', desc: 'Score, receita e margem por produto' },
-  { id: 'insights',  label: 'Insights + Diagnóstico', emoji: '🔍', desc: 'Riscos detectados e plano de ação 360°' },
-  { id: 'auditoria', label: 'Auditoria de Dados',     emoji: '🛡️', desc: 'Data Trust Score e confiabilidade' },
+  { id: 'dashboard', emoji: '📊', labelKey: 'demo.flowDashLabel',     descKey: 'demo.flowDashDesc' },
+  { id: 'insights',  emoji: '🔍', labelKey: 'demo.flowInsightsLabel', descKey: 'demo.flowInsightsDesc' },
+  { id: 'auditoria', emoji: '🛡️', labelKey: 'demo.flowAuditLabel',    descKey: 'demo.flowAuditDesc' },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -45,10 +45,17 @@ function scoreColor(s: number) {
   return { text: 'text-red-600', bg: 'bg-red-50', border: 'border-red-400', badge: 'bg-red-100 text-red-800' };
 }
 
-function scoreLabel(s: number) { return s >= 85 ? 'EXCELENTE' : s >= 70 ? 'BOM' : s >= 50 ? 'ATENÇÃO' : 'CRÍTICO'; }
+type T = (key: string, vars?: Record<string, string | number>) => string;
+function scoreLabel(s: number, t: T) {
+  return s >= 85 ? t('demo.scoreExcellent')
+    : s >= 70 ? t('demo.scoreGood')
+    : s >= 50 ? t('demo.scoreAttention')
+    : t('demo.scoreCritical');
+}
 
 // ── Flows ─────────────────────────────────────────────────────────────────────
 function FlowDashboard({ d }: { d: DemoData }) {
+  const { t } = useI18n();
   const C = scoreColor(d.kpis.score_juno);
   return (
     <div className="space-y-6">
@@ -56,13 +63,13 @@ function FlowDashboard({ d }: { d: DemoData }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className={`${C.bg} border-2 ${C.border} rounded-xl p-5 text-center`}>
           <div className={`text-5xl font-extrabold ${C.text}`}>{d.kpis.score_juno}</div>
-          <div className="text-xs text-gray-500 mt-1">Score JUNO</div>
-          <span className={`mt-2 inline-block text-xs font-bold px-2 py-0.5 rounded-full ${C.badge}`}>{scoreLabel(d.kpis.score_juno)}</span>
+          <div className="text-xs text-gray-500 mt-1">{t('demo.scoreJuno')}</div>
+          <span className={`mt-2 inline-block text-xs font-bold px-2 py-0.5 rounded-full ${C.badge}`}>{scoreLabel(d.kpis.score_juno, t)}</span>
         </div>
         {[
-          { label: 'Receita Líquida',   value: `R$ ${fmt(d.kpis.receita_liquida)}`,   icon: DollarSign,     color: 'text-[#0A2342]' },
-          { label: 'Perda Estimada/mês',value: `R$ ${fmt(d.kpis.estimated_loss)}`,     icon: TrendingDown,   color: 'text-red-600' },
-          { label: 'Ordens Atrasadas',  value: String(d.kpis.total_delayed),           icon: Clock,          color: 'text-orange-500' },
+          { label: t('demo.kpiRevenue'), value: `R$ ${fmt(d.kpis.receita_liquida)}`,   icon: DollarSign,     color: 'text-[#0A2342]' },
+          { label: t('demo.kpiLoss'),    value: `R$ ${fmt(d.kpis.estimated_loss)}`,     icon: TrendingDown,   color: 'text-red-600' },
+          { label: t('demo.kpiDelayed'), value: String(d.kpis.total_delayed),           icon: Clock,          color: 'text-orange-500' },
         ].map(k => {
           const Icon = k.icon;
           return (
@@ -83,15 +90,15 @@ function FlowDashboard({ d }: { d: DemoData }) {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="px-6 py-3 bg-[#0A2342] flex items-center gap-2">
           <BarChart3 size={16} className="text-[#C9A959]" />
-          <span className="text-white font-bold text-sm uppercase tracking-wider">Margem por Produto</span>
+          <span className="text-white font-bold text-sm uppercase tracking-wider">{t('demo.marginByProduct')}</span>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead><tr className="text-xs text-gray-400 uppercase tracking-wider border-b">
-              <th className="text-left px-6 py-3">Produto</th>
-              <th className="text-right px-6 py-3">Receita Líquida</th>
-              <th className="text-right px-6 py-3">Custo Real</th>
-              <th className="text-right px-6 py-3">Margem</th>
+              <th className="text-left px-6 py-3">{t('demo.colProduct')}</th>
+              <th className="text-right px-6 py-3">{t('demo.colRevenue')}</th>
+              <th className="text-right px-6 py-3">{t('demo.colCost')}</th>
+              <th className="text-right px-6 py-3">{t('demo.colMargin')}</th>
             </tr></thead>
             <tbody className="divide-y divide-gray-50">
               {d.margin_by_product.map((r, i) => (
@@ -105,7 +112,7 @@ function FlowDashboard({ d }: { d: DemoData }) {
                 </tr>
               ))}
               {d.margin_by_product.length === 0 && (
-                <tr><td colSpan={4} className="px-6 py-6 text-center text-gray-400">Sem dados de margem</td></tr>
+                <tr><td colSpan={4} className="px-6 py-6 text-center text-gray-400">{t('demo.noMarginData')}</td></tr>
               )}
             </tbody>
           </table>
@@ -118,7 +125,7 @@ function FlowDashboard({ d }: { d: DemoData }) {
           <div className="px-6 py-3 bg-orange-500 flex items-center gap-2">
             <Clock size={16} className="text-white" />
             <span className="text-white font-bold text-sm uppercase tracking-wider">
-              Ordens em Atraso ({d.delayed_orders.length})
+              {t('demo.delayedOrders')} ({d.delayed_orders.length})
             </span>
           </div>
           <ul className="divide-y divide-gray-50">
@@ -126,8 +133,8 @@ function FlowDashboard({ d }: { d: DemoData }) {
               <li key={i} className="px-6 py-3 flex items-center justify-between text-sm">
                 <span className="font-medium text-gray-800">OP-{o.order_id} · {o.product}</span>
                 <div className="flex items-center gap-3 text-xs text-gray-500">
-                  <span>Previsto: {o.planned_date?.slice(0, 10)}</span>
-                  <span className="text-red-500 font-semibold">Real: {o.actual_date?.slice(0, 10)}</span>
+                  <span>{t('demo.planned')} {o.planned_date?.slice(0, 10)}</span>
+                  <span className="text-red-500 font-semibold">{t('demo.actual')} {o.actual_date?.slice(0, 10)}</span>
                 </div>
               </li>
             ))}
@@ -139,18 +146,19 @@ function FlowDashboard({ d }: { d: DemoData }) {
 }
 
 function FlowInsights({ d }: { d: DemoData }) {
+  const { t } = useI18n();
   const opInsights = d.insights.filter(i => !i.type.startsWith('data_'));
   return (
     <div className="space-y-6">
       {/* Loss highlight */}
       <div className="bg-[#0A2342] rounded-xl p-6 flex items-center justify-between">
         <div>
-          <p className="text-[#C9A959] text-xs font-bold uppercase tracking-widest mb-1">Impacto Financeiro Estimado</p>
-          <p className="text-white text-4xl font-extrabold">R$ {fmt(d.kpis.estimated_loss)}<span className="text-lg font-normal text-gray-400">/mês</span></p>
+          <p className="text-[#C9A959] text-xs font-bold uppercase tracking-widest mb-1">{t('demo.financialImpact')}</p>
+          <p className="text-white text-4xl font-extrabold">R$ {fmt(d.kpis.estimated_loss)}<span className="text-lg font-normal text-gray-400">{t('demo.perMonth')}</span></p>
         </div>
         <div className="text-right">
-          <p className="text-gray-400 text-xs mb-1">{d.kpis.high_impact_insights} risco(s) de alto impacto</p>
-          <p className="text-gray-400 text-xs">{d.kpis.neg_margin_products} produto(s) com margem negativa</p>
+          <p className="text-gray-400 text-xs mb-1">{t('demo.highImpactRisks', { n: d.kpis.high_impact_insights })}</p>
+          <p className="text-gray-400 text-xs">{t('demo.negMarginProducts', { n: d.kpis.neg_margin_products })}</p>
         </div>
       </div>
 
@@ -158,12 +166,12 @@ function FlowInsights({ d }: { d: DemoData }) {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="px-6 py-3 bg-[#0A2342] flex items-center gap-2">
           <AlertTriangle size={16} className="text-[#C9A959]" />
-          <span className="text-white font-bold text-sm uppercase tracking-wider">Riscos Detectados</span>
+          <span className="text-white font-bold text-sm uppercase tracking-wider">{t('demo.risksDetected')}</span>
         </div>
         {opInsights.length === 0 ? (
           <div className="p-8 text-center text-gray-400 flex flex-col items-center gap-2">
             <CheckCircle size={28} className="text-green-400" />
-            <p>Nenhum risco operacional crítico detectado.</p>
+            <p>{t('demo.noOpRisks')}</p>
           </div>
         ) : (
           <ul className="divide-y divide-gray-50">
@@ -189,15 +197,15 @@ function FlowInsights({ d }: { d: DemoData }) {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100">
         <div className="px-6 py-3 border-b border-gray-100 flex items-center gap-2">
           <CheckCircle size={16} className="text-[#C9A959]" />
-          <span className="font-bold text-[#0A2342] text-sm uppercase tracking-wider">Plano de Ação Recomendado</span>
+          <span className="font-bold text-[#0A2342] text-sm uppercase tracking-wider">{t('demo.actionPlan')}</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0 divide-y md:divide-y-0 md:divide-x divide-gray-100">
           {[
-            { label: '30 dias', color: 'bg-yellow-50', items: ['Reunião de alinhamento com direção comercial', 'Revisão da precificação dos produtos críticos', 'Mapeamento das causas dos atrasos'] },
-            { label: '90 dias', color: 'bg-blue-50',   items: ['Política de gestão de custos industriais', 'Auditoria de desperdícios na linha produtiva', 'Monitoramento contínuo via JUNO'] },
+            { label: t('demo.days30'), color: 'bg-yellow-50', items: [t('demo.plan30a'), t('demo.plan30b'), t('demo.plan30c')] },
+            { label: t('demo.days90'), color: 'bg-blue-50',   items: [t('demo.plan90a'), t('demo.plan90b'), t('demo.plan90c')] },
           ].map(p => (
             <div key={p.label} className={`p-5 ${p.color}`}>
-              <p className="font-bold text-[#0A2342] text-xs uppercase tracking-wider mb-3">Curto Prazo · {p.label}</p>
+              <p className="font-bold text-[#0A2342] text-xs uppercase tracking-wider mb-3">{t('demo.shortTerm', { period: p.label })}</p>
               <ul className="space-y-2">
                 {p.items.map((it, j) => (
                   <li key={j} className="flex items-start gap-2 text-sm text-gray-700">
@@ -214,26 +222,27 @@ function FlowInsights({ d }: { d: DemoData }) {
 }
 
 function FlowAuditoria({ d }: { d: DemoData }) {
+  const { t } = useI18n();
   const C = scoreColor(d.trust.score);
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Big trust score */}
         <div className={`${C.bg} border-2 ${C.border} rounded-xl p-6 text-center`}>
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Data Trust Score</p>
+          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{t('demo.dataTrustScore')}</p>
           <Shield size={28} className={`mx-auto mb-2 ${C.text}`} />
           <div className={`text-6xl font-extrabold ${C.text}`}>{d.trust.score}</div>
           <div className="text-xs text-gray-400 mt-1">/100</div>
-          <span className={`mt-3 inline-block text-sm font-bold px-3 py-1 rounded-full ${C.badge}`}>Confiabilidade {d.trust.label}</span>
+          <span className={`mt-3 inline-block text-sm font-bold px-3 py-1 rounded-full ${C.badge}`}>{t('demo.reliability', { label: d.trust.label })}</span>
         </div>
 
         {/* Data stats */}
         <div className="md:col-span-2 grid grid-cols-2 gap-4">
           {[
-            { label: 'Receita Total', value: `R$ ${fmt(d.validation.receita_total)}` },
-            { label: 'Total Pedidos', value: fmt(d.validation.total_pedidos) },
-            { label: 'Total Produtos', value: fmt(d.validation.total_produtos) },
-            { label: 'Problemas Detectados', value: String(d.data_issues.length) },
+            { label: t('demo.totalRevenue'), value: `R$ ${fmt(d.validation.receita_total)}` },
+            { label: t('demo.totalOrders'), value: fmt(d.validation.total_pedidos) },
+            { label: t('demo.totalProducts'), value: fmt(d.validation.total_produtos) },
+            { label: t('demo.issuesDetected'), value: String(d.data_issues.length) },
           ].map(s => (
             <div key={s.label} className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
               <p className="text-xs text-gray-400 uppercase tracking-wider">{s.label}</p>
@@ -246,7 +255,7 @@ function FlowAuditoria({ d }: { d: DemoData }) {
       {/* Deductions */}
       {d.trust.deductions.length > 0 && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Deduções do Score</p>
+          <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">{t('demo.scoreDeductions')}</p>
           <ul className="space-y-2">
             {d.trust.deductions.map((ded, i) => (
               <li key={i} className="flex justify-between text-sm text-gray-700">
@@ -262,12 +271,12 @@ function FlowAuditoria({ d }: { d: DemoData }) {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="px-6 py-3 bg-[#0A2342] flex items-center gap-2">
           <ShieldCheck size={16} className="text-[#C9A959]" />
-          <span className="text-white font-bold text-sm uppercase tracking-wider">Problemas de Qualidade de Dados</span>
+          <span className="text-white font-bold text-sm uppercase tracking-wider">{t('demo.dataQualityIssues')}</span>
         </div>
         {d.data_issues.length === 0 ? (
           <div className="p-8 text-center flex flex-col items-center gap-2">
             <CheckCircle size={28} className="text-green-500" />
-            <p className="font-semibold text-green-700">Dados íntegros — prontos para o conselho.</p>
+            <p className="font-semibold text-green-700">{t('demo.dataIntegrity')}</p>
           </div>
         ) : (
           <ul className="divide-y divide-gray-50">
@@ -300,8 +309,8 @@ function FlowAuditoria({ d }: { d: DemoData }) {
           : <XCircle size={20} className="text-red-600" />}
         <p className={`font-bold text-sm ${d.validation.status === 'ok' ? 'text-green-800' : 'text-red-800'}`}>
           {d.validation.status === 'ok'
-            ? 'Validação básica aprovada — dados prontos para diagnóstico executivo.'
-            : 'Validação básica falhou — revisar dados antes da apresentação.'}
+            ? t('demo.validationOk')
+            : t('demo.validationFail')}
         </p>
       </div>
     </div>
@@ -313,7 +322,7 @@ export default function DemoPage() {
   // Empresa ativa do tenant logado: o demo opera sobre os dados a que o usuario
   // tem acesso (antes fixava empresa 1, que retornava 403 "Acesso negado").
   const { company: activeCompany, companyId } = useActiveCompany();
-  const { locale } = useI18n();
+  const { t, locale } = useI18n();
   const [company, setCompany] = useState(0);
   const [flow, setFlow]       = useState(0);
   const [data, setData]       = useState<DemoData | null>(null);
@@ -325,7 +334,7 @@ export default function DemoPage() {
   }, [companyId]);
 
   const companies = companyId
-    ? [{ id: companyId, label: activeCompany?.name ?? 'Minha Empresa', sector: 'Diagnóstico multi-setorial' }]
+    ? [{ id: companyId, label: activeCompany?.name ?? t('demo.defaultCompany'), sector: t('demo.multiSector') }]
     : COMPANIES;
 
   const loadDemo = async (cid = company) => {
@@ -365,11 +374,11 @@ export default function DemoPage() {
       <div className="border-b border-gray-200 pb-4 flex flex-wrap justify-between items-end gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-bold bg-[#C9A959] text-[#0A2342] px-2 py-0.5 rounded uppercase tracking-wider">Demo Mode</span>
+            <span className="text-xs font-bold bg-[#C9A959] text-[#0A2342] px-2 py-0.5 rounded uppercase tracking-wider">{t('demo.mode')}</span>
             <span className="text-xs text-gray-400">JUNO v0.3.2</span>
           </div>
-          <h1 className="text-2xl font-bold text-[#0A2342]">Pacote de Demonstração Executiva</h1>
-          <p className="text-gray-500 text-sm mt-0.5">3 fluxos prontos para apresentação ao cliente.</p>
+          <h1 className="text-2xl font-bold text-[#0A2342]">{t('demo.pkgTitle')}</h1>
+          <p className="text-gray-500 text-sm mt-0.5">{t('demo.pkgSubtitle')}</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex gap-2">
@@ -386,7 +395,7 @@ export default function DemoPage() {
           <button onClick={() => loadDemo()} disabled={loading}
             className="flex items-center gap-2 bg-[#C9A959] text-[#0A2342] font-bold py-2 px-5 rounded-lg hover:bg-[#b89a51] transition-colors shadow-md disabled:opacity-50">
             {loading ? <Loader2 className="animate-spin" size={18} /> : <Play size={18} />}
-            Carregar Demo
+            {t('demo.loadDemo')}
           </button>
           {data && (
             <button onClick={handleDownloadPDF}
@@ -401,14 +410,14 @@ export default function DemoPage() {
       {!data && !loading && !error && (
         <div className="bg-[#F0F4F8] rounded-xl p-12 text-center flex flex-col items-center gap-3">
           <div className="text-4xl">🎯</div>
-          <p className="text-[#0A2342] font-bold text-lg">Pronto para apresentar</p>
-          <p className="text-gray-500 text-sm max-w-md">Selecione a empresa, clique em <strong>Carregar Demo</strong> e apresente os 3 fluxos ao cliente em tempo real.</p>
+          <p className="text-[#0A2342] font-bold text-lg">{t('demo.readyTitle')}</p>
+          <p className="text-gray-500 text-sm max-w-md">{t('demo.readyDesc')}</p>
           <div className="flex gap-4 mt-3">
             {FLOWS.map((f, i) => (
               <div key={f.id} className="bg-white rounded-lg p-3 text-left shadow-sm border border-gray-100 w-44">
                 <span className="text-lg">{f.emoji}</span>
-                <p className="font-bold text-xs text-[#0A2342] mt-1">{i + 1}. {f.label}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{f.desc}</p>
+                <p className="font-bold text-xs text-[#0A2342] mt-1">{i + 1}. {t(f.labelKey)}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{t(f.descKey)}</p>
               </div>
             ))}
           </div>
@@ -427,7 +436,7 @@ export default function DemoPage() {
       {loading && (
         <div className="flex flex-col items-center justify-center py-16 gap-3">
           <Loader2 className="animate-spin text-[#0A2342]" size={40} />
-          <p className="text-gray-500 text-sm">Carregando dados da demo...</p>
+          <p className="text-gray-500 text-sm">{t('demo.loadingData')}</p>
         </div>
       )}
 
@@ -437,12 +446,12 @@ export default function DemoPage() {
           {/* Company banner */}
           <div className="bg-[#0A2342] rounded-xl px-6 py-4 flex items-center justify-between">
             <div>
-              <p className="text-[#C9A959] text-xs font-bold uppercase tracking-widest">Empresa em Análise</p>
+              <p className="text-[#C9A959] text-xs font-bold uppercase tracking-widest">{t('demo.companyInAnalysis')}</p>
               <p className="text-white text-xl font-extrabold mt-0.5">{data.company.name}</p>
               <p className="text-gray-400 text-xs">{data.company.sector}</p>
             </div>
             <div className="text-right">
-              <p className="text-gray-400 text-xs uppercase tracking-wider">Score JUNO</p>
+              <p className="text-gray-400 text-xs uppercase tracking-wider">{t('demo.scoreJuno')}</p>
               <p className={`text-4xl font-extrabold ${scoreColor(data.kpis.score_juno).text}`}>{data.kpis.score_juno}</p>
             </div>
           </div>
@@ -455,7 +464,7 @@ export default function DemoPage() {
                   flow === i ? 'bg-white text-[#0A2342] shadow-sm' : 'text-gray-500 hover:text-[#0A2342]'
                 }`}>
                 <span>{f.emoji}</span>
-                <span className="hidden sm:inline">{f.label}</span>
+                <span className="hidden sm:inline">{t(f.labelKey)}</span>
                 <span className="sm:hidden">{i + 1}</span>
               </button>
             ))}
@@ -464,8 +473,8 @@ export default function DemoPage() {
           {/* Slide navigation */}
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-[#0A2342]">{FLOWS[flow].emoji} {FLOWS[flow].label}</h2>
-              <p className="text-sm text-gray-500">{FLOWS[flow].desc}</p>
+              <h2 className="text-lg font-bold text-[#0A2342]">{FLOWS[flow].emoji} {t(FLOWS[flow].labelKey)}</h2>
+              <p className="text-sm text-gray-500">{t(FLOWS[flow].descKey)}</p>
             </div>
             <div className="flex items-center gap-2">
               <button onClick={() => setFlow(f => Math.max(0, f - 1))} disabled={flow === 0}

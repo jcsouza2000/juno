@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import {
   Database, Trash2, AlertTriangle, RefreshCw, Loader2,
@@ -63,6 +63,7 @@ export default function DataPage() {
   const [inventory, setInventory] = useState<Inventory | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const reqRef = useRef(0);
 
   // Purge state
   const [scope, setScope] = useState<Scope>('financial');
@@ -85,16 +86,21 @@ export default function DataPage() {
       setInventory(null);
       return;
     }
+    // Guard anti-empresa-fantasma: so a ultima chamada aplica resultado/erro
+    // (evita 403 "Acesso negado" preso de um companyId que resolveu tarde).
+    const reqId = ++reqRef.current;
     setLoading(true);
     setError(null);
     try {
       const res = await api.get(`/data/${companyId}/inventory`);
+      if (reqId !== reqRef.current) return;
       setInventory(res.data);
     } catch (err: unknown) {
+      if (reqId !== reqRef.current) return;
       setInventory(null);
       setError(getApiErrorMessage(err));
     } finally {
-      setLoading(false);
+      if (reqId === reqRef.current) setLoading(false);
     }
   }, [companyId]);
 
