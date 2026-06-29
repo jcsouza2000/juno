@@ -2,6 +2,20 @@
 setlocal EnableExtensions EnableDelayedExpansion
 title JUNO Industrial Diagnostic - Launcher
 
+REM === Auto-elevacao: garante privilegio de admin para a limpeza total ===
+REM Backends antigos podem subir protegidos e resistir ao Stop-Process comum;
+REM so com privilegio elevado o taskkill /F consegue derruba-los.
+net session >nul 2>&1
+if errorlevel 1 (
+    echo [INFO] Solicitando privilegios de administrador para limpar processos...
+    if "%~1"=="" (
+        powershell -NoProfile -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
+    ) else (
+        powershell -NoProfile -Command "Start-Process -FilePath '%~f0' -ArgumentList '%*' -Verb RunAs"
+    )
+    exit /b
+)
+
 for %%I in ("%~dp0.") do set "ROOT=%%~fI"
 
 set "BACKEND=%ROOT%\janus\backend"
@@ -25,6 +39,10 @@ set "BACKEND_LOG=%LOG_DIR%\backend-smart-juno.log"
 set "FRONTEND_LOG=%LOG_DIR%\frontend-smart-juno.log"
 set "FORCE_DOCKER=0"
 if /i "%~1"=="docker" set "FORCE_DOCKER=1"
+
+REM === Limpeza total das instancias anteriores (todos os modos exceto 'verificar') ===
+if /i not "%~1"=="verificar" call :kill_all
+
 if /i "%~1"=="clean" call :free_ports
 if /i "%~1"=="verificar" goto verify_mode
 if /i "%~1"=="local" goto local_mode
@@ -237,6 +255,25 @@ if not errorlevel 1 (
 )
 echo [AVISO] Dashboard nao respondeu. Vou subir o modo local...
 goto local_mode
+
+:kill_all
+echo.
+echo [LIMPEZA] Encerrando instancias JUNO anteriores (backend/frontend)...
+REM 1) Por porta: 8001 (backend) e 4000 (frontend) -- taskkill /F (com elevacao
+REM    derruba ate processos protegidos que resistiram ao Stop-Process).
+for %%P in (8001 4000) do (
+    for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":%%P " ^| findstr "LISTENING"') do (
+        taskkill /F /PID %%a >nul 2>&1 && echo   [OK] porta %%P liberada ^(PID %%a^)
+    )
+)
+REM 2) Backends uvicorn orfaos do JUNO (python rodando app.main:app, sem porta ativa).
+powershell -NoProfile -Command "Get-CimInstance Win32_Process | Where-Object { $_.Name -like 'python*' -and $_.CommandLine -match 'app.main:app' } | ForEach-Object { try { Stop-Process -Id $_.ProcessId -Force -ErrorAction Stop; Write-Host ('   [OK] backend orfao encerrado (PID ' + $_.ProcessId + ')') } catch {} }"
+REM 3) Frontend next dev orfaos do JUNO (node em janus\frontend).
+powershell -NoProfile -Command "Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'node.exe' -and $_.CommandLine -match 'janus' -and $_.CommandLine -match 'frontend' } | ForEach-Object { try { Stop-Process -Id $_.ProcessId -Force -ErrorAction Stop; Write-Host ('   [OK] frontend orfao encerrado (PID ' + $_.ProcessId + ')') } catch {} }"
+ping -n 3 127.0.0.1 >nul
+echo [LIMPEZA] Concluida. Iniciando do zero.
+echo.
+exit /b 0
 
 :free_ports
 call :free_port 8001
