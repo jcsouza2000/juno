@@ -81,6 +81,9 @@ export function useActiveCompany() {
   return {
     company,
     companyId: company?.id ?? null,
+    // Lista de empresas acessiveis (para o seletor no Header) + setter manual.
+    companies: accessible ?? [],
+    setCompany: setActiveCompany,
     isLoading: status === "loading" || accessible === null,
   }
 }

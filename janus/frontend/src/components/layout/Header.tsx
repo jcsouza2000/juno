@@ -17,7 +17,7 @@ function initials(name?: string | null, email?: string | null) {
 
 export default function Header() {
   const { data: session } = useSession()
-  const { company } = useActiveCompany()
+  const { company, companies, setCompany } = useActiveCompany()
   const { t, locale, setLocale } = useI18n()
   const user = session?.user
 
@@ -40,9 +40,30 @@ export default function Header() {
             </option>
           ))}
         </select>
-        <span className="px-3 py-1 rounded-full bg-[#C9A959]/10 text-[#8A6D1D] text-xs font-bold uppercase">
-          {company ? company.name : t("header.hybridSaas")}
-        </span>
+        {/* Seletor de empresa ativa: dropdown quando ha empresas acessiveis;
+            assim o usuario sempre tem onde ATIVAR/trocar a empresa, sem depender
+            so do auto-resolver. Persistido em localStorage (setActiveCompany). */}
+        {companies.length > 0 ? (
+          <select
+            value={company?.id ?? ""}
+            onChange={(e) => {
+              const sel = companies.find((c) => c.id === Number(e.target.value))
+              if (sel) setCompany(sel)
+            }}
+            aria-label={t("common.activeCompany")}
+            className="px-3 py-1.5 rounded-full bg-[#C9A959]/10 text-[#8A6D1D] text-xs font-bold uppercase border border-[#C9A959]/30 hover:border-[#C9A959] focus:outline-none focus:border-[#C9A959] cursor-pointer"
+          >
+            {companies.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <span className="px-3 py-1 rounded-full bg-[#C9A959]/10 text-[#8A6D1D] text-xs font-bold uppercase">
+            {company ? company.name : t("header.hybridSaas")}
+          </span>
+        )}
         <div className="text-right">
           <p className="text-sm font-semibold text-gray-800">{user?.name || user?.email || t("header.user")}</p>
           <p className="text-xs text-gray-500 uppercase">{user?.role || t("header.noProfile")}</p>
