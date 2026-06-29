@@ -21,5 +21,8 @@ export default auth((req) => {
 })
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|templates).*)"],
+  // Exclui TODO o /_next (nao so static/image): rodar o middleware em
+  // /_next/webpack-hmr quebra o WebSocket de hot-reload
+  // (ERR_INVALID_HTTP_RESPONSE) e corrompe a hidratacao do app em dev.
+  matcher: ["/((?!api|_next|favicon.ico|templates).*)"],
 }
