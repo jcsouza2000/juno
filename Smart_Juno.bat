@@ -43,6 +43,10 @@ if /i "%~1"=="docker" set "FORCE_DOCKER=1"
 REM === Limpeza total das instancias anteriores (todos os modos exceto 'verificar') ===
 if /i not "%~1"=="verificar" call :kill_all
 
+REM === 'reset': limpa o cache do Turbopack (.next) -- forca rebuild do frontend
+REM com .env.local e proxy.ts atualizados. Use quando trocar URL/host/env. ===
+if /i "%~1"=="reset" call :clear_next
+
 if /i "%~1"=="clean" call :free_ports
 if /i "%~1"=="verificar" goto verify_mode
 if /i "%~1"=="local" goto local_mode
@@ -273,6 +277,18 @@ powershell -NoProfile -Command "Get-CimInstance Win32_Process | Where-Object { $
 ping -n 3 127.0.0.1 >nul
 echo [LIMPEZA] Concluida. Iniciando do zero.
 echo.
+exit /b 0
+
+:clear_next
+echo [RESET] Limpando cache do Turbopack (.next) para rebuild limpo do frontend...
+if exist "%FRONTEND%\.next" (
+    rmdir /s /q "%FRONTEND%\.next" >nul 2>&1
+    if exist "%FRONTEND%\.next" (
+        echo [AVISO] Nao consegui remover todo o .next ^(arquivo em uso?^). Feche o frontend e tente de novo.
+    ) else (
+        echo [OK] .next removido. O proximo start recompila do zero.
+    )
+)
 exit /b 0
 
 :free_ports
