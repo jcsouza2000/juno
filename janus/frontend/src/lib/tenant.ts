@@ -45,8 +45,11 @@ export function useActiveCompany() {
   // Buscada do backend (/auth/me) com a mesma autenticacao usada nos uploads —
   // assim a empresa ativa nunca fica "fantasma" (causando 403 Acesso negado).
   // Em dev com JUNO_DEV_AUTH_BYPASS, retorna o dev-user com suas empresas reais.
+  // Busca a lista de empresas do backend (/auth/me) SEM esperar a sessao do
+  // NextAuth: em dev com bypass, /auth/me ja responde com o dev-user e suas
+  // empresas. Nao bloquear por status==="loading" evita o seletor travar em "—"
+  // quando a sessao fica presa carregando (sem login).
   useEffect(() => {
-    if (status === "loading") return
     let active = true
     api
       .get("/auth/me")
@@ -59,16 +62,23 @@ export function useActiveCompany() {
     return () => {
       active = false
     }
-  }, [status, session])
+  }, [session])
 
   const devId = process.env.NEXT_PUBLIC_DEV_COMPANY_ID
     ? Number(process.env.NEXT_PUBLIC_DEV_COMPANY_ID)
     : null
+  // Fallback de DEV: empresa de demonstracao sempre disponivel mesmo que
+  // /auth/me nao responda (HMR/sessao presa). Garante que o seletor nunca
+  // trava em "—" no ambiente local.
+  const devFallback: TenantCompany | null =
+    devId && process.env.NODE_ENV !== "production"
+      ? { id: devId, name: "Agora SA" }
+      : null
 
   let company: TenantCompany | null = null
   if (accessible === null) {
-    // Lista ainda carregando: usa otimista (sessao/localStorage) sem travar a UI.
-    company = selectedCompany ?? session?.user?.companies?.[0] ?? null
+    // Lista ainda carregando: usa otimista (sessao/localStorage/dev) sem travar a UI.
+    company = selectedCompany ?? session?.user?.companies?.[0] ?? devFallback ?? null
   } else if (accessible.length > 0) {
     // So' aceita uma empresa que o usuario REALMENTE acessa (evita 403).
     const selValid = selectedCompany
@@ -76,13 +86,24 @@ export function useActiveCompany() {
       : null
     const devPref = devId ? accessible.find((c) => c.id === devId) : null
     company = selValid ?? devPref ?? accessible[0]
+  } else {
+    // Lista veio vazia (sessao sem token etc.): usa o fallback de dev.
+    company = selectedCompany ?? devFallback ?? null
   }
+
+  // Lista para o seletor: usa a do backend; se vazia, oferece ao menos o dev.
+  const companiesForPicker =
+    accessible && accessible.length > 0
+      ? accessible
+      : devFallback
+        ? [devFallback]
+        : []
 
   return {
     company,
     companyId: company?.id ?? null,
     // Lista de empresas acessiveis (para o seletor no Header) + setter manual.
-    companies: accessible ?? [],
+    companies: companiesForPicker,
     setCompany: setActiveCompany,
     isLoading: status === "loading" || accessible === null,
   }

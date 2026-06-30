@@ -68,6 +68,13 @@ function StatusBadge({ status }: { status: string }) {
 // ── Page ───────────────────────────────────────────────────────────────────
 export default function IntegrationsPage() {
   const { company, companyId } = useActiveCompany();
+  // Fallback de DEV: se o resolver de empresa nao entregou id (token/sessao
+  // ainda nao propagados), usa NEXT_PUBLIC_DEV_COMPANY_ID para nao travar o
+  // upload no ambiente local. O backend valida o acesso de qualquer forma.
+  const devCompanyId = process.env.NEXT_PUBLIC_DEV_COMPANY_ID
+    ? Number(process.env.NEXT_PUBLIC_DEV_COMPANY_ID)
+    : null;
+  const effectiveCompanyId = companyId ?? devCompanyId;
   const { t } = useI18n();
   const [dataType, setDataType]   = useState('products');
   const [file, setFile]           = useState<File | null>(null);
@@ -104,7 +111,7 @@ export default function IntegrationsPage() {
 
   const handleImport = async () => {
     if (!file) return;
-    if (!companyId) {
+    if (!effectiveCompanyId) {
       setResult({
         company_id: 0,
         data_type: dataType,
@@ -119,7 +126,7 @@ export default function IntegrationsPage() {
     setImporting(true);
     setResult(null);
     const form = new FormData();
-    form.append('company_id', companyId.toString());
+    form.append('company_id', effectiveCompanyId.toString());
     form.append('data_type', dataType);
     form.append('file', file);
     try {
@@ -129,7 +136,7 @@ export default function IntegrationsPage() {
       setResult(res.data);
     } catch (err: unknown) {
       setResult({
-        company_id: companyId,
+        company_id: effectiveCompanyId,
         data_type: dataType,
         rows_received: 0,
         rows_imported: 0,
@@ -146,11 +153,11 @@ export default function IntegrationsPage() {
     setShowHistory(true);
     setLoadingHistory(true);
     try {
-      if (!companyId) {
+      if (!effectiveCompanyId) {
         setHistory([]);
         return;
       }
-      const res = await api.get(`/integrations/erp/history/${companyId}`);
+      const res = await api.get(`/integrations/erp/history/${effectiveCompanyId}`);
       setHistory(res.data);
     } catch {
       setHistory([]);
@@ -308,7 +315,7 @@ export default function IntegrationsPage() {
         {/* Import button */}
         <button
           onClick={handleImport}
-          disabled={!file || importing || !companyId}
+          disabled={!file || importing || !effectiveCompanyId}
           className="w-full flex items-center justify-center gap-2 bg-[#0A2342] text-white font-bold py-3 rounded-xl hover:bg-[#0d2d57] transition-colors shadow-md disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {importing

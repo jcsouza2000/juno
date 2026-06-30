@@ -2,7 +2,12 @@ import { auth } from "@/auth"
 import { NextResponse } from "next/server"
 
 export default auth((req) => {
-  if (process.env.NODE_ENV !== "production") {
+  // Dev normal OU modo "producao local" (build+start na maquina do dev):
+  // nao forca login. Em producao real (deploy), JUNO_LOCAL_NO_AUTH fica ausente.
+  if (
+    process.env.NODE_ENV !== "production" ||
+    process.env.JUNO_LOCAL_NO_AUTH === "1"
+  ) {
     return NextResponse.next()
   }
 

@@ -59,13 +59,20 @@ else:
     _cors_methods = ["*"]
     _cors_headers = ["*"]
 
-app.add_middleware(
-    CORSMiddleware,
+# Em desenvolvimento, aceita qualquer host local (localhost/127.0.0.1 em
+# qualquer porta) via regex, alem da lista explicita de ALLOWED_ORIGINS.
+# Isso evita bloqueio de preflight quando o front roda em 127.0.0.1:4000 e o
+# backend foi iniciado com outra lista de origens.
+_cors_kwargs: dict = dict(
     allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=_cors_methods,
     allow_headers=_cors_headers,
 )
+if not settings.is_production:
+    _cors_kwargs["allow_origin_regex"] = r"https?://(localhost|127\.0\.0\.1)(:\d+)?"
+
+app.add_middleware(CORSMiddleware, **_cors_kwargs)
 
 # Rate limiter (slowapi)
 limiter = Limiter(key_func=get_remote_address)

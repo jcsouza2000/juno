@@ -4,11 +4,17 @@ import Credentials from "next-auth/providers/credentials"
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 const DEV_AUTH_SECRET = "smart-juno-local-auth-secret-only-for-development-32-chars"
 
+// Em producao real, AUTH_SECRET/NEXTAUTH_SECRET DEVEM vir do ambiente.
+// O fallback DEV_AUTH_SECRET garante que o launcher local nunca quebre o
+// /api/auth/session com 500 quando a env nao chega ao processo do Next.
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  // NextAuth v5 fora da Vercel exige trustHost; sem isso o /api/auth/session
+  // retorna 500 ("problem with the server configuration") em 127.0.0.1/local.
+  trustHost: true,
   secret:
     process.env.AUTH_SECRET ||
     process.env.NEXTAUTH_SECRET ||
-    (process.env.NODE_ENV !== "production" ? DEV_AUTH_SECRET : undefined),
+    DEV_AUTH_SECRET,
   providers: [
     Credentials({
       name: "credentials",

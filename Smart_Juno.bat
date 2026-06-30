@@ -213,7 +213,7 @@ call :wait_http "%FRONTEND_URL%" 5 "frontend local existente"
 if errorlevel 1 (
     echo [INFO] Log frontend: %FRONTEND_LOG%
     call :free_port 4000
-    start "JUNO Frontend :4000" /D "%FRONTEND%" cmd /k "set ""NEXT_PUBLIC_API_URL=%BACKEND_URL%"" && set ""NEXT_PUBLIC_DEV_COMPANY_ID=4"" && set ""NEXTAUTH_URL=%FRONTEND_URL%"" && call npm run dev > ""%FRONTEND_LOG%"" 2>&1"
+    start "JUNO Frontend :4000" /D "%FRONTEND%" cmd /k "set ""NEXT_PUBLIC_API_URL=%BACKEND_URL%"" && set ""NEXT_PUBLIC_DEV_COMPANY_ID=4"" && set ""NEXTAUTH_URL=%FRONTEND_URL%"" && set ""AUTH_SECRET=%LOCAL_AUTH_SECRET%"" && set ""NEXTAUTH_SECRET=%LOCAL_AUTH_SECRET%"" && call npm run dev > ""%FRONTEND_LOG%"" 2>&1"
     call :wait_http "%FRONTEND_URL%" 120 "frontend local"
     if errorlevel 1 (
         echo [ERRO] Frontend local nao respondeu em %FRONTEND_URL%.
